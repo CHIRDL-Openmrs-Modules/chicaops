@@ -53,7 +53,7 @@ public class ChicaopsFormController extends SimpleFormController {
 				.getService(ChicaopsService.class);
         	
         	// Check the states
-        	ArrayList<CareCenterResult> results = dashService.monitorStates();        	
+        	ArrayList<CareCenterResult> results = dashService.checkCareCenters();        	
         	modelMap.put("careCenters", results);
         	
         	// Check server issues

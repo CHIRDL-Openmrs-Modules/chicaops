@@ -3,11 +3,13 @@ package org.openmrs.module.chicaops.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,17 +25,23 @@ import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
 import org.jibx.runtime.JiBXException;
+import org.openmrs.Form;
 import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.atd.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
+import org.openmrs.module.atd.service.ATDService;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DirectoryProblem;
 import org.openmrs.module.chicaops.dashboard.ForcedOutPWSProblem;
 import org.openmrs.module.chicaops.dashboard.MemoryProblem;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
+import org.openmrs.module.chicaops.dashboard.ScanProblem;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
 import org.openmrs.module.chicaops.service.ChicaopsService;
@@ -44,6 +52,8 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor;
@@ -80,7 +90,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		return dao;
 	}
 
-    public ArrayList<CareCenterResult> monitorStates() {
+    public ArrayList<CareCenterResult> checkCareCenters() {
 		Map<String, CareCenterResult> careCenterNameToResultMap = 
 			new LinkedHashMap<String, CareCenterResult>();
 		Map<Integer, CareCenterResult> careCenterIdToResultMap = 
@@ -99,15 +109,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			    for (StateToMonitor state : states.getStatesToMonitor()) {
 			    	for (MonitorResult result : getChicaopsDAO().checkState(state)) {
 				    	String careCenterName = result.getLocationName();
-				    	CareCenterResult results = careCenterNameToResultMap.get(careCenterName);
-				    	if (results == null) {
-				    		LocationService locService = Context.getLocationService();
-							Location loc = locService.getLocation(result.getLocationName());
-							String description = loc.getDescription();
-				    		results = new CareCenterResult(result.getLocationName(), description);
-				    		careCenterNameToResultMap.put(careCenterName, results);
-				    	}
-				    	
+				    	CareCenterResult results = careCenterNameToResultMap.get(careCenterName);				    	
 				    	results.addStateResult(result);
 			    	}
 		    	}
@@ -134,6 +136,35 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			    	}
 		    	}
 		    }
+		    
+		    // Check to see if anything has been scanned lately
+		    ScanChecks scanChecks = config.getScanChecks();
+		    if (scanChecks != null && scanChecks.getScanChecks().size() > 0) {
+		    	LocationService locService = Context.getLocationService();
+		    	List<Location> locations = locService.getAllLocations(false);
+		    	for (ScanCheck check : scanChecks.getScanChecks()) {
+		    		long timePeriodMs = check.getTimePeriodInMilliseconds();
+		    		Date date = new Date();
+		    		date = new Date(date.getTime() - timePeriodMs);
+		    		timePeriodMs = date.getTime();
+		        	Calendar cal = Calendar.getInstance();
+		        	cal.setTimeInMillis(timePeriodMs);
+		        	// Account for Saturday and Sunday.  Go back to Friday if it is Saturday or Sunday.
+		        	while (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+		        		cal.add(Calendar.DAY_OF_YEAR, -1);
+		        	}
+		        	
+		        	long timePeriod = cal.getTimeInMillis();
+		    		for (Location location : locations) {
+		    			ScanProblem problem = performScanCheck(check, location, timePeriod);
+		    			if (problem != null) {
+		    				String locationName = location.getName();
+		    				CareCenterResult results = careCenterNameToResultMap.get(locationName);					    	
+					    	results.addScanProblem(problem);
+		    			}
+		    		}
+		    	}
+		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("Error processing the dashboard configuration file.", e);
@@ -143,6 +174,40 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		careCenterNameToResultMap.clear();
 		careCenterIdToResultMap.clear();
 	    return returnList;
+    }
+    
+    private ScanProblem performScanCheck(ScanCheck check, Location location, long timeSincedLastModDate) {
+    	FormService formService = Context.getFormService();
+    	Form form = formService.getForm(check.getFormName());
+    	if (form == null) {
+    		log.error("Error performing scan checks.  The form \"" + check.getFormName() + "\" does not exist.");
+    		return null;
+    	}
+    	
+    	ATDService atdService = Context.getService(ATDService.class);
+    	Set<String> checkedDirs = new HashSet<String>();    	
+    	FilenameFilter filter = new FileListTimeFilter(null, "20", timeSincedLastModDate);
+    	for (LocationTag tag : location.getTags()) {
+    		FormAttributeValue fav = atdService.getFormAttributeValue(form.getFormId(), "defaultExportDirectory", 
+    			tag.getId(), location.getLocationId());
+    		if (fav != null && fav.getValue() != null && fav.getValue().trim().length() > 0 && 
+    				!checkedDirs.contains(fav.getValue())) {
+    			String scanDirStr = fav.getValue();
+    			checkedDirs.add(scanDirStr);
+    			File scanDir = new QuickListFile(scanDirStr);
+    			if (scanDir.exists()) {
+    				String[] files = scanDir.list(filter);
+    				if (files == null || files.length == 0) {
+    					// No files were found...there's a problem.
+    					checkedDirs.clear();
+    					return new ScanProblem(check);
+    				}
+    			}
+    		}
+    	}
+    	
+    	checkedDirs.clear();
+    	return null;
     }
 
     public ServerCheckResult performServerChecks() {
@@ -374,5 +439,51 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		}
 		
 		return new RuleCheckResult(ruleChecks);
+    }
+    
+    /**
+     * Extension of the File object.  This basically makes the list function faster by 
+     * returning an accepted file once found.  It does not continue once it finds one.  
+     * This is to be used to check to see if any files exist matching the FilenameFilter.
+     * 
+     * @author Steve McKee
+     */
+    private class QuickListFile extends File {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * Creates a new QuickListFile instance by converting the given pathname String into 
+         * an abstract pathname.  If the given String is the empty String, then the result is 
+         * the empty abstract pathname.
+         * 
+         * @param pathname A pathname String
+         * @throws NullPointerException If the pathname argument is null.
+         */
+		public QuickListFile(String pathname) {
+	        super(pathname);
+        }
+
+		/**
+		 * Returns only one String if any are found.  This is to be used to tell if at least one 
+		 * child file exists matching the FilenameFilter.
+		 * 
+		 * @param filter FilenameFilter used for matching child files.
+		 */
+		public String[] list(FilenameFilter filter) {
+			String[] names = list();
+			if ((names == null) || (filter == null)) {
+				return names;
+			}
+			
+			// Only need to know if at least one file is accepted.
+			for (String name : names) {
+				if (filter.accept(this, name)) {
+					return new String[] { name };
+				}
+			}
+			
+			return new String[0];
+		}
     }
 }

@@ -27,6 +27,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.Notification;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutil.util.MailSender;
@@ -166,6 +167,29 @@ public class DashboardMailerPager {
 				        	+ stateMon.getElapsedTime() + " " + stateMon.getElapsedTimeUnit() + "(s) over the past " 
 				        	+ stateMon.getTimePeriod() + " " + stateMon.getTimePeriodUnit() 
 				        	+ "(s).\n\nRegards,\nCHICA Operations Dashboard";
+						if (canSendMessage(message)) {
+							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
+								sendMail(message, notification.getEmailAddress(), location, locationDescription);
+							}
+							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+								sendPage(message, notification.getPageNumber());
+							}
+						}
+					}
+				}
+			}
+			
+			// Scan latency
+			for (ScanProblem problem : result.getScanProblems()) {
+				ScanCheck check = problem.getScanCheck();
+				Notification notification = check.getNotification();
+				if (notification != null) {
+					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
+							DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+						String message = "The following issue with a form is occurring at " + result.getCareCenterName() 
+							+ " (" + result.getCareCenterDescription() + "):\n\n" + check.getFormName() + ": " 
+							+ "there have been no successful scans for this form in the last " + check.getTimePeriod() 
+							+ " " + check.getTimePeriodUnit() + "(s).\n\nRegards,\nCHICA Operations Dashboard";
 						if (canSendMessage(message)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);

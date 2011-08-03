@@ -202,6 +202,58 @@
             </tr>
         </c:forEach>
       </c:if>
+      <c:forEach items="${center.scanProblems}" var="scanProb" varStatus="status">
+        <tr>
+            <c:choose>
+                <c:when test="${scanProb.scanCheck.severity == 'error'}">
+                    <td></td><td></td>
+                    <td>
+                        <img src="/openmrs/images/error.gif"/>
+                        <c:if test="${scanProb.scanCheck.notification.page == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
+                        </c:if>
+                        <c:if test="${scanProb.scanCheck.notification.email == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
+                        </c:if>
+                    </td>
+                </c:when>
+                <c:when test="${scanProb.scanCheck.severity == 'warning'}">
+                    <td></td><td></td>
+                    <td>
+                        <img src="/openmrs/images/alert.gif"/>
+                        <c:if test="${scanProb.scanCheck.notification.page == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
+                        </c:if>
+                        <c:if test="${scanProb.scanCheck.notification.email == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
+                        </c:if>
+                    </td>
+                </c:when>
+                <c:otherwise>
+                    <td></td><td></td><td></td>
+                </c:otherwise>
+            </c:choose>
+            <td>
+                <c:out value="${scanProb.scanCheck.formName}"/> 
+                <c:if test="${fn:length(scanProb.scanCheck.fixTips.tips) > 0}">
+                    <c:forEach items="${scanProb.scanCheck.fixTips.tips}" var="tip">
+                        <c:set var="tiphtml" value="${tiphtml}<li>${tip}</li>"/>
+                    </c:forEach>
+                    <span class="hotspot" onmouseover="tooltip.show('<ol>${tiphtml}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
+                    <c:set var="tiphtml" value=""/>
+                </c:if> 
+            </td>            
+        </tr>
+        <tr>    
+            <td></td><td></td><td></td>
+            <td>        
+                <div>
+	                There have been no successful scans for this form in the last <c:out value="${scanProb.scanCheck.timePeriod}"/> 
+	                <c:out value="${scanProb.scanCheck.timePeriodUnit}"/> period.<br />
+                </div>
+            </td>
+        </tr>            
+      </c:forEach>
   </c:forEach>
   <tr>
     <c:choose>

@@ -3,6 +3,7 @@
         <structure field="statesToMonitor" usage="optional"/>
         <structure field="hl7ExportChecks" usage="optional"/>
         <structure field="forcedOutPWSCheck" usage="optional"/>
+        <structure field="scanChecks" usage="optional"/>
         <structure field="serverChecks" usage="optional"/>
         <structure field="ruleChecks" usage="optional"/>
     </mapping>
@@ -81,6 +82,20 @@
        <value name="severity" field="severity" />
        <structure field="fixTips" usage="optional"/>
        <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ScanChecks" name="scanChecks">
+        <collection field="scanChecks">
+            <structure name="scanCheck" type="org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck">
+                <value name="formName" field="formName" />
+		        <structure name="timePeriod" value-style="attribute">
+		            <value name="unit" field="timePeriodUnit" />
+		            <value style="text" field="timePeriod" />
+		        </structure>
+		        <value name="severity" field="severity" />
+		        <structure field="fixTips" usage="optional"/>
+		        <structure field="notification"/>
+            </structure>
+        </collection>
     </mapping>
     <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks" name="ruleChecks">
         <structure field="neverFiredCheck" usage="optional"/>

@@ -3,16 +3,14 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
 import org.openmrs.module.chicaops.util.ChicaopsUtil;
 
 /**
- * Bean used to contain the parameters to find files in the imageDir that do 
- * not exist in the scanDir and vice versa.
+ * Bean used to contain the parameters to find any clinics that have not scanned any 
+ * specific forms over the past specified time line.
  *
  * @author Steve McKee
  */
-public class DirectoryCheck {
+public class ScanCheck {
 
-	private String imageDir;
-	private String scanDir;
-	private int numErrors = 1;
+	private String formName;
 	private String severity;
 	private int timePeriod;
 	private String timePeriodUnit;
@@ -22,14 +20,13 @@ public class DirectoryCheck {
 	/**
 	 * Default Constructor
 	 */
-	public DirectoryCheck() {
+	public ScanCheck() {
 	}
 	
 	/**
 	 * Constructor method
 	 * 
-	 * @param imageDir The directory containing the image files.
-	 * @param scanDir The directory containing the scan XML files.
+	 * @param formName The name of the form we want to check to see if it's been scanned.
 	 * @param severity The severity of the check if it occurs (error, warning).
 	 * @param timePeriod The amount of time to check against the last modified 
 	 * dates of the files to compare.
@@ -37,65 +34,32 @@ public class DirectoryCheck {
 	 * hours, days, etc.).
 	 * @param fixTips Tips that can be displayed to the user to help resolve 
 	 * the issue.
-	 * @param numErrors The number of errors to reach before a problem is 
-	 * reported.
 	 * @param notification Notification information if the check fails.
 	 */
-	public DirectoryCheck(String imageDir, String scanDir, String severity, 
-	                      int timePeriod, String timePeriodUnit, FixTips fixTips, 
-	                      int numErrors, Notification notification) {
-		this.imageDir = imageDir;
-		this.scanDir = scanDir;
+	public ScanCheck(String formName, String severity, int timePeriod, String timePeriodUnit, 
+	                 FixTips fixTips, Notification notification) {
+		this.formName = formName;
 		this.severity = severity;
 		this.timePeriod = timePeriod;
 		this.timePeriodUnit = timePeriodUnit;
 		this.fixTips = fixTips;
-		this.numErrors = numErrors;
 		this.notification = notification;
 	}
 	
-    /**
-     * @return the imageDir
+	/**
+     * @return the formName
      */
-    public String getImageDir() {
-    	return imageDir;
+    public String getFormName() {
+    	return formName;
     }
 	
     /**
-     * @param imageDir the imageDir to set
+     * @param formName the formName to set
      */
-    public void setImageDir(String imageDir) {
-    	this.imageDir = imageDir;
-    }
-	
-    /**
-     * @return the scanDir
-     */
-    public String getScanDir() {
-    	return scanDir;
-    }
-	
-    /**
-     * @param scanDir the scanDir to set
-     */
-    public void setScanDir(String scanDir) {
-    	this.scanDir = scanDir;
+    public void setFormName(String formName) {
+    	this.formName = formName;
     }
     
-    /**
-     * @return the numErrors
-     */
-    public int getNumErrors() {
-    	return numErrors;
-    }
-	
-    /**
-     * @param numErrors the numErrors to set
-     */
-    public void setNumErrors(int numErrors) {
-    	this.numErrors = numErrors;
-    }
-	
     /**
      * @return the severity
      */

@@ -16,12 +16,24 @@ public class FileListTimeFilter implements FilenameFilter {
 	private String extension;
 	private long sinceLastModDate = -1;
 
+	/**
+	 * Constructor method
+	 * 
+	 * @param name the filename to look for (excluding the extension).  This can be null if all filenames are wanted.
+	 * @param extension The extension of the file (without the '.' character).  This can be null if all extensions are 
+	 * wanted.
+	 * @param sinceLastModDate files wanted between this time and the current time.  This can be null if last modified 
+	 * date filtering is not requested.
+	 */
 	public FileListTimeFilter(String name, String extension, long sinceLastModDate) {
 		this.name = name;
 		this.extension = extension;
 		this.sinceLastModDate = sinceLastModDate;
 	}
 
+	/**
+	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
+	 */
 	public boolean accept(File directory, String filename) {
 		boolean ok = true;
 

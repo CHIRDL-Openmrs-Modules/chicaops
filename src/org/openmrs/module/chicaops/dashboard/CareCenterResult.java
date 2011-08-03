@@ -20,6 +20,7 @@ public class CareCenterResult {
 	private boolean hasWarnings = false;
 	private ArrayList<MonitorResult> stateResults = new ArrayList<MonitorResult>();
 	private ArrayList<ForcedOutPWSProblem> forcedOutPWSs = new ArrayList<ForcedOutPWSProblem>();
+	private ArrayList<ScanProblem> scanProblems = new ArrayList<ScanProblem>();
 	private Map<String, Integer> hl7ExportProblems = new HashMap<String, Integer>();
 	private HL7ExportChecks hl7ExportChecks;
 
@@ -152,5 +153,27 @@ public class CareCenterResult {
      */
     public void setHl7ExportChecks(HL7ExportChecks hl7ExportChecks) {
     	this.hl7ExportChecks = hl7ExportChecks;
+    }
+    
+    /**
+     * @return the scanProblems
+     */
+    public ArrayList<ScanProblem> getScanProblems() {
+    	return scanProblems;
+    }
+    
+    /**
+     * Add a ScanProblem to the current list of them
+     * 
+     * @param scanProblem
+     */
+    public void addScanProblem(ScanProblem scanProblem) {
+    	scanProblems.add(scanProblem);
+		String severity = scanProblem.getScanCheck().getSeverity();
+		if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
+			hasErrors = true;
+		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
+			hasWarnings = true;
+		}
     }
 }

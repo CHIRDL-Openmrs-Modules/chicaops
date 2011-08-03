@@ -34,7 +34,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *							<email>Y</email>
  *							<emailAddress>bob@iupui.edu</emailAddress>
  *							<page>N</page>
- *							<pageNumber>555-5555</pageNumber>
+ *							<pageNumber>5555555</pageNumber>
  *						</notification>
  *					</stateToMonitor>
  *					.........
@@ -53,7 +53,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *						<email>Y</email>
  *						<emailAddress>bob@iupui.edu</emailAddress>
  *						<page>N</page>
- *						<pageNumber>555-5555</pageNumber>
+ *						<pageNumber>5555555</pageNumber>
  *					</notification>
  *				</hl7ExportChecks>
  *				<forcedOutPWSCheck>
@@ -67,9 +67,26 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *						<email>Y</email>
  *						<emailAddress>bob@iupui.edu</emailAddress>
  *						<page>N</page>
- *						<pageNumber>555-5555</pageNumber>
+ *						<pageNumber>5555555</pageNumber>
  *					</notification>
  *				</forcedOutPWSCheck>
+ *				<scanChecks>
+ *		 			<scanCheck>
+ *		 				<formName>PSF</formName>
+ *		 				<timePeriod unit="day">3</timePeriod>	
+ *		 				<severity>error</severity>
+ *		 				<fixTips> //fix tips are optional
+ *		 					<tip>tip 1.</tip>
+ *		 					...........
+ *		 				</fixTips>
+ *		 				<notification>
+ *		 					<email>Y</email>
+ *		 					<emailAddress>bob@iupui.edu</emailAddress>
+ *		 					<page>N</page>
+ *		 					<pageNumber>5555555</pageNumber>
+ *		 				</notification>
+ *		 			</scanCheck>
+ *		 		</scanChecks>
  *				<serverChecks>
  *					<memoryCheck>
  *						<percentileToNotify>1</percentileToNotify>
@@ -82,7 +99,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *							<email>Y</email>
  *							<emailAddress>bob@iupui.edu</emailAddress>
  *							<page>N</page>
- *							<pageNumber>555-5555</pageNumber>
+ *							<pageNumber>5555555</pageNumber>
  *						</notification>
  *					</memoryCheck>
  *					.........
@@ -100,7 +117,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *							<email>Y</email>
  *							<emailAddress>bob@iupui.edu</emailAddress>
  *							<page>N</page>
- *							<pageNumber>555-5555</pageNumber>
+ *							<pageNumber>5555555</pageNumber>
  *						</notification>
  *					</directoryCheck>
  *					.........
@@ -116,7 +133,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *							<email>Y</email>
  *							<emailAddress>bob@iupui.edu</emailAddress>
  *							<page>N</page>
- *							<pageNumber>555-5555</pageNumber>
+ *							<pageNumber>5555555</pageNumber>
  *						</notification>
  *					</neverFiredCheck>
  *					<unFiredCheck>
@@ -130,7 +147,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *							<email>Y</email>
  *							<emailAddress>bob@iupui.edu</emailAddress>
  *							<page>N</page>
- *							<pageNumber>555-5555</pageNumber>
+ *							<pageNumber>5555555</pageNumber>
  *						</notification>
  *					</unFiredCheck>
  *				</ruleChecks>
@@ -159,6 +176,7 @@ public class DashboardConfig {
 	private ServerChecks serverChecks;
 	private ForcedOutPWSCheck forcedOutPWSCheck;
 	private HL7ExportChecks hl7ExportChecks;
+	private ScanChecks scanChecks;
 	private RuleChecks ruleChecks;
 
 	/**
@@ -180,11 +198,13 @@ public class DashboardConfig {
 	                       ServerChecks serverChecks, 
 	                       ForcedOutPWSCheck forcedOutPWSCheck,
 	                       HL7ExportChecks hl7ExportChecks,
+	                       ScanChecks scanChecks,
 	                       RuleChecks ruleChecks) {
 		this.statesToMonitor = statesToMonitor;
 		this.serverChecks = serverChecks;
 		this.forcedOutPWSCheck = forcedOutPWSCheck;
 		this.hl7ExportChecks = hl7ExportChecks;
+		this.scanChecks = scanChecks;
 		this.ruleChecks = ruleChecks;
 	}
 	
@@ -242,6 +262,20 @@ public class DashboardConfig {
      */
     public void setHl7ExportChecks(HL7ExportChecks hl7ExportChecks) {
     	this.hl7ExportChecks = hl7ExportChecks;
+    }
+    
+    /**
+     * @return the scanChecks
+     */
+    public ScanChecks getScanChecks() {
+    	return scanChecks;
+    }
+	
+    /**
+     * @param scanChecks the scanChecks to set
+     */
+    public void setScanChecks(ScanChecks scanChecks) {
+    	this.scanChecks = scanChecks;
     }
 	
     /**
