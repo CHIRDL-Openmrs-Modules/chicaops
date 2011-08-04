@@ -140,9 +140,16 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    // Check to see if anything has been scanned lately
 		    ScanChecks scanChecks = config.getScanChecks();
 		    if (scanChecks != null && scanChecks.getScanChecks().size() > 0) {
+		    	FormService formService = Context.getFormService();
 		    	LocationService locService = Context.getLocationService();
 		    	List<Location> locations = locService.getAllLocations(false);
 		    	for (ScanCheck check : scanChecks.getScanChecks()) {
+		    		Form form = formService.getForm(check.getFormName());
+		        	if (form == null) {
+		        		log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
+		        		continue;
+		        	}
+		        	
 		    		long timePeriodMs = check.getTimePeriodInMilliseconds();
 		    		Date date = new Date();
 		    		date = new Date(date.getTime() - timePeriodMs);
@@ -156,7 +163,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		        	
 		        	long timePeriod = cal.getTimeInMillis();
 		    		for (Location location : locations) {
-		    			ScanProblem problem = performScanCheck(check, location, timePeriod);
+		    			ScanProblem problem = performScanCheck(check, location, timePeriod, form);
 		    			if (problem != null) {
 		    				String locationName = location.getName();
 		    				CareCenterResult results = careCenterNameToResultMap.get(locationName);					    	
@@ -176,14 +183,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	    return returnList;
     }
     
-    private ScanProblem performScanCheck(ScanCheck check, Location location, long timeSincedLastModDate) {
-    	FormService formService = Context.getFormService();
-    	Form form = formService.getForm(check.getFormName());
-    	if (form == null) {
-    		log.error("Error performing scan checks.  The form \"" + check.getFormName() + "\" does not exist.");
-    		return null;
-    	}
-    	
+    private ScanProblem performScanCheck(ScanCheck check, Location location, long timeSincedLastModDate, Form form) {
     	ATDService atdService = Context.getService(ATDService.class);
     	Set<String> checkedDirs = new HashSet<String>();    	
     	FilenameFilter filter = new FileListTimeFilter(null, "20", timeSincedLastModDate);
