@@ -157,13 +157,11 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		        	Calendar cal = Calendar.getInstance();
 		        	cal.setTimeInMillis(timePeriodMs);
 		        	// Account for Saturday and Sunday.  Go back to Friday if it is Saturday or Sunday.
-		        	boolean adjusted = false;
 		        	while (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
 		        		cal.add(Calendar.DAY_OF_YEAR, -1);
-		        		adjusted = true;
 		        	}
 		        	
-		        	if (adjusted) {
+		        	if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
 		        		// We need to start at the beginning of Friday so we don't get over-notified on the weekends.
 		        		cal.set(Calendar.HOUR, 0);
 		        		cal.set(Calendar.MINUTE, 0);
