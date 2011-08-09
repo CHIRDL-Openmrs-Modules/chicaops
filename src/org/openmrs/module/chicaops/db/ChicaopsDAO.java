@@ -1,6 +1,7 @@
 package org.openmrs.module.chicaops.db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.openmrs.module.atd.hibernateBeans.PatientState;
@@ -65,4 +66,16 @@ public interface ChicaopsDAO {
 	 * @return List of Rule objects.
 	 */
 	public List<Rule> getUnFiredRules(UnFiredRuleCheck check);
+	
+	/**
+	 * Retrieves all the PatientState objects for a particular form that have been recorded 
+	 * since the provided Date.
+	 * 
+	 * @param formId The form ID used for limiting the query.
+	 * @param locationId The location ID used for limiting the query.
+	 * @param sinceDate Only include entries since this date.
+	 * @return List of PatientState objects for a particular form that have been recored 
+	 * since the provided Date.
+	 */
+	public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate);
 }

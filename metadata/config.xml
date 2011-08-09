@@ -5,7 +5,7 @@
 	<!-- Patient Notes Properties -->
 	<id>chicaops</id> <!-- The unique internal id used in urls -->
 	<name>Chica Operations</name> <!-- Longer descriptive name used on Manage Modules page -->
-	<version>1.4.2</version>
+	<version>1.4.3</version>
 	<package>org.openmrs.module.@MODULE_ID@</package> <!-- Distinct package name for this module.  MODULE_ID refrences "id" element from above -->
 	<author>Steve McKee</author> <!-- Custom string representation of the author  -->
 	

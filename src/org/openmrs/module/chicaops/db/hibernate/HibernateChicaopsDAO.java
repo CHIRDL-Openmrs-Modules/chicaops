@@ -1,6 +1,8 @@
 package org.openmrs.module.chicaops.db.hibernate;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -228,6 +230,24 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 		qry.setInteger(0, check.getTimePeriod());
 		qry.addEntity(Rule.class);
+		return qry.list();
+    }
+    
+    public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate) {
+    	String sql = "select * " 
+			+ "from atd_patient_state "
+			+ "where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 "
+					+ "and state in ("
+					+ "select state_id "
+				    + "from atd_state "
+				    + "where name in ('PSF_printed', 'PWS_printed', 'PSF_reprint', 'PWS_reprint', 'JIT_printed', "
+				    		+ "'JIT_reprint'))";
+    	
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		qry.setInteger(0, formId);
+		qry.setInteger(1, locationId);
+		qry.setTimestamp(2, new Timestamp(sinceDate.getTime()));
+		qry.addEntity(PatientState.class);
 		return qry.list();
     }
 }

@@ -166,6 +166,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		        		cal.set(Calendar.HOUR, 0);
 		        		cal.set(Calendar.MINUTE, 0);
 		        		cal.set(Calendar.SECOND, 0);
+		        		cal.set(Calendar.MILLISECOND, 0);
 		        	}
 		        	
 		        	long timePeriod = cal.getTimeInMillis();
@@ -194,6 +195,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
     	ATDService atdService = Context.getService(ATDService.class);
     	Set<String> checkedDirs = new HashSet<String>();    	
     	FilenameFilter filter = new FileListTimeFilter(null, "20", timeSincedLastModDate);
+    	Date sinceDate = new Date(timeSincedLastModDate);
     	for (LocationTag tag : location.getTags()) {
     		FormAttributeValue fav = atdService.getFormAttributeValue(form.getFormId(), "defaultExportDirectory", 
     			tag.getId(), location.getLocationId());
@@ -201,6 +203,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
     				!checkedDirs.contains(fav.getValue())) {
     			String scanDirStr = fav.getValue();
     			checkedDirs.add(scanDirStr);
+    			// Check to see if any forms have been printed first
+    			List<PatientState> pStates = 
+    				getChicaopsDAO().getPatientsStates(form.getFormId(), location.getLocationId(), sinceDate);
+    			if (pStates == null || pStates.size() == 0) {
+    				continue;
+    			}
+    			
+    			// Check the directory to see if any forms have been scanned
     			File scanDir = new QuickListFile(scanDirStr);
     			if (scanDir.exists()) {
     				String[] files = scanDir.list(filter);
