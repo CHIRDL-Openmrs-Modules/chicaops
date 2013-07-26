@@ -7,7 +7,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  */
 public class MemoryCheck {
 	
-	private int percentileToNotify;
+	private Integer percentileToNotify = 90;
 	private String severity;
 	private FixTips fixTips;
 	private Notification notification;
@@ -29,7 +29,7 @@ public class MemoryCheck {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	public MemoryCheck(int percentileToNotify, String severity, FixTips fixTips, Notification notification) {
+	public MemoryCheck(Integer percentileToNotify, String severity, FixTips fixTips, Notification notification) {
 		this.percentileToNotify = percentileToNotify;
 		this.severity = severity;
 		this.fixTips = fixTips;
@@ -39,7 +39,7 @@ public class MemoryCheck {
     /**
      * @return the percentileToNotify
      */
-    public int getPercentileToNotify() {
+    public Integer getPercentileToNotify() {
     	return percentileToNotify;
     }
     
@@ -53,7 +53,7 @@ public class MemoryCheck {
     /**
      * @param percentileToNotify the percentileToNotify to set
      */
-    public void setPercentileToNotify(int percentileToNotify) {
+    public void setPercentileToNotify(Integer percentileToNotify) {
     	this.percentileToNotify = percentileToNotify;
     }
 

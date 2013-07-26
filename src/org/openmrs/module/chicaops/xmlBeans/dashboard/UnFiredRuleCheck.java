@@ -10,8 +10,8 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
 public class UnFiredRuleCheck {
 
 	private String severity;
-	private int timePeriod;
-	private String timePeriodUnit;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
 	private FixTips fixTips;
 	private Notification notification;
 	
@@ -33,7 +33,7 @@ public class UnFiredRuleCheck {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	private UnFiredRuleCheck(String severity, int timePeriod, String timePeriodUnit,
+	private UnFiredRuleCheck(String severity, Integer timePeriod, String timePeriodUnit,
 	                         FixTips fixTips, Notification notification) {
 		this.severity = severity;
 		this.timePeriod = timePeriod;
@@ -59,14 +59,14 @@ public class UnFiredRuleCheck {
     /**
      * @return the timePeriod
      */
-    public int getTimePeriod() {
+    public Integer getTimePeriod() {
     	return timePeriod;
     }
 	
     /**
      * @param timePeriod the timePeriod to set
      */
-    public void setTimePeriod(int timePeriod) {
+    public void setTimePeriod(Integer timePeriod) {
     	this.timePeriod = timePeriod;
     }
 	

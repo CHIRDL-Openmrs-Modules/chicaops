@@ -8,11 +8,11 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
 public class StateToMonitor {
 
 	private String name;
-	private int elapsedTime;
-	private String elapsedTimeUnit;
-	private int timePeriod;
-	private String timePeriodUnit;
-	private int numErrors;
+	private Integer elapsedTime = 0;
+	private String elapsedTimeUnit = DashboardConfig.SECOND;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
+	private Integer numErrors = 1;
 	private String severity;
 	private FixTips fixTips;
 	private Notification notification;
@@ -43,9 +43,9 @@ public class StateToMonitor {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	public StateToMonitor(String name, int elapsedTime, 
-	                      String elapsedTimeUnit, int timePeriod, 
-	                      String timePeriodUnit, int numErrors, 
+	public StateToMonitor(String name, Integer elapsedTime, 
+	                      String elapsedTimeUnit, Integer timePeriod, 
+	                      String timePeriodUnit, Integer numErrors, 
 	                      String severity, FixTips fixTips, Notification notification) {
 		this.name = name;
 		this.elapsedTime = elapsedTime;
@@ -68,7 +68,7 @@ public class StateToMonitor {
 	/**
 	 * @return The threshold time used to report errors/warnings.
 	 */
-	public int getElapsedTime() {
+	public Integer getElapsedTime() {
 		return elapsedTime;
 	}
 	
@@ -83,7 +83,7 @@ public class StateToMonitor {
 	 * @return The time period in which the measurements were 
 	 * taken.
 	 */
-	public int getTimePeriod() {
+	public Integer getTimePeriod() {
 		return timePeriod;
 	}
 	
@@ -98,7 +98,7 @@ public class StateToMonitor {
 	 * @return The number of errors to reach before a problem is 
 	 * reported.
 	 */
-	public int getNumErrors() {
+	public Integer getNumErrors() {
 		return numErrors;
 	}
 	

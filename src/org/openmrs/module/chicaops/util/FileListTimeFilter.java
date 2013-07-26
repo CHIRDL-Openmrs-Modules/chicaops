@@ -14,7 +14,8 @@ import java.io.FilenameFilter;
 public class FileListTimeFilter implements FilenameFilter {
 	private String name;
 	private String extension;
-	private long sinceLastModDate = -1;
+	private Long sinceLastModDate;
+	private Long bufferDate;
 
 	/**
 	 * Constructor method
@@ -24,11 +25,13 @@ public class FileListTimeFilter implements FilenameFilter {
 	 * wanted.
 	 * @param sinceLastModDate files wanted between this time and the current time.  This can be null if last modified 
 	 * date filtering is not requested.
+	 * @param bufferDate Files be at least this old to be included.  This can be null if no buffer time is desired.
 	 */
-	public FileListTimeFilter(String name, String extension, long sinceLastModDate) {
+	public FileListTimeFilter(String name, String extension, Long sinceLastModDate, Long bufferDate) {
 		this.name = name;
 		this.extension = extension;
 		this.sinceLastModDate = sinceLastModDate;
+		this.bufferDate = bufferDate;
 	}
 
 	/**
@@ -48,10 +51,18 @@ public class FileListTimeFilter implements FilenameFilter {
 			if (!ok) return false;
 		}
 		
-		if (sinceLastModDate != -1 && ok) {
+		long lastModified = -1;
+		if ((sinceLastModDate != null || bufferDate != null) && ok) {
 			File file = new File(directory, filename);
-			long lastModified = file.lastModified();
+			lastModified = file.lastModified();
+		}
+		
+		if (sinceLastModDate != null && ok) {
 			ok &= lastModified > sinceLastModDate;
+		}
+		
+		if (bufferDate != null && ok) {
+			ok &= lastModified < bufferDate;
 		}
 
 		return ok;

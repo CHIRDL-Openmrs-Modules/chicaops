@@ -12,10 +12,12 @@ public class DirectoryCheck {
 
 	private String imageDir;
 	private String scanDir;
-	private int numErrors = 1;
+	private Integer numErrors = 1;
 	private String severity;
-	private int timePeriod;
-	private String timePeriodUnit;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
+	private Integer bufferTimePeriod = 0;
+	private String bufferTimeUnit = DashboardConfig.SECOND;
 	private FixTips fixTips;
 	private Notification notification;
 	
@@ -42,8 +44,8 @@ public class DirectoryCheck {
 	 * @param notification Notification information if the check fails.
 	 */
 	public DirectoryCheck(String imageDir, String scanDir, String severity, 
-	                      int timePeriod, String timePeriodUnit, FixTips fixTips, 
-	                      int numErrors, Notification notification) {
+	                      Integer timePeriod, String timePeriodUnit, FixTips fixTips, 
+	                      Integer numErrors, Notification notification, Integer bufferTimePeriod, String bufferTimeUnit) {
 		this.imageDir = imageDir;
 		this.scanDir = scanDir;
 		this.severity = severity;
@@ -52,9 +54,39 @@ public class DirectoryCheck {
 		this.fixTips = fixTips;
 		this.numErrors = numErrors;
 		this.notification = notification;
+		this.bufferTimePeriod = bufferTimePeriod;
+		this.bufferTimeUnit = bufferTimeUnit;
 	}
+    
+    /**
+     * @return the bufferTimePeriod
+     */
+    public Integer getBufferTimePeriod() {
+    	return bufferTimePeriod;
+    }
 	
     /**
+     * @param bufferTimePeriod the bufferTimePeriod to set
+     */
+    public void setBufferTimePeriod(Integer bufferTimePeriod) {
+    	this.bufferTimePeriod = bufferTimePeriod;
+    }
+	
+    /**
+     * @return the bufferTimeUnit
+     */
+    public String getBufferTimeUnit() {
+    	return bufferTimeUnit;
+    }
+	
+    /**
+     * @param bufferTimeUnit the bufferTimeUnit to set
+     */
+    public void setBufferTimeUnit(String bufferTimeUnit) {
+    	this.bufferTimeUnit = bufferTimeUnit;
+    }
+
+	/**
      * @return the imageDir
      */
     public String getImageDir() {
@@ -85,14 +117,14 @@ public class DirectoryCheck {
     /**
      * @return the numErrors
      */
-    public int getNumErrors() {
+    public Integer getNumErrors() {
     	return numErrors;
     }
 	
     /**
      * @param numErrors the numErrors to set
      */
-    public void setNumErrors(int numErrors) {
+    public void setNumErrors(Integer numErrors) {
     	this.numErrors = numErrors;
     }
 	
@@ -113,14 +145,14 @@ public class DirectoryCheck {
     /**
      * @return the timePeriod
      */
-    public int getTimePeriod() {
+    public Integer getTimePeriod() {
     	return timePeriod;
     }
 	
     /**
      * @param timePeriod the timePeriod to set
      */
-    public void setTimePeriod(int timePeriod) {
+    public void setTimePeriod(Integer timePeriod) {
     	this.timePeriod = timePeriod;
     }
 	
@@ -169,7 +201,14 @@ public class DirectoryCheck {
     /**
      * @return The time period in milliseconds.
      */
-    public long getTimePeriodInMilliseconds() {
+    public Long getTimePeriodInMilliseconds() {
     	return ChicaopsUtil.getTimePeriodInMilliseconds(timePeriod, timePeriodUnit);
+    }
+    
+    /**
+     * @return The buffer time in milliseconds.
+     */
+    public Long getBufferTimeInMilliseconds() {
+    	return ChicaopsUtil.getTimePeriodInMilliseconds(bufferTimePeriod, bufferTimeUnit);
     }
 }

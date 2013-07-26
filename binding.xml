@@ -55,6 +55,10 @@
                     <value style="text" field="timePeriod" />
                </structure>
                <value name="numErrors" field="numErrors" />
+               <structure name="bufferTime" value-style="attribute">
+                    <value name="unit" field="bufferTimeUnit" />
+                    <value style="text" field="bufferTimePeriod" />
+               </structure>
                <value name="severity" field="severity"/>
                <structure field="fixTips" usage="optional"/>
                <structure field="notification"/>

@@ -12,8 +12,8 @@ public class ScanCheck {
 
 	private String formName;
 	private String severity;
-	private int timePeriod;
-	private String timePeriodUnit;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
 	private FixTips fixTips;
 	private Notification notification;
 	
@@ -36,7 +36,7 @@ public class ScanCheck {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	public ScanCheck(String formName, String severity, int timePeriod, String timePeriodUnit, 
+	public ScanCheck(String formName, String severity, Integer timePeriod, String timePeriodUnit, 
 	                 FixTips fixTips, Notification notification) {
 		this.formName = formName;
 		this.severity = severity;
@@ -77,14 +77,14 @@ public class ScanCheck {
     /**
      * @return the timePeriod
      */
-    public int getTimePeriod() {
+    public Integer getTimePeriod() {
     	return timePeriod;
     }
 	
     /**
      * @param timePeriod the timePeriod to set
      */
-    public void setTimePeriod(int timePeriod) {
+    public void setTimePeriod(Integer timePeriod) {
     	this.timePeriod = timePeriod;
     }
 	
@@ -133,7 +133,7 @@ public class ScanCheck {
     /**
      * @return The time period in milliseconds.
      */
-    public long getTimePeriodInMilliseconds() {
+    public Long getTimePeriodInMilliseconds() {
     	return ChicaopsUtil.getTimePeriodInMilliseconds(timePeriod, timePeriodUnit);
     }
 }

@@ -12,8 +12,12 @@ public class ChicaopsUtil {
 	/**
      * @return The time period in milliseconds.
      */
-    public static long getTimePeriodInMilliseconds(int timePeriod, String timePeriodUnit) {
-    	long time = timePeriod;
+    public static Long getTimePeriodInMilliseconds(Integer timePeriod, String timePeriodUnit) {
+    	if (timePeriod == null || timePeriodUnit == null) {
+    		return null;
+    	}
+    	
+    	Long time = new Long(timePeriod);
     	if (DashboardConfig.SECOND.equals(timePeriodUnit)) {
     		return time * 1000;
     	} else if (DashboardConfig.MINUTE.equals(timePeriodUnit)) {

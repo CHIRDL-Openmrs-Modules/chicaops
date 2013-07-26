@@ -65,15 +65,15 @@ public class DashboardMailerPager {
 	 */
 	public DashboardMailerPager() {
 		AdministrationService adminService = Context.getAdministrationService();		
-		String smtpMailHost = adminService.getGlobalProperty("chicaops.dashboardSmtpMailHost");
+		String smtpMailHost = adminService.getGlobalProperty("chirdlutil.smtpMailHost");
 		if (smtpMailHost != null) {
 			mailProps.put("mail.smtp.host", smtpMailHost);
 		}
 		
 		mailSender = new MailSender(mailProps);
-		idParam = adminService.getGlobalProperty("chicaops.dashboardPagerUrlNumberParam");
-		textParam = adminService.getGlobalProperty("chicaops.dashboardPagerUrlMessageParam");
-		baseUrl = adminService.getGlobalProperty("chicaops.dashboardPagerBaseURL");
+		idParam = adminService.getGlobalProperty("chica.pagerUrlNumberParam");
+		textParam = adminService.getGlobalProperty("chica.pagerUrlMessageParam");
+		baseUrl = adminService.getGlobalProperty("chica.pagerBaseURL");
 		String threshold = adminService.getGlobalProperty("chicaops.dashboardMessageWaitThreshold");
 		if (threshold != null) {
 			thresholdTime = Integer.parseInt(threshold);
@@ -137,9 +137,6 @@ public class DashboardMailerPager {
 							Entry<String, Integer> entry = iter.next();
 							message.append("\n");
 							message.append(entry.getKey());
-							message.append(": ");
-							message.append(entry.getValue());
-							message.append(" occurrence(s)");
 						}
 						
 						message.append("\n\nRegards,\nCHICA Operations Dashboard");
@@ -336,7 +333,7 @@ public class DashboardMailerPager {
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
 		if (mailProps.get("mail.smtp.host") == null) {
-			log.error("Dashboard: SMTP host not specified.  Please specify the global property chicaops.dashboardSmtpMailHost");
+			log.error("Dashboard: SMTP host not specified.  Please specify the global property chirdlutil.smtpMailHost");
 			return;
 		}
 		
@@ -379,17 +376,17 @@ public class DashboardMailerPager {
 		}
 		
 		if (baseUrl == null) {
-			log.error("Dashboard: Pager base URL is null.  Please specify global property chicaops.dashboardPagerBaseURL.");
+			log.error("Dashboard: Pager base URL is null.  Please specify global property chica.pagerBaseURL.");
 			return null;
 		}
 		
 		if (idParam == null) {
-			log.error("Dashboard: Pager ID param is null.  Please specify global property chicaops.dashboardPagerUrlNumberParam");
+			log.error("Dashboard: Pager ID param is null.  Please specify global property chica.pagerUrlNumberParam");
 			return null;
 		}
 		
 		if (textParam == null) {
-			log.error("Dashboard: Pager text param is null.  Please specify global property chicaops.dashboardPagerUrlMessageParam");
+			log.error("Dashboard: Pager text param is null.  Please specify global property chica.pagerUrlMessageParam");
 			return null;
 		}
 		

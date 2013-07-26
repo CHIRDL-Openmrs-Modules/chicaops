@@ -32,9 +32,6 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.atd.hibernateBeans.FormAttributeValue;
-import org.openmrs.module.atd.hibernateBeans.PatientState;
-import org.openmrs.module.atd.service.ATDService;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DirectoryProblem;
 import org.openmrs.module.chicaops.dashboard.ForcedOutPWSProblem;
@@ -58,6 +55,9 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor;
 import org.openmrs.module.chirdlutil.util.Util;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
+import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 
 /**
@@ -144,7 +144,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    	LocationService locService = Context.getLocationService();
 		    	List<Location> locations = locService.getAllLocations(false);
 		    	for (ScanCheck check : scanChecks.getScanChecks()) {
-		    		Form form = formService.getForm(check.getFormName());
+		        	Form form = formService.getForm(check.getFormName());
 		        	if (form == null) {
 		        		log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
 		        		continue;
@@ -180,8 +180,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    		}
 		    	}
 		    }
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
 			log.error("Error processing the dashboard configuration file.", e);
 		}
 	    
@@ -191,13 +190,13 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	    return returnList;
     }
     
-    private ScanProblem performScanCheck(ScanCheck check, Location location, long timeSincedLastModDate, Form form) {
-    	ATDService atdService = Context.getService(ATDService.class);
+    private ScanProblem performScanCheck(ScanCheck check, Location location, long timeSincedLastModDate, Form form) {    	
+    	ChirdlUtilBackportsService backportService = Context.getService(ChirdlUtilBackportsService.class);
     	Set<String> checkedDirs = new HashSet<String>();    	
-    	FilenameFilter filter = new FileListTimeFilter(null, "20", timeSincedLastModDate);
+    	FilenameFilter filter = new FileListTimeFilter(null, "20", timeSincedLastModDate, null);
     	Date sinceDate = new Date(timeSincedLastModDate);
     	for (LocationTag tag : location.getTags()) {
-    		FormAttributeValue fav = atdService.getFormAttributeValue(form.getFormId(), "defaultExportDirectory", 
+    		FormAttributeValue fav = backportService.getFormAttributeValue(form.getFormId(), "defaultExportDirectory", 
     			tag.getId(), location.getLocationId());
     		if (fav != null && fav.getValue() != null && fav.getValue().trim().length() > 0 && 
     				!checkedDirs.contains(fav.getValue())) {
@@ -242,8 +241,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				
 			performMemoryChecks(checks.getMemoryChecks(), result);
 			performDirectoryChecks(checks.getDirectoryChecks(), result);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Throwable e) {
 			log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 	    
@@ -280,10 +278,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	                                    ServerCheckResult result) {
 		DecimalFormat df = new DecimalFormat("##0.00");
 		for (DirectoryCheck directoryCheck : checks) {
-			long timePeriodMs = directoryCheck.getTimePeriodInMilliseconds();
+			Long timePeriodMs = directoryCheck.getTimePeriodInMilliseconds();
 			Date date = new Date();
 			date = new Date(date.getTime() - timePeriodMs);
 			timePeriodMs = date.getTime();
+			Long bufferTimeMs = directoryCheck.getBufferTimeInMilliseconds();
+			Date bufferDate = new Date();
+			bufferDate = new Date(bufferDate.getTime() - bufferTimeMs);
+			bufferTimeMs = bufferDate.getTime();
 			Map<String, String> imgNewToOldName = new HashMap<String, String>();
 			Map<String, String> scanNewToOldName = new HashMap<String, String>();
 			ArrayList<String> imgProblemFiles = new ArrayList<String>();
@@ -308,8 +310,8 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				continue;
 			}
 			
-			File[] imageDirFiles = imageDir.listFiles(new FileListTimeFilter(null, "tif", timePeriodMs));
-			File[] scanDirFiles = scanDir.listFiles(new FileListTimeFilter(null, "20", timePeriodMs));
+			File[] imageDirFiles = imageDir.listFiles(new FileListTimeFilter(null, "tif", timePeriodMs, bufferTimeMs));
+			File[] scanDirFiles = scanDir.listFiles(new FileListTimeFilter(null, "20", timePeriodMs, bufferTimeMs));
 			double imageDirSize = imageDirFiles.length;
 			double scanDirSize = scanDirFiles.length;
 			

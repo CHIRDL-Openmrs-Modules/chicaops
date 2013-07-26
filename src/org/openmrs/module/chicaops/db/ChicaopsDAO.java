@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.openmrs.module.atd.hibernateBeans.PatientState;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 
 /**

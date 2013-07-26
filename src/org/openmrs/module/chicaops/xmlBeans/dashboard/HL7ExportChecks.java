@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class HL7ExportChecks {
 	
 	private ArrayList<String> checks = new ArrayList<String>();
-	private int timePeriod;
-	private String timePeriodUnit;
-	private int numErrors;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
+	private Integer numErrors = 1;
 	private String severity;
 	private FixTips fixTips;
 	private Notification notification;
@@ -38,8 +38,8 @@ public class HL7ExportChecks {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	public HL7ExportChecks(ArrayList<String> checks, int timePeriod, String timePeriodUnit, 
-	                       int numErrors, String severity, FixTips fixTips, Notification notification) {
+	public HL7ExportChecks(ArrayList<String> checks, Integer timePeriod, String timePeriodUnit, 
+	                       Integer numErrors, String severity, FixTips fixTips, Notification notification) {
 		this.checks = checks;
 		this.timePeriod = timePeriod;
 		this.timePeriodUnit = timePeriodUnit;
@@ -66,14 +66,14 @@ public class HL7ExportChecks {
     /**
      * @return the timePeriod
      */
-    public int getTimePeriod() {
+    public Integer getTimePeriod() {
     	return timePeriod;
     }
 	
     /**
      * @param timePeriod the timePeriod to set
      */
-    public void setTimePeriod(int timePeriod) {
+    public void setTimePeriod(Integer timePeriod) {
     	this.timePeriod = timePeriod;
     }
 	
@@ -94,14 +94,14 @@ public class HL7ExportChecks {
     /**
      * @return the numErrors
      */
-    public int getNumErrors() {
+    public Integer getNumErrors() {
     	return numErrors;
     }
 
     /**
      * @param numErrors the numErrors to set
      */
-    public void setNumErrors(int numErrors) {
+    public void setNumErrors(Integer numErrors) {
     	this.numErrors = numErrors;
     }
 

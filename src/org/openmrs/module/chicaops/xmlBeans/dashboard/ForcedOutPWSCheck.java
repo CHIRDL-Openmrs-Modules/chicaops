@@ -8,8 +8,8 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  */
 public class ForcedOutPWSCheck {
 
-	private int timePeriod;
-	private String timePeriodUnit;
+	private Integer timePeriod = 0;
+	private String timePeriodUnit = DashboardConfig.SECOND;
 	private String severity;
 	private FixTips fixTips;
 	private Notification notification;
@@ -30,7 +30,7 @@ public class ForcedOutPWSCheck {
 	 * the issue.
 	 * @param notification Notification information if the check fails.
 	 */
-	public ForcedOutPWSCheck(int timePeriod, String timePeriodUnit, String severity, 
+	public ForcedOutPWSCheck(Integer timePeriod, String timePeriodUnit, String severity, 
 	                         FixTips fixTips, Notification notification) {
 		this.timePeriod = timePeriod;
 		this.timePeriodUnit = timePeriodUnit;
@@ -42,14 +42,14 @@ public class ForcedOutPWSCheck {
     /**
      * @return the timePeriod
      */
-    public int getTimePeriod() {
+    public Integer getTimePeriod() {
     	return timePeriod;
     }
 	
     /**
      * @param timePeriod the timePeriod to set
      */
-    public void setTimePeriod(int timePeriod) {
+    public void setTimePeriod(Integer timePeriod) {
     	this.timePeriod = timePeriod;
     }
 	

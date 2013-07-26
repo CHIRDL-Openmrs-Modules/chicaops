@@ -108,6 +108,7 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *						<scanDir>C:\chica\scan\BBPS\PSF_SCAN</scanDir>
  *						<timePeriod unit="day">1</timePeriod>
  *						<numErrors>1</numErrors>
+ *						<bufferTime unit="minute">5</bufferTime>
  *						<severity>error</severity>
  *						<fixTips> <!-- fix tips are optional -->
  *							<tip>Tip 1.</tip>

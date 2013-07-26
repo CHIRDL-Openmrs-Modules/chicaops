@@ -17,7 +17,6 @@ import org.hibernate.SessionFactory;
 import org.openmrs.Location;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.atd.hibernateBeans.PatientState;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
@@ -25,6 +24,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutil.util.Util;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 
 /**
@@ -120,7 +120,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	
 	public List<PatientState> getForcedOutPWSs(ForcedOutPWSCheck forcedOutPWSCheck) {
 		String sql = "select * "
-				+ "from atd_patient_state a, atd_patient_state b "
+				+ "from chirdlutilbackports_patient_state a, chirdlutilbackports_patient_state b "
 				+ "where a.session_id = b.session_id "
 				+ "and (a.state = 6 and a.end_time is null AND TIMESTAMPDIFF(" + forcedOutPWSCheck.getTimePeriodUnit() 
 				+ ", a.start_time, NOW()) <= ?) and b.state = 19";
@@ -156,10 +156,10 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	}
 	
 	private List<PatientState> getGenericPatientStates(StateToMonitor state) {
-		String sql = "select * from atd_patient_state where state = (select state_id from atd_state "
+		String sql = "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state "
 		        + "where name = ?) and (TIMESTAMPDIFF(" + state.getTimePeriodUnit() + ", start_time, NOW()) <= ?) and "
 		        + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit() + ", start_time, end_time) >= ?) union "
-		        + "select * from atd_patient_state where state = (select state_id from atd_state "
+		        + "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state "
 		        + "where name = ?) and end_time is null and (TIMESTAMPDIFF(" + state.getTimePeriodUnit()
 		        + ", start_time, NOW()) <= ?) and " + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
 		        + ", start_time, NOW()) >= ?)";
@@ -178,9 +178,9 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		List<PatientState> patientStates = new ArrayList<PatientState>();
 		LocationService locService = Context.getLocationService();
 		for (Location location : locService.getAllLocations()) {
-			String sql = "select * from atd_patient_state where state = (select state_id from atd_state where name = ?) "
-			        + "and start_time = (select MAX(start_time) from atd_patient_state where state = (select state_id from "
-			        + "atd_state where name = ?) and location_id = ?) and (TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
+			String sql = "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state where name = ?) "
+			        + "and start_time = (select MAX(start_time) from chirdlutilbackports_patient_state where state = (select state_id from "
+			        + "chirdlutilbackports_state where name = ?) and location_id = ?) and (TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
 			        + ", start_time, NOW()) >= ?)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 			qry.setString(0, state.getName());
@@ -232,14 +232,14 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.addEntity(Rule.class);
 		return qry.list();
     }
-    
+
     public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate) {
     	String sql = "select * " 
-			+ "from atd_patient_state "
+			+ "from chirdlutilbackports_patient_state "
 			+ "where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 "
 					+ "and state in ("
 					+ "select state_id "
-				    + "from atd_state "
+				    + "from chirdlutilbackports_state "
 				    + "where name in ('PSF_printed', 'PWS_printed', 'PSF_reprint', 'PWS_reprint', 'JIT_printed', "
 				    		+ "'JIT_reprint'))";
     	
