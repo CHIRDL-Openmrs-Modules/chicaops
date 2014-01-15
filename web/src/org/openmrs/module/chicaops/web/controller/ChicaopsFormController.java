@@ -12,6 +12,7 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DashboardMailerPager;
+import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.service.ChicaopsService;
@@ -64,6 +65,10 @@ public class ChicaopsFormController extends SimpleFormController {
         	RuleCheckResult ruleResult = dashService.performRuleChecks();
         	modelMap.put("ruleResult", ruleResult);
         	
+        	// Check rules
+        	ImmunizationCheckResult immunizationResult = dashService.performImmunizationChecks();
+        	modelMap.put("immunizationResult", immunizationResult);
+        	
         	// Load the refresh rate
         	String refreshRate = adminService.getGlobalProperty("chicaops.dashboardRefresh");        	
         	if (refreshRate == null || refreshRate.trim().length() == 0) {
@@ -87,6 +92,7 @@ public class ChicaopsFormController extends SimpleFormController {
 	        	mailer.sendEmailsOrPages(results);
 	        	mailer.sendEmailsOrPages(serverResult);
 	        	mailer.sendEmailsOrPages(ruleResult);
+	        	mailer.sendEmailsOrPages(immunizationResult);
         	} catch (Exception e) {
         		log.error("Error creating/sending email/pages", e);
         	}

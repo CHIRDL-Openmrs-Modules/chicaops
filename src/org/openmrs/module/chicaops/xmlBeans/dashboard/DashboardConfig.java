@@ -152,6 +152,50 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *						</notification>
  *					</unFiredCheck>
  *				</ruleChecks>
+ *				<ruleChecks>
+ *					<neverFiredCheck>
+ *						<severity>warning</severity>
+ *						<fixTips> <!-- fix tips are optional -->
+ *							<tip>Check 1</tip>
+ *							.........
+ *						</fixTips>
+ *						<notification>
+ *							<email>Y</email>
+ *							<emailAddress>bob@iupui.edu</emailAddress>
+ *							<page>N</page>
+ *							<pageNumber>5555555</pageNumber>
+ *						</notification>
+ *					</neverFiredCheck>
+ *					<unFiredCheck>
+ *						<timePeriod unit="month">6</timePeriod>
+ *						<severity>warning</severity>
+ *						<fixTips> <!-- fix tips are optional -->
+ *							<tip>Check 1</tip>
+ *							.........
+ *						</fixTips>
+ *						<notification>
+ *							<email>Y</email>
+ *							<emailAddress>bob@iupui.edu</emailAddress>
+ *							<page>N</page>
+ *							<pageNumber>5555555</pageNumber>
+ *						</notification>
+ *					</unFiredCheck>
+ *				</ruleChecks>
+ *				<immunizationChecks>
+ *						<timePeriod unit="hour">8</timePeriod>
+ *						<severity>warning</severity>
+ *						<numErrors>1</numErrors>
+ *						<fixTips> <!-- fix tips are optional -->
+ *							<tip>Tip 1.</tip>
+ *							..........
+ *						</fixTips>
+ *						<notification>
+ *							<email>Y</email>
+ *							<emailAddress>bob@iupui.edu</emailAddress>
+ *							<page>N</page>
+ *							<pageNumber>5555555</pageNumber>
+ *						</notification>
+ *				</immunizationChecks>
  *			</dashboardConfig>
  *  	}
  *  </pre>
@@ -179,6 +223,7 @@ public class DashboardConfig {
 	private HL7ExportChecks hl7ExportChecks;
 	private ScanChecks scanChecks;
 	private RuleChecks ruleChecks;
+	private ImmunizationChecks immunizationChecks;
 
 	/**
 	 * Default Constructor
@@ -200,13 +245,15 @@ public class DashboardConfig {
 	                       ForcedOutPWSCheck forcedOutPWSCheck,
 	                       HL7ExportChecks hl7ExportChecks,
 	                       ScanChecks scanChecks,
-	                       RuleChecks ruleChecks) {
+	                       RuleChecks ruleChecks,
+	                       ImmunizationChecks immunizationChecks) {
 		this.statesToMonitor = statesToMonitor;
 		this.serverChecks = serverChecks;
 		this.forcedOutPWSCheck = forcedOutPWSCheck;
 		this.hl7ExportChecks = hl7ExportChecks;
 		this.scanChecks = scanChecks;
 		this.ruleChecks = ruleChecks;
+		this.immunizationChecks = immunizationChecks;
 	}
 	
     /**
@@ -292,4 +339,12 @@ public class DashboardConfig {
     public void setRuleChecks(RuleChecks ruleChecks) {
     	this.ruleChecks = ruleChecks;
     }
+
+	public ImmunizationChecks getImmunizationChecks() {
+		return immunizationChecks;
+	}
+
+	public void setImmunizationChecks(ImmunizationChecks immunizationCheck) {
+		this.immunizationChecks = immunizationChecks;
+	}
 }

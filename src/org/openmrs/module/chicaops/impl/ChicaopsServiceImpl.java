@@ -35,6 +35,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DirectoryProblem;
 import org.openmrs.module.chicaops.dashboard.ForcedOutPWSProblem;
+import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
 import org.openmrs.module.chicaops.dashboard.MemoryProblem;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
@@ -47,6 +48,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
@@ -136,6 +138,8 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			    	}
 		    	}
 		    }
+		    
+		
 		    
 		    // Check to see if anything has been scanned lately
 		    ScanChecks scanChecks = config.getScanChecks();
@@ -459,6 +463,48 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		
 		return new RuleCheckResult(ruleChecks);
     }
+    
+    /**
+	 * Perform immunization registry (CHIRP) access checks.
+	 * @return ImmunizationRegistryCheckResult object containing the results of the CHIRP registry check.
+	 */
+    
+    
+	public ImmunizationCheckResult performImmunizationChecks(){
+		ImmunizationCheckResult result = new ImmunizationCheckResult();
+		try {
+			DashboardConfig config = getDashboardConfig();
+			if (config == null) {
+				return null;
+			}
+			
+			ImmunizationChecks immunChecks = config.getImmunizationChecks();
+			if (immunChecks == null) {
+			  return null;
+			}
+			
+			//check  " Error type Query Immunization List Connection"
+			//result.
+			if (immunChecks != null && immunChecks.getChecks() != null 
+					&&  immunChecks.getChecks().size() > 0) {
+				
+				//loop through the checks  which is an array of strings
+				List<String> errors = getChicaopsDAO().getImmunizationAlerts(immunChecks);
+		    	if (errors.size() >= immunChecks.getNumErrors()) {
+			    	for (String arry : errors) {
+			    		 result.addImmunizationProblem(arry.toString());
+			    		
+			    	}
+		    	}
+		    }
+			result.setImmunizationChecks(immunChecks);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error attempting to load the dashboard configuration file.", e);
+		}
+		return result;
+	}
     
     /**
      * Extension of the File object.  This basically makes the list function faster by 

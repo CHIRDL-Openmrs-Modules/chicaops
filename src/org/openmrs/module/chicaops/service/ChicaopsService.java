@@ -3,6 +3,7 @@ package org.openmrs.module.chicaops.service;
 import java.util.ArrayList;
 
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
+import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 
@@ -35,4 +36,10 @@ public interface ChicaopsService {
 	 * @return RuleCheckResult object containing the results of the rule checks.
 	 */
 	public RuleCheckResult performRuleChecks();
+	
+	/**
+	 * Perform immunization registry (CHIRP) access checks.
+	 * @return ImmunizationRegistryCheckResult object containing the results of the CHIRP registry check.
+	 */
+	public ImmunizationCheckResult performImmunizationChecks();
 }

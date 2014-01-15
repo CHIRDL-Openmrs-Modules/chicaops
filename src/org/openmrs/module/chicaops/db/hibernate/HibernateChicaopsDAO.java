@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +21,7 @@ import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutil.util.Util;
@@ -152,6 +153,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		}
 		
 		qry.setInteger(count, alerts.getTimePeriod());
+		
 		return qry.list();
 	}
 	
@@ -250,4 +252,32 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.addEntity(PatientState.class);
 		return qry.list();
     }
+    
+    public List<String> getImmunizationAlerts(ImmunizationChecks alerts) {
+    	StringBuffer sql = new StringBuffer("select e.message from chirdlutilbackports_error e "
+    			+ " join chirdlutilbackports_error_category c ON "  
+    			+ " e.error_category_id = c.error_category_id"
+    			+ " where c.name like 'Query Immunization List Connection' "
+    			+ " and e.message in (");
+    	
+    	ArrayList<String> al = alerts.getChecks();
+		for (int i = 0; i < al.size(); i++) {
+			if (i == 0) {
+				sql.append("?");
+				continue;
+			}
+			
+			sql.append(", ?");
+		}
+    	
+		sql.append(") and TIMESTAMPDIFF(" + alerts.getTimePeriodUnit() + ", e.date_time, NOW())<= ?");
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+		int count = 0;
+		for (String alert : al) {
+			qry.setString(count++, alert);
+		}
+		
+		qry.setInteger(count, alerts.getTimePeriod());
+		return qry.list();
+	}
 }

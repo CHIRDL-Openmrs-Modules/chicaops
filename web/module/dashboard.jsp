@@ -18,20 +18,20 @@
 <br/>
 <center><h2 style="color:#7d98b3"><c:out value="Welcome to the ${appName} Operations Dashboard"/></h2></center>
  <table class="pretty-table" align="center">
-	<c:forEach items="${careCenters}" var="center">
+    <c:forEach items="${careCenters}" var="center">
       <tr>
         <c:choose>
             <c:when test="${center.hasErrors == 'true'}">
-	            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
-	        </c:when>
-	        <c:when test="${center.hasWarnings == 'true'}">
+                <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
+            </c:when>
+            <c:when test="${center.hasWarnings == 'true'}">
                 <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
             </c:when>
             <c:otherwise>
                 <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
             </c:otherwise>
         </c:choose>
-      </tr>	
+      </tr> 
       <c:forEach items="${center.stateResults}" var="monitor" varStatus="status">
         <tr>
             <c:choose>
@@ -77,21 +77,21 @@
         <tr>    
             <td></td><td></td><td></td>
             <td>        
-		        <div>
-		          <c:choose>
-		              <c:when test="${monitor.stateToMonitor.name == 'CHECKIN'}">
-		                  There have been no checkins in the last <c:out value="${monitor.stateToMonitor.elapsedTime}"/> 
-		                  <c:out value="${monitor.stateToMonitor.elapsedTimeUnit}"/>(s) at this clinic.
-		              </c:when>
-		              <c:otherwise>
-				            There have been <c:out value="${monitor.numOccurrences}"/> occurrences of items in this state 
-				            taking over <c:out value="${monitor.stateToMonitor.elapsedTime}"/> <c:out value="${monitor.stateToMonitor.elapsedTimeUnit}"/>(s) 
-				            to complete in the last <c:out value="${monitor.stateToMonitor.timePeriod}"/> 
-				            <c:out value="${monitor.stateToMonitor.timePeriodUnit}"/> period.<br />
-		              </c:otherwise>
-		          </c:choose>
-		        </div>
-	        </td>
+                <div>
+                  <c:choose>
+                      <c:when test="${monitor.stateToMonitor.name == 'CHECKIN'}">
+                          There have been no checkins in the last <c:out value="${monitor.stateToMonitor.elapsedTime}"/> 
+                          <c:out value="${monitor.stateToMonitor.elapsedTimeUnit}"/>(s) at this clinic.
+                      </c:when>
+                      <c:otherwise>
+                            There have been <c:out value="${monitor.numOccurrences}"/> occurrences of items in this state 
+                            taking over <c:out value="${monitor.stateToMonitor.elapsedTime}"/> <c:out value="${monitor.stateToMonitor.elapsedTimeUnit}"/>(s) 
+                            to complete in the last <c:out value="${monitor.stateToMonitor.timePeriod}"/> 
+                            <c:out value="${monitor.stateToMonitor.timePeriodUnit}"/> period.<br />
+                      </c:otherwise>
+                  </c:choose>
+                </div>
+            </td>
         </tr>            
       </c:forEach>
       <c:if test="${!empty (center.forcedOutPWSs)}">
@@ -176,13 +176,13 @@
                 </c:otherwise>
             </c:choose>
             <td>HL7 Export Issues
-	            <c:if test="${fn:length(center.hl7ExportChecks.fixTips.tips) > 0}">
-	                <c:forEach items="${center.hl7ExportChecks.fixTips.tips}" var="tip">
-	                    <c:set var="hl7Tip" value="${hl7Tip}<li>${tip}</li>"/>
-	                </c:forEach>
-	                <span class="hotspot" onmouseover="tooltip.show('<ol>${hl7Tip}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
-	                <c:set var="hl7Tip" value=""/>
-	            </c:if>
+                <c:if test="${fn:length(center.hl7ExportChecks.fixTips.tips) > 0}">
+                    <c:forEach items="${center.hl7ExportChecks.fixTips.tips}" var="tip">
+                        <c:set var="hl7Tip" value="${hl7Tip}<li>${tip}</li>"/>
+                    </c:forEach>
+                    <span class="hotspot" onmouseover="tooltip.show('<ol>${hl7Tip}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
+                    <c:set var="hl7Tip" value=""/>
+                </c:if>
             </td>
         </tr>
         <tr>
@@ -195,10 +195,10 @@
         <c:forEach items="${center.hl7ExportProblems}" var="exportIssue">
             <tr>
                 <td></td><td></td><td></td>
-	            <td>
-	                <c:out value="${exportIssue.key}"/>: 
-	                <c:out value="${exportIssue.value}"/> occurrences
-	            </td>
+                <td>
+                    <c:out value="${exportIssue.key}"/>: 
+                    <c:out value="${exportIssue.value}"/> occurrences
+                </td>
             </tr>
         </c:forEach>
       </c:if>
@@ -248,8 +248,8 @@
             <td></td><td></td><td></td>
             <td>        
                 <div>
-	                There have been no successful scans for this form in the last <c:out value="${scanProb.scanCheck.timePeriod}"/> 
-	                <c:out value="${scanProb.scanCheck.timePeriodUnit}"/> period.<br />
+                    There have been no successful scans for this form in the last <c:out value="${scanProb.scanCheck.timePeriod}"/> 
+                    <c:out value="${scanProb.scanCheck.timePeriodUnit}"/> period.<br />
                 </div>
             </td>
         </tr>            
@@ -258,46 +258,46 @@
   <tr>
     <c:choose>
         <c:when test="${serverResult.hasErrors == 'true'}">
-	        <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
-	    </c:when>
-	    <c:when test="${serverResult.hasWarnings == 'true'}">
-	        <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
-	    </c:when>
-	    <c:otherwise>
-	        <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
-	    </c:otherwise>
+            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+        </c:when>
+        <c:when test="${serverResult.hasWarnings == 'true'}">
+            <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+        </c:when>
+        <c:otherwise>
+            <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+        </c:otherwise>
     </c:choose>
   </tr>
   <c:forEach items="${serverResult.memProblems}" var="memProblem">
     <tr>
         <c:choose>
             <c:when test="${memProblem.memCheck.severity == 'error'}">
-	            <td></td><td></td>
-	            <td>
-	               <img src="/openmrs/images/error.gif"/>
-	               <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
+                <td></td><td></td>
+                <td>
+                   <img src="/openmrs/images/error.gif"/>
+                   <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                    </c:if>
                    <c:if test="${memProblem.memCheck.notification.email == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
                    </c:if>
-	            </td>
-	        </c:when>
-	        <c:when test="${memProblem.memCheck.severity == 'warning'}">
-	            <td></td><td></td>
-	            <td>
-	               <img src="/openmrs/images/alert.gif"/>
-	               <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
+                </td>
+            </c:when>
+            <c:when test="${memProblem.memCheck.severity == 'warning'}">
+                <td></td><td></td>
+                <td>
+                   <img src="/openmrs/images/alert.gif"/>
+                   <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                    </c:if>
                    <c:if test="${memProblem.memCheck.notification.email == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
                    </c:if>
-	            </td>
-	        </c:when>
-	        <c:otherwise>
-	            <td></td><td></td><td></td>
-	        </c:otherwise>
+                </td>
+            </c:when>
+            <c:otherwise>
+                <td></td><td></td><td></td>
+            </c:otherwise>
         </c:choose>
         <td>
             Memory Issue 
@@ -375,16 +375,16 @@
      <tr>
          <td></td><td></td><td></td>
          <td>
-	       <c:forEach items="${dirProblem.fileNames}" var="fileName" varStatus="status">
-	        <c:choose>
-	          <c:when test="${status.count != 1}">
-	              <c:out value=", ${fileName}"/>
-	          </c:when>
-	          <c:otherwise>
-	              <c:out value="${fileName}"/>
-	          </c:otherwise>
-	        </c:choose>
-	       </c:forEach>
+           <c:forEach items="${dirProblem.fileNames}" var="fileName" varStatus="status">
+            <c:choose>
+              <c:when test="${status.count != 1}">
+                  <c:out value=", ${fileName}"/>
+              </c:when>
+              <c:otherwise>
+                  <c:out value="${fileName}"/>
+              </c:otherwise>
+            </c:choose>
+           </c:forEach>
         </td>
      </tr>
      <br />
@@ -497,11 +497,11 @@
         <td>
             <c:out value="RULES NEVER FIRED"/>
             <c:if test="${fn:length(ruleResult.ruleChecks.neverFiredCheck.fixTips.tips) > 0}">
-	            <c:forEach items="${ruleResult.ruleChecks.neverFiredCheck.fixTips.tips}" var="tip">
-	                <c:set var="neverFiredTip" value="${neverFiredTip}<li>${tip}</li>"/>
-	            </c:forEach>
-	            <span class="hotspot" onmouseover="tooltip.show('<ol>${neverFiredTip}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
-	            <c:set var="neverFiredTip" value=""/>
+                <c:forEach items="${ruleResult.ruleChecks.neverFiredCheck.fixTips.tips}" var="tip">
+                    <c:set var="neverFiredTip" value="${neverFiredTip}<li>${tip}</li>"/>
+                </c:forEach>
+                <span class="hotspot" onmouseover="tooltip.show('<ol>${neverFiredTip}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
+                <c:set var="neverFiredTip" value=""/>
             </c:if> 
         </td>
      </tr>
@@ -599,30 +599,76 @@
         </td>
      </tr>
   </c:if>
-</table>
-<br></br><br></br>
-<table class="pretty-table" align="center">
-    <caption>Statuses</caption>
-    <tr>
-        <th scope="row"><img src="/openmrs/images/play.gif"/></th>
-        <td>No issues</td>
-    </tr>
-    <tr>
-        <th scope="row"><img src="/openmrs/images/alert.gif"/></th>
-        <td>Warning</td>
-    </tr>
-    <tr>
-        <th scope="row"><img src="/openmrs/images/error.gif"/></th>
-        <td>Error</td>
-    </tr>
-    <tr>
-        <th scope="row"><img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/></th>
-        <td>Email</td>
-    </tr>
-    <tr>
-        <th scope="row"><img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/></th>
-        <td>Pager</td>
-    </tr>
+  <tr>
+    <c:choose>
+        <c:when test="${serverResult.hasErrors == 'true'}">
+            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+        </c:when>
+        <c:when test="${serverResult.hasWarnings == 'true'}">
+            <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+        </c:when>
+        <c:otherwise>
+            <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+        </c:otherwise>
+    </c:choose>
+ <c:if test="${!empty (immunizationResult.immunizationProblems)}">
+     <tr>
+         <c:choose>
+                <c:when test="${immunizationResult.immunizationChecks.severity == 'error'}">
+                    <td></td><td></td>
+                    <td>
+                        <img src="/openmrs/images/error.gif"/>
+                        <c:if test="${immunizationResult.immunizationChecks.notification.page == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
+                        </c:if>
+                        <c:if test="${immunizationResult.immunizationChecks.notification.email == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
+                        </c:if>
+                    </td>
+                </c:when>
+                <c:when test="${immunizationResult.immunizationChecks.severity == 'warning'}">
+                    <td></td><td></td>
+                    <td>
+                        <img src="/openmrs/images/alert.gif"/>
+                        <c:if test="${immunizationResult.immunizationChecks.notification.page == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
+                        </c:if>
+                        <c:if test="${immunizationResult.immunizationChecks.notification.email == 'Y'}">
+                            <img src="${pageContext.request.contextPath}/moduleResources/chicaops/email.jpg"/>
+                        </c:if>
+                    </td>
+                </c:when>
+                <c:otherwise>
+                    <td></td><td></td><td></td>
+                </c:otherwise>
+            </c:choose>
+            <td>Immunization Registry Connection Issues
+                <c:if test="${fn:length(immunizationResult.immunizationChecks.fixTips.tips) > 0}">
+                    <c:forEach items="${immunizationResult.immunizationChecks.fixTips.tips}" var="tip">
+                        <c:set var="immunTip" value="${immunTip}<li>${tip}</li>"/>
+                    </c:forEach>
+                    <span class="hotspot" onmouseover="tooltip.show('<ol>${immunTip}</ol>');" onmouseout="tooltip.hide();"><i>(<u>tips</u>)</i></span>
+                    <c:set var="immunTip" value=""/>
+                </c:if>
+            </td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td>
+            <td>
+                There have been some issues with the CHIRP Immunization Registry over the last <c:out value="${center.immunizationChecks.timePeriod}"/> 
+                <c:out value="${immunizationResult.immunizationChecks.timePeriodUnit}"/>(s):
+            </td>
+        </tr>
+        <c:forEach items="${immunizationResult.immunizationProblems}" var="immunizationIssue">
+            <tr>
+                <td></td><td></td><td></td>
+                <td>
+                    <c:out value="${immunizationIssue.key}"/>: 
+                    <c:out value="${immunizationIssue.value}"/> occurrences
+                </td>
+            </tr>
+        </c:forEach>
+      </c:if>
 </table>
 </body>
 </html>

@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
@@ -23,6 +23,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.Notification;
@@ -209,6 +210,9 @@ public class DashboardMailerPager {
 	 * @param serverResult ServerCheckResult object containing the results from the server checks.
 	 */
 	public void sendEmailsOrPages(ServerCheckResult serverResult) {
+		
+		if (serverResult == null)
+			return;
 		// Memory problems
 		ArrayList<MemoryProblem> memProblems = serverResult.getMemProblems();
 		for (MemoryProblem memProblem : memProblems) {
@@ -285,6 +289,8 @@ public class DashboardMailerPager {
 	 * @param ruleResult RuleCheckResult object containing the results of the rule checks.
 	 */
 	public void sendEmailsOrPages(RuleCheckResult ruleResult) {
+		if (ruleResult == null)
+			return;
 		RuleChecks ruleChecks = ruleResult.getRuleChecks();
 		if (ruleChecks != null) {
 			NeverFiredRuleCheck nfRuleCheck = ruleChecks.getNeverFiredCheck();
@@ -329,6 +335,53 @@ public class DashboardMailerPager {
 			}
 		}
 	}
+	/**
+	 * Sends emails/pages for issues with the immunization checks.
+	 * 
+	 * @param immunizationResult ImmunizationCheckResult object containing the results from the immunization checks.
+	 */
+	public void sendEmailsOrPages(ImmunizationCheckResult immunizationResult) {
+		// Memory problems
+		if (immunizationResult == null) 
+			return;
+		Map<String, Integer> immunProblemsMap = immunizationResult.getImmunizationProblems();
+		
+		if (!immunProblemsMap.isEmpty()) {
+			ImmunizationChecks checks = immunizationResult.getImmunizationChecks();
+			Notification notification = checks.getNotification();
+			if (notification != null) {
+				if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
+						DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+					Set<Entry<String, Integer>> entries = immunProblemsMap.entrySet();
+					Iterator<Entry<String, Integer>> iter = entries.iterator();
+					StringBuffer message = new StringBuffer("There have been some immunization forecasting issues over the past ");
+					message.append(checks.getTimePeriod());
+					message.append(" ");
+					message.append(checks.getTimePeriodUnit());
+					message.append("(s) ");
+					while (iter.hasNext()) {
+						Entry<String, Integer> entry = iter.next();
+						message.append("\n");
+						message.append(entry.getKey());
+					}
+					
+					message.append("\n\nRegards,\nCHICA Operations Dashboard");
+					if (canSendMessage(message.toString())) {
+						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
+							sendMail(message.toString(), notification.getEmailAddress(), null, null);
+						}
+						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+							sendPage(message.toString(), notification.getPageNumber());
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	
+	
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
