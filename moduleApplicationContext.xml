@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- This is a normal spring application context file -->
+
+<!-- There is a webModuleApplicationContext.xml file that has web-specific spring setup in this same folder -->
+
+<beans>
+
+	<!-- This bean calls ServiceContext.setModuleService() with our ChicaopsService class -->
+	<!-- This makes it possible to call Context.getService(ChicaopsService.class);... -->
+	
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.chicaops.service.ChicaopsService</value> <!-- service interface name -->
+                <bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+                    <property name="transactionManager"><ref bean="transactionManager"/></property>
+                    <property name="target">
+                        <bean class="org.openmrs.module.chicaops.impl.ChicaopsServiceImpl">
+                            <property name="chicaopsDAO">
+                                <bean class="org.openmrs.module.chicaops.db.hibernate.HibernateChicaopsDAO">
+                                    <property name="sessionFactory"><ref bean="sessionFactory"/></property> 
+                                </bean>
+                            </property> 
+                        </bean>
+                    </property>
+                    <property name="preInterceptors">
+                        <list>
+                            <ref bean="authorizationInterceptor"/>
+                        </list>
+                    </property>
+                    <property name="transactionAttributeSource">
+                        <bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+	
+	<bean id="chicaopsUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/module/@MODULE_ID@/dashboard.form">dashboard</prop>
+            </props>
+        </property>
+    </bean>
+	<bean id="dashboard" class="org.openmrs.module.chicaops.web.controller.ChicaopsFormController">
+        <property name="commandName"><value>dashboardObject</value></property>
+        <property name="formView"><value>/module/@MODULE_ID@/dashboard</value></property>
+        <property name="successView"><value>dashboard.form</value></property>
+    </bean>
+	
+</beans>
