@@ -486,8 +486,6 @@ public class DashboardMailerPager {
 		if (notification.getWeekend().equalsIgnoreCase("N")) {
 			/* weekend time */
 			Calendar calendar = Calendar.getInstance();
-			/*mock weekend*/
-			calendar.set(2014, 10, 9, 7, 30);
 			int day = calendar.get(Calendar.DAY_OF_WEEK);
 			if (Calendar.SUNDAY == day || Calendar.SATURDAY == day) {
 				return false;
