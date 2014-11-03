@@ -33,10 +33,13 @@
         </collection>
     </mapping>
     <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.Notification" name="notification">
+    	
         <value name="email" field="email" />
+        <value name="weekend" field="weekend" />
         <value name="emailAddress" field="emailAddress" />
         <value name="page" field="page" />
         <value name="pageNumber" field="pageNumber" />
+
     </mapping>
     <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks" name="serverChecks">
        <collection field="memoryChecks">
