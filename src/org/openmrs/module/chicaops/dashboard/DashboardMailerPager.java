@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -26,6 +27,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.Notification;
@@ -368,6 +370,38 @@ public class DashboardMailerPager {
 
 	}
 
+	public void sendEmailsOrpages(List<ManualCheckinNumResult> resultsList) {
+		if (resultsList == null) {
+			return;
+		}
+		for (ManualCheckinNumResult result : resultsList) {
+			if (result == null) {
+				continue;
+			}
+			if (result.isShouldSend()) {
+				ManualCheckinChecks checks = result.getManualCheckinChecks();
+				Notification notification = checks.getNotification();
+				if (notification != null) {
+					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+						String message = "There are " + checks.getManualCheckinNum() + " manual checkin cases in last " + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " in "+result.getLocation().getName() + ". \n" + 
+						"An error may happen. This email is just for notification.";
+						String footPrint = "\n\nRegards,\nCHICA Operations Dashboard";
+
+						if (canSendMessage(message, notification)) {
+							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
+								sendMail(message + footPrint, notification.getEmailAddress(), null, null);
+							}
+							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+								sendPage(message + footPrint, notification.getPageNumber());
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
 	private void sendMail(String message, String dashboardEmail, String location, String locationDescription) {
 		if (mailProps.get("mail.smtp.host") == null) {
 			log.error("Dashboard: SMTP host not specified.  Please specify the global property chirdlutil.smtpMailHost");
@@ -531,4 +565,5 @@ public class DashboardMailerPager {
 			}
 		}
 	}
+
 }
