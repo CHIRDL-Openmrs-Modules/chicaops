@@ -11,6 +11,7 @@ public class Notification {
 	private String emailAddress;
 	private String page;
 	private String pageNumber;
+	private String weekend;
 	
 	/**
 	 * Default constructor
@@ -31,6 +32,14 @@ public class Notification {
 		this.emailAddress = emailAddress;
 		this.page = page;
 		this.pageNumber = pageNumber;
+	}
+	
+	public Notification(String email, String emailAddress, String page, String pageNumber, String weekend) {
+		this.email = email;
+		this.emailAddress = emailAddress;
+		this.page = page;
+		this.pageNumber = pageNumber;
+		this.setWeekend(weekend);
 	}
 	
     /**
@@ -88,4 +97,12 @@ public class Notification {
     public void setPageNumber(String pageNumber) {
     	this.pageNumber = pageNumber;
     }
+
+	public String getWeekend() {
+		return weekend;
+	}
+
+	public void setWeekend(String weekend) {
+		this.weekend = weekend;
+	}
 }
