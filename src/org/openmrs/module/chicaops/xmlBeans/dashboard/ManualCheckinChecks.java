@@ -1,5 +1,10 @@
 package org.openmrs.module.chicaops.xmlBeans.dashboard;
 
+/**
+ * 
+ * @author wang417
+ * count the number of manual check-in in the latest period of time
+ */
 public class ManualCheckinChecks {
 	private Integer timePeriod;
 	private String timePeriodUnit;
@@ -7,6 +12,14 @@ public class ManualCheckinChecks {
 	private String severity;
 	private Notification notification;
 	
+	/**
+	 * constructor
+	 * @param timePeriod checking time period
+	 * @param timePeriodUnit the unit of time period
+	 * @param manualCheckinNum the minimal number of manual checkin to trigger report
+	 * @param severity severity
+	 * @Param Notification a Notification object
+	 * /
 	public ManualCheckinChecks(Integer timePeriod, String timePeriodUnit, Integer manualCheckinNum, String severity, Notification notification) {
 		super();
 		this.timePeriod = timePeriod;
