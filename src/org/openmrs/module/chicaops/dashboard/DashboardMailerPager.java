@@ -383,10 +383,8 @@ public class DashboardMailerPager {
 				Notification notification = checks.getNotification();
 				if (notification != null) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "There are " + checks.getManualCheckinNum() + " manual checkin cases in last " + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " in "+result.getLocation().getName() + ". \n" + 
-						"An error may happen. This email is just for notification.";
+						String message = "There have been " + checks.getManualCheckinNum() + " manual checkins over the past" + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " at "+result.getLocation().getName() + ". \n";
 						String footPrint = "\n\nRegards,\nCHICA Operations Dashboard";
-
 						if (canSendMessage(message, notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message + footPrint, notification.getEmailAddress(), null, null);
@@ -517,7 +515,8 @@ public class DashboardMailerPager {
 	 */
 	private boolean canSendMessage(String message, Notification notification) {
 		long currTime = System.currentTimeMillis();
-		if (notification.getWeekend().equalsIgnoreCase("N")) {
+		//if (notification.getWeekend().equalsIgnoreCase("N")) {
+		if(DashboardConfig.NO_INDICATOR.equalsIgnoreCase(notification.getWeekend())){
 			/* weekend time */
 			Calendar calendar = Calendar.getInstance();
 			int day = calendar.get(Calendar.DAY_OF_WEEK);
