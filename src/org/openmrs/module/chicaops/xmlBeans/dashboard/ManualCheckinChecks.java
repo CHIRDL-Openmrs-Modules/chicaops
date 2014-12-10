@@ -19,7 +19,7 @@ public class ManualCheckinChecks {
 	 * @param manualCheckinNum the minimal number of manual checkin to trigger report
 	 * @param severity severity
 	 * @Param Notification a Notification object
-	 * /
+	 */
 	public ManualCheckinChecks(Integer timePeriod, String timePeriodUnit, Integer manualCheckinNum, String severity, Notification notification) {
 		super();
 		this.timePeriod = timePeriod;
