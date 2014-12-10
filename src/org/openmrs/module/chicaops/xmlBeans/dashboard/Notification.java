@@ -34,6 +34,15 @@ public class Notification {
 		this.pageNumber = pageNumber;
 	}
 	
+	
+	/**
+	 * Constructor method
+	 * @param email Whether or not to send email ("Y" or "N").
+	 * @param emailAddress Comma delimited list of email addresses to notify.
+	 * @param page Whether or not to send a page ("Y" or "N").
+	 * @param pageNumber The phone number to page.
+	 * @param weekend if it is a weekend day
+	 */
 	public Notification(String email, String emailAddress, String page, String pageNumber, String weekend) {
 		this.email = email;
 		this.emailAddress = emailAddress;
