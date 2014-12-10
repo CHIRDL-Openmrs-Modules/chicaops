@@ -3,6 +3,11 @@ package org.openmrs.module.chicaops.dashboard;
 import org.openmrs.Location;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 
+/**
+ * 
+ * @author wang417
+ * used to hold the result for manual check-in monitor
+ */
 public class ManualCheckinNumResult {
 	private boolean shouldSend;
 	private ManualCheckinChecks manualCheckinChecks;
