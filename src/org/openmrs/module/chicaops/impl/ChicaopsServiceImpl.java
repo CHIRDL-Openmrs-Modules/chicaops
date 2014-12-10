@@ -559,6 +559,10 @@ public class ChicaopsServiceImpl implements ChicaopsService {
     }
 
 	@Override
+	/**
+	 * Perform monitoring clinic manual check-in times frequency. If it happens too frequently, the program will let chica team know. 
+	 * @return ManualCheckinNumResult object containing the results of manual check-in monitoring result
+	 */
 	public List<ManualCheckinNumResult> performManualCheckinChecks() {
 		DashboardConfig config=null;
 		List<ManualCheckinNumResult> resultsList = new ArrayList<ManualCheckinNumResult>();
