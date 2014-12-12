@@ -589,7 +589,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				diff = period*86400000;
 			}else if(config.WEEK.equals(timeUnit)){
 				diff = period*604800000;
-			}else if(config.WEEK.equals(timeUnit)){
+			}else if(config.YEAR.equals(timeUnit)){
 				diff = period*30758400000l;
 			}
 			Date start = new Date(now.getTime()-diff);

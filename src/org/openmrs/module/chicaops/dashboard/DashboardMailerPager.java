@@ -383,7 +383,7 @@ public class DashboardMailerPager {
 				Notification notification = checks.getNotification();
 				if (notification != null) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "There have been " + checks.getManualCheckinNum() + " manual checkins over the past" + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " at "+result.getLocation().getName() + ". \n";
+						String message = "There have been over" + checks.getManualCheckinNum() + " manual checkins over the past" + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " at "+result.getLocation().getName() + ". \n";
 						String footPrint = "\n\nRegards,\nCHICA Operations Dashboard";
 						if (canSendMessage(message, notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
