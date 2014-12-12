@@ -22,6 +22,7 @@ public class ImmunizationChecks {
 	 * Default Constructor
 	 */
 	public ImmunizationChecks() {
+		
 	}
 	
 	/**
