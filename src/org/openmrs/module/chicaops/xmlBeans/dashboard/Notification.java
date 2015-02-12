@@ -35,10 +35,7 @@ public class Notification {
 	}
 	
 	public Notification(String email, String emailAddress, String page, String pageNumber, String weekend) {
-		this.email = email;
-		this.emailAddress = emailAddress;
-		this.page = page;
-		this.pageNumber = pageNumber;
+		this(email, emailAddress, page, pageNumber);
 		this.setWeekend(weekend);
 	}
 	
