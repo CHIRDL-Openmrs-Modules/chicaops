@@ -576,22 +576,8 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				  return null;
 			}
 			Date now = new Date();
-			long diff = 0;
-			String timeUnit = manualCheckinChecks.getTimePeriodUnit();
-			long period = manualCheckinChecks.getTimePeriod();
-			if(config.SECOND.equals(timeUnit)){
-				diff = period*1000;
-			}else if(config.MINUTE.equals(timeUnit)){
-				diff = period*60000;
-			}else if(config.HOUR.equals(timeUnit)){
-				diff = period*3600000;
-			}else if(config.DAY.equals(timeUnit)){
-				diff = period*86400000;
-			}else if(config.WEEK.equals(timeUnit)){
-				diff = period*604800000;
-			}else if(config.YEAR.equals(timeUnit)){
-				diff = period*30758400000l;
-			}
+			long diff = manualCheckinChecks.getTimePeriodInMilliseconds();
+			
 			Date start = new Date(now.getTime()-diff);
 			EncounterService es = Context.getEncounterService();
 			List<EncounterType> encounterTypes = new ArrayList<EncounterType>();

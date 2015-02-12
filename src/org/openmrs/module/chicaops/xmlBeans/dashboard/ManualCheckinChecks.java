@@ -1,5 +1,7 @@
 package org.openmrs.module.chicaops.xmlBeans.dashboard;
 
+import org.openmrs.module.chicaops.util.ChicaopsUtil;
+
 /**
  * 
  * @author wang417
@@ -74,6 +76,11 @@ public class ManualCheckinChecks {
 	}
 	
 	
-	
+	/**
+     * @return The time period in milliseconds.
+     */
+    public Long getTimePeriodInMilliseconds() {
+    	return ChicaopsUtil.getTimePeriodInMilliseconds(timePeriod, timePeriodUnit);
+    }
 	
 }
