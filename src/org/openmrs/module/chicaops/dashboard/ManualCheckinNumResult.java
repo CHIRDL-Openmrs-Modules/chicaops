@@ -13,13 +13,6 @@ public class ManualCheckinNumResult {
 	private ManualCheckinChecks manualCheckinChecks;
 	private Location location;
 	
-	
-	public boolean isShouldSend() {
-		return shouldSend;
-	}
-	public void setShouldSend(boolean shouldSend) {
-		this.shouldSend = shouldSend;
-	}
 	public ManualCheckinChecks getManualCheckinChecks() {
 		return manualCheckinChecks;
 	}

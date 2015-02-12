@@ -390,8 +390,10 @@ public class DashboardMailerPager {
 			if (result == null) {
 				continue;
 			}
-			if (result.isShouldSend()) {
 				ManualCheckinChecks checks = result.getManualCheckinChecks();
+				if(checks == null){
+					continue;
+				}
 				Notification notification = checks.getNotification();
 				if (notification != null) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
@@ -409,7 +411,6 @@ public class DashboardMailerPager {
 
 				}
 			}
-		}
 	}
 
 	

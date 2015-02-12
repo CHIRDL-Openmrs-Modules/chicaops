@@ -587,15 +587,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			for(Location loc: locations){
 				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, false);
 				int manualCheckinNum = encountersRecords.size();
-				ManualCheckinNumResult result = new ManualCheckinNumResult();
-				result.setManualCheckinChecks(manualCheckinChecks);
+				
 				if(manualCheckinNum>=manualCheckinChecks.getManualCheckinNum()){
-					result.setShouldSend(true);
-				}else{
-					result.setShouldSend(false);
+					ManualCheckinNumResult result = new ManualCheckinNumResult();
+					result.setManualCheckinChecks(manualCheckinChecks);
+					result.setLocation(loc);
+					resultsList.add(result);
 				}
-				result.setLocation(loc);
-				resultsList.add(result);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
