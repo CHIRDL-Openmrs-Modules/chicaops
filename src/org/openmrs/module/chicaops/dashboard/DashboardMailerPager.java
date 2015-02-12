@@ -504,7 +504,9 @@ public class DashboardMailerPager {
 	 */
 	private boolean canSendMessage(String message, Notification notification) {
 		long currTime = System.currentTimeMillis();
-		if (notification.getWeekend().equalsIgnoreCase("N")) {
+		String suppressWeekendNotifications = notification.getWeekend();
+		if (suppressWeekendNotifications!=null&&
+				suppressWeekendNotifications.equalsIgnoreCase("N")) {
 			/* weekend time */
 			Calendar calendar = Calendar.getInstance();
 			int day = calendar.get(Calendar.DAY_OF_WEEK);
