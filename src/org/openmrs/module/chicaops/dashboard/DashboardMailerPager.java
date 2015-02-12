@@ -6,8 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -102,9 +100,13 @@ public class DashboardMailerPager {
 				ForcedOutPWSCheck pwsCheck = result.getForcedOutPWSs().get(0).getForcedOutPWSCheck();
 				Notification notification = pwsCheck.getNotification();
 				if (notification != null) {
-					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "There have been " + fopwsProbSize + " PWS's forced out in the past " + pwsCheck.getTimePeriod() + " " + pwsCheck.getTimePeriodUnit() + "(s) at " + result.getCareCenterName() + " (" + result.getCareCenterDescription() + ").\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message, notification)) {
+					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
+							DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+						String message = "There have been " + fopwsProbSize + " PWS's forced out in the past "
+						        + pwsCheck.getTimePeriod() + " " + pwsCheck.getTimePeriodUnit() + "(s) at "
+						        + result.getCareCenterName() + " (" + result.getCareCenterDescription()
+						        + ").\n\nRegards,\nCHICA Operations Dashboard";
+						if (canSendMessage(message)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							}
@@ -141,7 +143,7 @@ public class DashboardMailerPager {
 						}
 
 						message.append("\n\nRegards,\nCHICA Operations Dashboard");
-						if (canSendMessage(message.toString(), notification)) {
+						if (canSendMessage(message.toString())) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message.toString(), notification.getEmailAddress(), location, locationDescription);
 							}
@@ -158,9 +160,14 @@ public class DashboardMailerPager {
 				StateToMonitor stateMon = monResult.getStateToMonitor();
 				Notification notification = stateMon.getNotification();
 				if (notification != null) {
-					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "The following issue with a state is occurring at " + result.getCareCenterName() + " (" + result.getCareCenterDescription() + "):\n\n" + stateMon.getName() + ": " + "taking more than " + stateMon.getElapsedTime() + " " + stateMon.getElapsedTimeUnit() + "(s) over the past " + stateMon.getTimePeriod() + " " + stateMon.getTimePeriodUnit() + "(s).\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message, notification)) {
+					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
+							DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+						String message = "The following issue with a state is occurring at " + result.getCareCenterName() + " ("
+				        	+ result.getCareCenterDescription() + "):\n\n" + stateMon.getName() + ": " + "taking more than "
+				        	+ stateMon.getElapsedTime() + " " + stateMon.getElapsedTimeUnit() + "(s) over the past " 
+				        	+ stateMon.getTimePeriod() + " " + stateMon.getTimePeriodUnit() 
+				        	+ "(s).\n\nRegards,\nCHICA Operations Dashboard";
+						if (canSendMessage(message)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							}
@@ -177,9 +184,13 @@ public class DashboardMailerPager {
 				ScanCheck check = problem.getScanCheck();
 				Notification notification = check.getNotification();
 				if (notification != null) {
-					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "The following issue with a form is occurring at " + result.getCareCenterName() + " (" + result.getCareCenterDescription() + "):\n\n" + check.getFormName() + ": " + "there have been no successful scans for this form in the last " + check.getTimePeriod() + " " + check.getTimePeriodUnit() + "(s).\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message, notification)) {
+					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
+							DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+						String message = "The following issue with a form is occurring at " + result.getCareCenterName() 
+							+ " (" + result.getCareCenterDescription() + "):\n\n" + check.getFormName() + ": " 
+							+ "there have been no successful scans for this form in the last " + check.getTimePeriod() 
+							+ " " + check.getTimePeriodUnit() + "(s).\n\nRegards,\nCHICA Operations Dashboard";
+						if (canSendMessage(message)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							}
@@ -212,8 +223,10 @@ public class DashboardMailerPager {
 			MemoryCheck memCheck = memProblem.getMemCheck();
 			Notification notification = memCheck.getNotification();
 			if (notification != null) {
-				String message = "The following memory problem is occurring on the server:\n\n" + memProblem.getPercentageUsed() + "% of the " + memProblem.getMemType() + " memory is being used.\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message, notification)) {
+				String message = "The following memory problem is occurring on the server:\n\n"
+					+ memProblem.getPercentageUsed() + "% of the " + memProblem.getMemType()
+				        + " memory is being used.\n\nRegards,\nCHICA Operations Dashboard";
+				if (canSendMessage(message)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -237,7 +250,7 @@ public class DashboardMailerPager {
 				}
 
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message, notification)) {
+				if (canSendMessage(message)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -258,7 +271,7 @@ public class DashboardMailerPager {
 				}
 
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message, notification)) {
+				if (canSendMessage(message)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -292,7 +305,7 @@ public class DashboardMailerPager {
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (found && canSendMessage(message, notification)) {
+				if (found && canSendMessage(message)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -312,7 +325,7 @@ public class DashboardMailerPager {
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (found && canSendMessage(message, notification)) {
+				if (found && canSendMessage(message)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -356,7 +369,7 @@ public class DashboardMailerPager {
 					}
 
 					message.append("\n\nRegards,\nCHICA Operations Dashboard");
-					if (canSendMessage(message.toString(), notification)) {
+					if (canSendMessage(message.toString())) {
 						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 							sendMail(message.toString(), notification.getEmailAddress(), null, null);
 						}
@@ -385,7 +398,7 @@ public class DashboardMailerPager {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
 						String message = "There have been over" + checks.getManualCheckinNum() + " manual checkins over the past" + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " at "+result.getLocation().getName() + ". \n";
 						String footPrint = "\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message, notification)) {
+						if (canSendMessage(message)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message + footPrint, notification.getEmailAddress(), null, null);
 							}
@@ -513,24 +526,15 @@ public class DashboardMailerPager {
 	 *            The message that is possibly going to be sent.
 	 * @return true if the message can be sent, false otherwise.
 	 */
-	private boolean canSendMessage(String message, Notification notification) {
-		long currTime = System.currentTimeMillis();
-		//if (notification.getWeekend().equalsIgnoreCase("N")) {
-		if(DashboardConfig.NO_INDICATOR.equalsIgnoreCase(notification.getWeekend())){
-			/* weekend time */
-			Calendar calendar = Calendar.getInstance();
-			int day = calendar.get(Calendar.DAY_OF_WEEK);
-			if (Calendar.SUNDAY == day || Calendar.SATURDAY == day) {
-				return false;
-			}
-		}
+	private boolean canSendMessage(String message) {
 		int messageHash = message.hashCode();
 		Long time = messageToTimeMap.get(messageHash);
 		if (time == null) {
 			messageToTimeMap.put(messageHash, System.currentTimeMillis());
 			return true;
 		}
-
+		
+		long currTime = System.currentTimeMillis();
 		if ((currTime - time) > thresholdTime) {
 			messageToTimeMap.put(messageHash, currTime);
 			return true;
