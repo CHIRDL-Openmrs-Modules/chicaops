@@ -57,15 +57,12 @@ public class DashboardTask extends AbstractTask {
         	// Check rules
         	ImmunizationCheckResult immunizationResult = dashService.performImmunizationChecks();
         	
-        	//Check whether manual check-in is more than the threshold so that we can check whether eCW works all right.
-        	List<ManualCheckinNumResult> manualCheckinResultsList = dashService.performManualCheckinChecks();
         	// Send emails/pages if necessary.
         	DashboardMailerPager mailer = new DashboardMailerPager();
         	mailer.sendEmailsOrPages(results);
         	mailer.sendEmailsOrPages(serverResult);
         	mailer.sendEmailsOrPages(ruleResult);
         	mailer.sendEmailsOrPages(immunizationResult);
-        	mailer.sendEmailsOrpages(manualCheckinResultsList);
         } catch (Exception e) {
         	log.error("Error creating/sending email/pages", e);
         }

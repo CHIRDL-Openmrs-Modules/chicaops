@@ -71,9 +71,6 @@ public class ChicaopsFormController extends SimpleFormController {
         	ImmunizationCheckResult immunizationResult = dashService.performImmunizationChecks();
         	modelMap.put("immunizationResult", immunizationResult);
         	
-        	List<ManualCheckinNumResult> manualCheckinResultsList = dashService.performManualCheckinChecks();
-        	modelMap.put("manualCheckinResult", manualCheckinResultsList);
-        	
         	// Load the refresh rate
         	String refreshRate = adminService.getGlobalProperty("chicaops.dashboardRefresh");        	
         	if (refreshRate == null || refreshRate.trim().length() == 0) {

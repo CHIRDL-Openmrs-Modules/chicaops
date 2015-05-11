@@ -201,6 +201,40 @@ public class DashboardMailerPager {
 					}
 				}
 			}
+			
+			// DWE CHICA-367 Send email for manual check-ins
+			// CareCenterResult object will only have a ManualCheckinNumResult object 
+			// if the number of manual check-ins is greater than the threshold
+			ManualCheckinNumResult manualCheckinNumResult = result.getManualCheckinNumResult();
+			if(manualCheckinNumResult != null)
+			{
+				ManualCheckinChecks checks = manualCheckinNumResult.getManualCheckinChecks();
+				if(checks != null)
+				{
+					Notification notification = checks.getNotification();
+					if (notification != null) {
+						if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+							StringBuilder builder = new StringBuilder();
+							builder.append(manualCheckinNumResult.getMessage())
+							.append(" at ")
+							.append(manualCheckinNumResult.getLocation().getName())
+							.append(". \n")
+							.append("\n\nRegards,\nCHICA Operations Dashboard");
+							if(canSendMessage(builder.toString())) 
+							{
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()))
+								{
+									sendMail(builder.toString(), notification.getEmailAddress(), manualCheckinNumResult.getLocation().getName(), manualCheckinNumResult.getLocation().getDescription());
+								}
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage()))
+								{
+									sendPage(builder.toString(), notification.getPageNumber());
+								}
+							}
+						}
+					}
+				}	
+			}
 		}
 		
 		reconcileMessageMap();
@@ -381,40 +415,6 @@ public class DashboardMailerPager {
 		}
 
 	}
-
-	public void sendEmailsOrpages(List<ManualCheckinNumResult> resultsList) {
-		if (resultsList == null) {
-			return;
-		}
-		for (ManualCheckinNumResult result : resultsList) {
-			if (result == null) {
-				continue;
-			}
-				ManualCheckinChecks checks = result.getManualCheckinChecks();
-				if(checks == null){
-					continue;
-				}
-				Notification notification = checks.getNotification();
-				if (notification != null) {
-					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-						String message = "There have been over" + checks.getManualCheckinNum() + " manual checkins over the past" + checks.getTimePeriod() + " " + checks.getTimePeriodUnit() + " at "+result.getLocation().getName() + ". \n";
-						String footPrint = "\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message)) {
-							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
-								sendMail(message + footPrint, notification.getEmailAddress(), null, null);
-							}
-							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-								sendPage(message + footPrint, notification.getPageNumber());
-							}
-						}
-					}
-
-				}
-			}
-	}
-
-	
-	
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {

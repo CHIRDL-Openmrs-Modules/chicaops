@@ -190,6 +190,26 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    		}
 		    	}
 		    }
+		    
+		    // DWE 5/8/15 CHICA-367
+		    // Check to see if there have been manual check-ins
+		    // Adding here so that it can be added to the CareCenterResult object and displayed on the dashboard
+		    // ********* This list will only contain ManualCheckinNumResult 
+		    // objects for locations where the manual check-in 
+		    // value is greater than the threshold specified in the config file
+		    List<ManualCheckinNumResult> manualCheckinNumResultList = performManualCheckinChecks();
+		    if(manualCheckinNumResultList != null)
+		    {
+		    	for(ManualCheckinNumResult manualCheckinNumResult : manualCheckinNumResultList)
+		    	{
+		    		CareCenterResult careCenterResult = careCenterIdToResultMap.get(manualCheckinNumResult.getLocation().getId());
+		    		if(careCenterResult != null)
+		    		{
+		    			careCenterResult.setManualCheckinNumResult(manualCheckinNumResult);
+		    		}
+		    	}
+		    }
+		    
 		} catch (Throwable e) {
 			log.error("Error processing the dashboard configuration file.", e);
 		}
@@ -585,13 +605,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			LocationService ls = Context.getLocationService();
 			List<Location> locations = ls.getAllLocations();
 			for(Location loc: locations){
-				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, false);
+				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, null, false); // DWE CHICA-367 Replaced call to deprecated method
 				int manualCheckinNum = encountersRecords.size();
 				
 				if(manualCheckinNum>=manualCheckinChecks.getManualCheckinNum()){
 					ManualCheckinNumResult result = new ManualCheckinNumResult();
 					result.setManualCheckinChecks(manualCheckinChecks);
 					result.setLocation(loc);
+					result.setNumberOfManualCheckins(manualCheckinNum); 
 					resultsList.add(result);
 				}
 				

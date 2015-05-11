@@ -254,6 +254,13 @@
             </td>
         </tr>            
       </c:forEach>
+      
+      <% // DWE CHICA-367 %>
+      <c:if test="${center.manualCheckinNumResult != null}">
+      	<tr><td></td><td></td><td></td>
+      	<td><c:out value="${center.manualCheckinNumResult.message}"/></td>
+      	</tr>
+      </c:if>
   </c:forEach>
   <tr>
     <c:choose>
