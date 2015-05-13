@@ -500,13 +500,14 @@ public class DashboardMailerPager {
 	 * Checks to see if the message has been previously sent within the specified threshold time.
 	 * 
 	 * @param message The message that is possibly going to be sent.
+	 * @param notification object used to determine if notifications should be sent on the weekend
 	 * @return true if the message can be sent, false otherwise.
 	 */
 	private boolean canSendMessage(String message, Notification notification) {
 		long currTime = System.currentTimeMillis();
-		String suppressWeekendNotifications = notification.getWeekend();
-		if (suppressWeekendNotifications!=null&&
-				suppressWeekendNotifications.equalsIgnoreCase("N")) {
+		String sendWeekendNotifications = notification.getWeekend();
+		if (sendWeekendNotifications!=null&&
+				sendWeekendNotifications.equalsIgnoreCase(DashboardConfig.NO_INDICATOR)) {
 			/* weekend time */
 			Calendar calendar = Calendar.getInstance();
 			int day = calendar.get(Calendar.DAY_OF_WEEK);
