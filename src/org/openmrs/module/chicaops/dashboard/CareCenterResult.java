@@ -23,6 +23,7 @@ public class CareCenterResult {
 	private ArrayList<ScanProblem> scanProblems = new ArrayList<ScanProblem>();
 	private Map<String, Integer> hl7ExportProblems = new HashMap<String, Integer>();
 	private HL7ExportChecks hl7ExportChecks;
+	private ManualCheckinNumResult manualCheckinNumResult; // DWE CHICA-367
 
 	/**
 	 * Constructor method
@@ -175,5 +176,29 @@ public class CareCenterResult {
 		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
 			hasWarnings = true;
 		}
+    }
+    
+    /**
+     * DWE CHICA-367
+     * Sets hasWarnings or hasErrors and sets the ManualCheckinNumResult object
+     * @param manualCheckinNumResult the manualCheckinNumResult to set
+     */
+    public void setManualCheckinNumResult (ManualCheckinNumResult manualCheckinNumResult){
+    	this.manualCheckinNumResult = manualCheckinNumResult;
+    	
+    	String severity = manualCheckinNumResult.getManualCheckinChecks().getSeverity();
+    	if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
+			hasErrors = true;
+		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
+			hasWarnings = true;
+		}
+    }
+    
+    /**
+     * DWE CHICA-367
+     * @return the manualCheckinNumResult
+     */
+    public ManualCheckinNumResult getManualCheckinNumResult(){
+    	return manualCheckinNumResult;
     }
 }

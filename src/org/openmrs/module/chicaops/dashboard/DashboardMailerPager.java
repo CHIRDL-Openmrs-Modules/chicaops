@@ -6,8 +6,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -24,6 +27,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.Notification;
@@ -103,7 +107,7 @@ public class DashboardMailerPager {
 						        + pwsCheck.getTimePeriod() + " " + pwsCheck.getTimePeriodUnit() + "(s) at "
 						        + result.getCareCenterName() + " (" + result.getCareCenterDescription()
 						        + ").\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message)) {
+						if (canSendMessage(message,notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							} 
@@ -141,7 +145,7 @@ public class DashboardMailerPager {
 						}
 						
 						message.append("\n\nRegards,\nCHICA Operations Dashboard");
-						if (canSendMessage(message.toString())) {
+						if (canSendMessage(message.toString(), notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message.toString(), notification.getEmailAddress(), location, locationDescription);
 							}
@@ -165,7 +169,7 @@ public class DashboardMailerPager {
 				        	+ stateMon.getElapsedTime() + " " + stateMon.getElapsedTimeUnit() + "(s) over the past " 
 				        	+ stateMon.getTimePeriod() + " " + stateMon.getTimePeriodUnit() 
 				        	+ "(s).\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message)) {
+						if (canSendMessage(message, notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							}
@@ -188,7 +192,7 @@ public class DashboardMailerPager {
 							+ " (" + result.getCareCenterDescription() + "):\n\n" + check.getFormName() + ": " 
 							+ "there have been no successful scans for this form in the last " + check.getTimePeriod() 
 							+ " " + check.getTimePeriodUnit() + "(s).\n\nRegards,\nCHICA Operations Dashboard";
-						if (canSendMessage(message)) {
+						if (canSendMessage(message, notification)) {
 							if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 								sendMail(message, notification.getEmailAddress(), location, locationDescription);
 							}
@@ -198,6 +202,40 @@ public class DashboardMailerPager {
 						}
 					}
 				}
+			}
+			
+			// DWE CHICA-367 Send email for manual check-ins
+			// CareCenterResult object will only have a ManualCheckinNumResult object 
+			// if the number of manual check-ins is greater than the threshold
+			ManualCheckinNumResult manualCheckinNumResult = result.getManualCheckinNumResult();
+			if(manualCheckinNumResult != null)
+			{
+				ManualCheckinChecks checks = manualCheckinNumResult.getManualCheckinChecks();
+				if(checks != null)
+				{
+					Notification notification = checks.getNotification();
+					if (notification != null) {
+						if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+							StringBuilder builder = new StringBuilder();
+							builder.append(manualCheckinNumResult.getMessage())
+							.append(" at ")
+							.append(manualCheckinNumResult.getLocation().getName())
+							.append(". \n")
+							.append("\n\nRegards,\nCHICA Operations Dashboard");
+							if(canSendMessage(builder.toString(), notification)) 
+							{
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()))
+								{
+									sendMail(builder.toString(), notification.getEmailAddress(), manualCheckinNumResult.getLocation().getName(), manualCheckinNumResult.getLocation().getDescription());
+								}
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage()))
+								{
+									sendPage(builder.toString(), notification.getPageNumber());
+								}
+							}
+						}
+					}
+				}	
 			}
 		}
 		
@@ -222,7 +260,7 @@ public class DashboardMailerPager {
 				String message = "The following memory problem is occurring on the server:\n\n"
 					+ memProblem.getPercentageUsed() + "% of the " + memProblem.getMemType()
 				        + " memory is being used.\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message)) {
+				if (canSendMessage(message, notification)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -248,7 +286,7 @@ public class DashboardMailerPager {
 				}
 				
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message)) {
+				if (canSendMessage(message, notification)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -271,7 +309,7 @@ public class DashboardMailerPager {
 				}
 				
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (canSendMessage(message)) {
+				if (canSendMessage(message, notification)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -303,7 +341,7 @@ public class DashboardMailerPager {
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (found && canSendMessage(message)) {
+				if (found && canSendMessage(message, notification)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -324,7 +362,7 @@ public class DashboardMailerPager {
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
-				if (found && canSendMessage(message)) {
+				if (found && canSendMessage(message, notification)) {
 					if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 						sendMail(message, notification.getEmailAddress(), null, null);
 					}
@@ -366,7 +404,7 @@ public class DashboardMailerPager {
 					}
 					
 					message.append("\n\nRegards,\nCHICA Operations Dashboard");
-					if (canSendMessage(message.toString())) {
+					if (canSendMessage(message.toString(), notification)) {
 						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
 							sendMail(message.toString(), notification.getEmailAddress(), null, null);
 						}
@@ -377,11 +415,8 @@ public class DashboardMailerPager {
 				}
 			}
 		}
-		
-	}
 
-	
-	
+	}
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
@@ -498,17 +533,28 @@ public class DashboardMailerPager {
 	 * Checks to see if the message has been previously sent within the specified threshold time.
 	 * 
 	 * @param message The message that is possibly going to be sent.
+	 * @param notification object used to determine if notifications should be sent on the weekend
 	 * @return true if the message can be sent, false otherwise.
 	 */
-	private boolean canSendMessage(String message) {
+	private boolean canSendMessage(String message, Notification notification) {
+		long currTime = System.currentTimeMillis();
+		String sendWeekendNotifications = notification.getWeekend();
+		if (sendWeekendNotifications!=null&&
+				sendWeekendNotifications.equalsIgnoreCase(DashboardConfig.NO_INDICATOR)) {
+			/* weekend time */
+			Calendar calendar = Calendar.getInstance();
+			int day = calendar.get(Calendar.DAY_OF_WEEK);
+			if (Calendar.SUNDAY == day || Calendar.SATURDAY == day) {
+				return false;
+			}
+		}
 		int messageHash = message.hashCode();
 		Long time = messageToTimeMap.get(messageHash);
 		if (time == null) {
 			messageToTimeMap.put(messageHash, System.currentTimeMillis());
 			return true;
 		}
-		
-		long currTime = System.currentTimeMillis();
+
 		if ((currTime - time) > thresholdTime) {
 			messageToTimeMap.put(messageHash, currTime);
 			return true;
