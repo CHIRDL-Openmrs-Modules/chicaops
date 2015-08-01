@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -24,6 +25,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.Notification;
@@ -198,6 +200,40 @@ public class DashboardMailerPager {
 						}
 					}
 				}
+			}
+			
+			// DWE CHICA-367 Send email for manual check-ins
+			// CareCenterResult object will only have a ManualCheckinNumResult object 
+			// if the number of manual check-ins is greater than the threshold
+			ManualCheckinNumResult manualCheckinNumResult = result.getManualCheckinNumResult();
+			if(manualCheckinNumResult != null)
+			{
+				ManualCheckinChecks checks = manualCheckinNumResult.getManualCheckinChecks();
+				if(checks != null)
+				{
+					Notification notification = checks.getNotification();
+					if (notification != null) {
+						if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+							StringBuilder builder = new StringBuilder();
+							builder.append(manualCheckinNumResult.getMessage())
+							.append(" at ")
+							.append(manualCheckinNumResult.getLocation().getName())
+							.append(". \n")
+							.append("\n\nRegards,\nCHICA Operations Dashboard");
+							if(canSendMessage(builder.toString())) 
+							{
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()))
+								{
+									sendMail(builder.toString(), notification.getEmailAddress(), manualCheckinNumResult.getLocation().getName(), manualCheckinNumResult.getLocation().getDescription());
+								}
+								if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage()))
+								{
+									sendPage(builder.toString(), notification.getPageNumber());
+								}
+							}
+						}
+					}
+				}	
 			}
 		}
 		
@@ -377,11 +413,8 @@ public class DashboardMailerPager {
 				}
 			}
 		}
-		
-	}
 
-	
-	
+	}
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
