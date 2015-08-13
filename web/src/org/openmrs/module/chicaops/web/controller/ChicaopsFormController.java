@@ -2,6 +2,7 @@ package org.openmrs.module.chicaops.web.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DashboardMailerPager;
 import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
+import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.service.ChicaopsService;
