@@ -173,7 +173,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		        	
 		        	if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
 		        		// We need to start at the beginning of Friday so we don't get over-notified on the weekends.
-		        		cal.set(Calendar.HOUR, 0);
+		        		cal.set(Calendar.HOUR_OF_DAY, 0);
 		        		cal.set(Calendar.MINUTE, 0);
 		        		cal.set(Calendar.SECOND, 0);
 		        		cal.set(Calendar.MILLISECOND, 0);
