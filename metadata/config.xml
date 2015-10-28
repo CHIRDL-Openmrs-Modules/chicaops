@@ -5,7 +5,7 @@
     <!-- Patient Notes Properties -->
     <id>chicaops</id> <!-- The unique internal id used in urls -->
     <name>Chica Operations</name> <!-- Longer descriptive name used on Manage Modules page -->
-    <version>1.8.0</version>
+    <version>1.9.0</version>
     <package>org.openmrs.module.@MODULE_ID@</package> <!-- Distinct package name for this module.  MODULE_ID refrences "id" element from above -->
     <author>Steve McKee</author> <!-- Custom string representation of the author  -->
     
@@ -45,11 +45,11 @@
     </globalProperty>
     
     <require_modules>
-        <require_module version="2.30.0">org.openmrs.module.dss</require_module>
-        <require_module version="2.2.0">org.openmrs.module.atd</require_module>
-        <require_module version="1.9.0">org.openmrs.module.chirdlutil</require_module>
-        <require_module version="2.3.0">org.openmrs.module.chirdlutilbackports</require_module>
-        <require_module version="1.65.0">org.openmrs.module.chica</require_module>
+        <require_module version="2.30.1">org.openmrs.module.dss</require_module>
+        <require_module version="2.3.0">org.openmrs.module.atd</require_module>
+        <require_module version="1.9.4">org.openmrs.module.chirdlutil</require_module>
+        <require_module version="2.4.0">org.openmrs.module.chirdlutilbackports</require_module>
+        <require_module version="1.67.0">org.openmrs.module.chica</require_module>
     </require_modules>
     
     <!-- Extensions -->
