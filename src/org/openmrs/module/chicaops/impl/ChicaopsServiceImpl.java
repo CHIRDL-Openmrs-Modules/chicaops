@@ -21,14 +21,18 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.mapping.Collection;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
 import org.jibx.runtime.JiBXException;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Form;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
@@ -36,6 +40,7 @@ import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DirectoryProblem;
 import org.openmrs.module.chicaops.dashboard.ForcedOutPWSProblem;
 import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
+import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.MemoryProblem;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
@@ -49,6 +54,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
@@ -167,7 +173,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		        	
 		        	if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
 		        		// We need to start at the beginning of Friday so we don't get over-notified on the weekends.
-		        		cal.set(Calendar.HOUR, 0);
+		        		cal.set(Calendar.HOUR_OF_DAY, 0);
 		        		cal.set(Calendar.MINUTE, 0);
 		        		cal.set(Calendar.SECOND, 0);
 		        		cal.set(Calendar.MILLISECOND, 0);
@@ -184,6 +190,26 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    		}
 		    	}
 		    }
+		    
+		    // DWE 5/8/15 CHICA-367
+		    // Check to see if there have been manual check-ins
+		    // Adding here so that it can be added to the CareCenterResult object and displayed on the dashboard
+		    // ********* This list will only contain ManualCheckinNumResult 
+		    // objects for locations where the manual check-in 
+		    // value is greater than the threshold specified in the config file
+		    List<ManualCheckinNumResult> manualCheckinNumResultList = performManualCheckinChecks();
+		    if(manualCheckinNumResultList != null)
+		    {
+		    	for(ManualCheckinNumResult manualCheckinNumResult : manualCheckinNumResultList)
+		    	{
+		    		CareCenterResult careCenterResult = careCenterIdToResultMap.get(manualCheckinNumResult.getLocation().getId());
+		    		if(careCenterResult != null)
+		    		{
+		    			careCenterResult.setManualCheckinNumResult(manualCheckinNumResult);
+		    		}
+		    	}
+		    }
+		    
 		} catch (Throwable e) {
 			log.error("Error processing the dashboard configuration file.", e);
 		}
@@ -551,4 +577,50 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			return new String[0];
 		}
     }
+
+	@Override
+	/**
+	 * Perform monitoring clinic manual check-in times frequency. If it happens too frequently, the program will let chica team know. 
+	 * @return ManualCheckinNumResult object containing the results of manual check-in monitoring result
+	 */
+	public List<ManualCheckinNumResult> performManualCheckinChecks() {
+		DashboardConfig config=null;
+		List<ManualCheckinNumResult> resultsList = new ArrayList<ManualCheckinNumResult>();
+		try {
+			config = getDashboardConfig();
+			if (config == null) {
+				return null;
+			}
+			ManualCheckinChecks manualCheckinChecks = config.getManualCheckinChecks();
+			if (manualCheckinChecks == null) {
+				  return null;
+			}
+			Date now = new Date();
+			long diff = manualCheckinChecks.getTimePeriodInMilliseconds();
+			
+			Date start = new Date(now.getTime()-diff);
+			EncounterService es = Context.getEncounterService();
+			List<EncounterType> encounterTypes = new ArrayList<EncounterType>();
+			encounterTypes.add(es.getEncounterType("ManualCheckin"));
+			LocationService ls = Context.getLocationService();
+			List<Location> locations = ls.getAllLocations();
+			for(Location loc: locations){
+				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, null, false); // DWE CHICA-367 Replaced call to deprecated method
+				int manualCheckinNum = encountersRecords.size();
+				
+				if(manualCheckinNum>=manualCheckinChecks.getManualCheckinNum()){
+					ManualCheckinNumResult result = new ManualCheckinNumResult();
+					result.setManualCheckinChecks(manualCheckinChecks);
+					result.setLocation(loc);
+					result.setNumberOfManualCheckins(manualCheckinNum); 
+					resultsList.add(result);
+				}
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Error attempting to load the dashboard configuration file.", e);
+		}
+		return resultsList;
+	}
 }

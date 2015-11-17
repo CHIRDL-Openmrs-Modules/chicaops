@@ -224,6 +224,7 @@ public class DashboardConfig {
 	private ScanChecks scanChecks;
 	private RuleChecks ruleChecks;
 	private ImmunizationChecks immunizationChecks;
+	private ManualCheckinChecks manualCheckinChecks;
 
 	/**
 	 * Default Constructor
@@ -246,7 +247,8 @@ public class DashboardConfig {
 	                       HL7ExportChecks hl7ExportChecks,
 	                       ScanChecks scanChecks,
 	                       RuleChecks ruleChecks,
-	                       ImmunizationChecks immunizationChecks) {
+	                       ImmunizationChecks immunizationChecks,
+	                       ManualCheckinChecks manualCheckinChecks) {
 		this.statesToMonitor = statesToMonitor;
 		this.serverChecks = serverChecks;
 		this.forcedOutPWSCheck = forcedOutPWSCheck;
@@ -254,6 +256,7 @@ public class DashboardConfig {
 		this.scanChecks = scanChecks;
 		this.ruleChecks = ruleChecks;
 		this.immunizationChecks = immunizationChecks;
+		this.manualCheckinChecks = manualCheckinChecks;
 	}
 	
     /**
@@ -344,7 +347,17 @@ public class DashboardConfig {
 		return immunizationChecks;
 	}
 
-	public void setImmunizationChecks(ImmunizationChecks immunizationCheck) {
+	public void setImmunizationChecks(ImmunizationChecks immunizationChecks) {
 		this.immunizationChecks = immunizationChecks;
 	}
+
+	public ManualCheckinChecks getManualCheckinChecks() {
+		return manualCheckinChecks;
+	}
+
+	public void setManualCheckinChecks(ManualCheckinChecks manualCheckinChecks) {
+		this.manualCheckinChecks = manualCheckinChecks;
+	}
+	
+	
 }
