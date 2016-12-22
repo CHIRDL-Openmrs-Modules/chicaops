@@ -22,13 +22,13 @@
       <tr>
         <c:choose>
             <c:when test="${center.hasErrors == 'true'}">
-                <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
+                <th scope="row"><img src="${pageContext.request.contextPath}/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
             </c:when>
             <c:when test="${center.hasWarnings == 'true'}">
-                <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
+                <th scope="row"]]><img src="${pageContext.request.contextPath}/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
             </c:when>
             <c:otherwise>
-                <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
+                <th scope="row"><img src="${pageContext.request.contextPath}/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="${center.careCenterName}"/> (<c:out value="${center.careCenterDescription}"/>)</th>
             </c:otherwise>
         </c:choose>
       </tr> 
@@ -38,7 +38,7 @@
                 <c:when test="${monitor.stateToMonitor.severity == 'error'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/error.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/error.gif"/>
                         <c:if test="${monitor.stateToMonitor.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -50,7 +50,7 @@
                 <c:when test="${monitor.stateToMonitor.severity == 'warning'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/alert.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                         <c:if test="${monitor.stateToMonitor.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -100,7 +100,7 @@
                 <c:when test="${center.forcedOutPWSs[0].forcedOutPWSCheck.severity == 'error'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/error.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/error.gif"/>
                         <c:if test="${center.forcedOutPWSs[0].forcedOutPWSCheck.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -112,7 +112,7 @@
                 <c:when test="${center.forcedOutPWSs[0].forcedOutPWSCheck.severity == 'warning'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/alert.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                         <c:if test="${center.forcedOutPWSs[0].forcedOutPWSCheck.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -150,7 +150,7 @@
                 <c:when test="${center.hl7ExportChecks.severity == 'error'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/error.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/error.gif"/>
                         <c:if test="${center.hl7ExportChecks.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -162,7 +162,7 @@
                 <c:when test="${center.hl7ExportChecks.severity == 'warning'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/alert.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                         <c:if test="${center.hl7ExportChecks.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -208,7 +208,7 @@
                 <c:when test="${scanProb.scanCheck.severity == 'error'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/error.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/error.gif"/>
                         <c:if test="${scanProb.scanCheck.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -220,7 +220,7 @@
                 <c:when test="${scanProb.scanCheck.severity == 'warning'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/alert.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                         <c:if test="${scanProb.scanCheck.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -265,13 +265,13 @@
   <tr>
     <c:choose>
         <c:when test="${serverResult.hasErrors == 'true'}">
-            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
         </c:when>
         <c:when test="${serverResult.hasWarnings == 'true'}">
-            <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+            <th scope="row"]]><img src="${pageContext.request.contextPath}/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
         </c:when>
         <c:otherwise>
-            <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Server"/></th>
         </c:otherwise>
     </c:choose>
   </tr>
@@ -281,7 +281,7 @@
             <c:when test="${memProblem.memCheck.severity == 'error'}">
                 <td></td><td></td>
                 <td>
-                   <img src="/openmrs/images/error.gif"/>
+                   <img src="${pageContext.request.contextPath}/images/error.gif"/>
                    <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                    </c:if>
@@ -293,7 +293,7 @@
             <c:when test="${memProblem.memCheck.severity == 'warning'}">
                 <td></td><td></td>
                 <td>
-                   <img src="/openmrs/images/alert.gif"/>
+                   <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                    <c:if test="${memProblem.memCheck.notification.page == 'Y'}">
                        <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                    </c:if>
@@ -333,7 +333,7 @@
             <c:when test="${dirProblem.directoryCheck.severity == 'error'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/error.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/error.gif"/>
                     <c:if test="${dirProblem.directoryCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -345,7 +345,7 @@
             <c:when test="${dirProblem.directoryCheck.severity == 'warning'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/alert.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                     <c:if test="${dirProblem.directoryCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -402,7 +402,7 @@
             <c:when test="${dirProblem.directoryCheck.severity == 'error'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/error.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/error.gif"/>
                     <c:if test="${dirProblem.directoryCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -414,7 +414,7 @@
             <c:when test="${dirProblem.directoryCheck.severity == 'warning'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/alert.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                     <c:if test="${dirProblem.directoryCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -460,13 +460,13 @@
   <tr>
     <c:choose>
         <c:when test="${ruleResult.hasErrors == 'true'}">
-            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
         </c:when>
         <c:when test="${ruleResult.hasWarnings == 'true'}">
-            <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
+            <th scope="row"]]><img src="${pageContext.request.contextPath}/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
         </c:when>
         <c:otherwise>
-            <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Rules"/></th>
         </c:otherwise>
     </c:choose>
   </tr>
@@ -476,7 +476,7 @@
             <c:when test="${ruleResult.ruleChecks.neverFiredCheck.severity == 'error'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/error.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/error.gif"/>
                     <c:if test="${ruleResult.ruleChecks.neverFiredCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -488,7 +488,7 @@
             <c:when test="${ruleResult.ruleChecks.neverFiredCheck.severity == 'warning'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/alert.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                     <c:if test="${ruleResult.ruleChecks.neverFiredCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -543,7 +543,7 @@
             <c:when test="${ruleResult.ruleChecks.unFiredCheck.severity == 'error'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/error.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/error.gif"/>
                     <c:if test="${ruleResult.ruleChecks.unFiredCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -555,7 +555,7 @@
             <c:when test="${ruleResult.ruleChecks.unFiredCheck.severity == 'warning'}">
                 <td></td><td></td>
                 <td>
-                    <img src="/openmrs/images/alert.gif"/>
+                    <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                     <c:if test="${ruleResult.ruleChecks.unFiredCheck.notification.page == 'Y'}">
                         <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                     </c:if>
@@ -609,13 +609,13 @@
   <tr>
     <c:choose>
         <c:when test="${serverResult.hasErrors == 'true'}">
-            <th scope="row"><img src="/openmrs/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/error.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
         </c:when>
         <c:when test="${serverResult.hasWarnings == 'true'}">
-            <th scope="row"]]><img src="/openmrs/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+            <th scope="row"]]><img src="${pageContext.request.contextPath}/images/alert.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
         </c:when>
         <c:otherwise>
-            <th scope="row"><img src="/openmrs/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
+            <th scope="row"><img src="${pageContext.request.contextPath}/images/play.gif"/></th><th scope="col" colspan="3"><c:out value="Immunization"/></th>
         </c:otherwise>
     </c:choose>
  <c:if test="${!empty (immunizationResult.immunizationProblems)}">
@@ -624,7 +624,7 @@
                 <c:when test="${immunizationResult.immunizationChecks.severity == 'error'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/error.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/error.gif"/>
                         <c:if test="${immunizationResult.immunizationChecks.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
@@ -636,7 +636,7 @@
                 <c:when test="${immunizationResult.immunizationChecks.severity == 'warning'}">
                     <td></td><td></td>
                     <td>
-                        <img src="/openmrs/images/alert.gif"/>
+                        <img src="${pageContext.request.contextPath}/images/alert.gif"/>
                         <c:if test="${immunizationResult.immunizationChecks.notification.page == 'Y'}">
                             <img src="${pageContext.request.contextPath}/moduleResources/chicaops/pager.jpg"/>
                         </c:if>
