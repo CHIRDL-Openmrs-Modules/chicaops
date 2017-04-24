@@ -4,26 +4,46 @@
 	<classpathentry kind="src" path="web/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib-common/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib-common/dbunit-2.2.jar"/>
-	<classpathentry kind="lib" path="lib-common/hapi-0.5.1.jar"/>
-	<classpathentry kind="lib" path="lib-common/hibernate325-mod.jar"/>
-	<classpathentry kind="lib" path="lib-common/hsqldb.jar"/>
-	<classpathentry kind="lib" path="lib-common/junit-4.4.jar"/>
-	<classpathentry kind="lib" path="lib-common/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib-common/spring-2.5.6.jar"/>
-	<classpathentry kind="lib" path="lib-common/spring-test.jar"/>
-	<classpathentry kind="lib" path="lib-common/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="lib-common/dbunit-2.4.7.jar"/>
+	<classpathentry kind="lib" path="lib-common/hsqldb-1.8.0.10.jar"/>
+	<classpathentry kind="lib" path="lib-common/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-base-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v22-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v23-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v24-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v25-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v26-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hapi-structures-v231-2.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/hibernate-c3p0-3.6.5.Final.jar"/>
+	<classpathentry kind="lib" path="lib-common/hibernate-core-3.6.5.Final-mod.jar"/>
+	<classpathentry kind="lib" path="lib-common/hibernate-ehcache-3.6.5.Final.jar"/>
+	<classpathentry kind="lib" path="lib-common/hibernate-search-3.4.2.Final.jar"/>
+	<classpathentry kind="lib" path="lib-common/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-aop-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-beans-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-context-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-core-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-expression-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-jdbc-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-orm-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-oxm-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-test-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-tx-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-web-3.2.7.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-webmvc-3.2.7.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib-common/bcel.jar"/>
 	<classpathentry kind="lib" path="lib-common/jibx-bind.jar"/>
 	<classpathentry kind="lib" path="lib-common/jibx-extras.jar"/>
 	<classpathentry kind="lib" path="lib-common/jibx-run.jar"/>
-	<classpathentry kind="lib" path="lib-common/openmrs-api-1.7.3.0-dev.jar"/>
-	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.7.2.19959-dev.jar"/>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.7.2.19959-dev.jar"/>
-	<classpathentry kind="lib" path="lib-common/atd-2.7.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/chica-1.73.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/chirdlutil-1.11.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/chirdlutilbackports-2.5.0.jar"/>
-	<classpathentry kind="lib" path="lib-common/dss-2.31.3.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.12.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-api-1.12.1-SNAPSHOT-tests.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-tests.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-tools-1.12.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/openmrs-web-1.12.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib-common/atd-2.9.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/chica-1.75.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/chirdlutil-1.13.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/chirdlutilbackports-2.7.0.jar"/>
+	<classpathentry kind="lib" path="lib-common/dss-2.32.0.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
