@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//OpenMRS//DTD OpenMRS Config 1.0//EN" "http://resources.openmrs.org/doctype/config-1.0.dtd">
+<module configVersion="1.0">
+    
+    <!-- Patient Notes Properties -->
+    <id>@MODULE_ID@</id> <!-- The unique internal id used in urls -->
+    <name>@MODULE_NAME@</name> <!-- Longer descriptive name used on Manage Modules page -->
+    <version>@MODULE_VERSION@</version>
+    <package>@MODULE_PACKAGE@</package> <!-- Distinct package name for this module.  MODULE_ID refrences "id" element from above -->
+    <author>Steve McKee</author> <!-- Custom string representation of the author  -->
+    
+    <description>Monitor CHICA Installations</description>
+    
+    <!-- All message codes should start with @MODULE_ID@.* -->
+    <messages>
+        <lang>en</lang>
+        <file>messages.properties</file>
+    </messages>
+    
+    <activator>@MODULE_PACKAGE@.ChicaopsActivator</activator> <!-- Class called when the module is installed into openmrs and when the module is turned off -->
+    
+    <!-- Properties -->
+    <globalProperty>
+        <property>chicaops.dashboardConfigFile</property>
+        <description>This file contains the information the dashboard will monitor.
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>chicaops.dashboardRefresh</property>
+        <defaultValue>300</defaultValue>
+        <description>This value contains the refresh rate for the CHICA Dashboard.
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>chicaops.dashboardMessageWaitThreshold</property>
+        <defaultValue>60</defaultValue>
+        <description>This is used by the dashboard messaging/paging system.  It specifies the amount of time (in minutes) before the same message will be sent again.
+        </description>
+    </globalProperty>
+    <globalProperty>
+        <property>chicaops.dashboardApplicationName</property>
+        <defaultValue>CHICA</defaultValue>
+        <description>The application name displayed on the dashboard: 'Welcome to the app_name Operations Dashboard';
+        </description>
+    </globalProperty>
+    
+    <require_modules>
+        <require_module version="2.32.0">org.openmrs.module.dss</require_module>
+        <require_module version="2.9.0">org.openmrs.module.atd</require_module>
+        <require_module version="1.13.0">org.openmrs.module.chirdlutil</require_module>
+        <require_module version="2.7.0">org.openmrs.module.chirdlutilbackports</require_module>
+        <require_module version="1.75.0">org.openmrs.module.chica</require_module>
+    </require_modules>
+    
+    <!-- Extensions -->
+    <extension>
+        <point>org.openmrs.admin.list</point>
+        <class>org.openmrs.module.chicaops.extension.html.AdminList</class>
+    </extension>
+    
+</module>

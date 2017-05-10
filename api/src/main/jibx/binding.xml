@@ -1,0 +1,147 @@
+<binding>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig" name="dashboardConfig">
+        <structure field="statesToMonitor" usage="optional"/>
+        <structure field="hl7ExportChecks" usage="optional"/>
+        <structure field="forcedOutPWSCheck" usage="optional"/>
+        <structure field="scanChecks" usage="optional"/>
+        <structure field="serverChecks" usage="optional"/>
+        <structure field="ruleChecks" usage="optional"/>
+        <structure field="immunizationChecks" usage="optional"/>
+        <structure field="manualCheckinChecks" usage="optional"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor" name="statesToMonitor">
+        <collection field="statesToMonitor">
+            <structure name="stateToMonitor" type="org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor">
+                <value style="attribute" name="name" field="name" />
+                <structure name="elapsedTime" value-style="attribute">
+                    <value name="unit" field="elapsedTimeUnit" />
+                    <value style="text" field="elapsedTime" />
+                </structure>
+                <structure name="timePeriod" value-style="attribute">
+                    <value name="unit" field="timePeriodUnit" />
+                    <value style="text" field="timePeriod" />
+                </structure>
+                <value name="numErrors" field="numErrors" />
+                <value name="severity" field="severity" />
+                <structure field="fixTips" usage="optional"/>
+                <structure field="notification"/>
+            </structure>
+        </collection>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.FixTips" name="fixTips">
+        <collection field="tips">
+            <value name="tip"/>
+        </collection>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.Notification" name="notification">
+        <value name="email" field="email" />
+        <value name="weekend" field="weekend" />
+        <value name="emailAddress" field="emailAddress" />
+        <value name="page" field="page" />
+        <value name="pageNumber" field="pageNumber" />
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks" name="serverChecks">
+       <collection field="memoryChecks">
+           <structure name="memoryCheck" type="org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck">
+               <value name="percentileToNotify" field="percentileToNotify"/>
+               <value name="severity" field="severity"/>
+               <structure field="fixTips" usage="optional"/>
+               <structure field="notification"/>
+           </structure>
+       </collection>
+       <collection field="directoryChecks">
+           <structure name="directoryCheck" type="org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck">
+               <value name="imageDir" field="imageDir"/>
+               <value name="scanDir" field="scanDir"/>
+               <structure name="timePeriod" value-style="attribute">
+                    <value name="unit" field="timePeriodUnit" />
+                    <value style="text" field="timePeriod" />
+               </structure>
+               <value name="numErrors" field="numErrors" />
+               <structure name="bufferTime" value-style="attribute">
+                    <value name="unit" field="bufferTimeUnit" />
+                    <value style="text" field="bufferTimePeriod" />
+               </structure>
+               <value name="severity" field="severity"/>
+               <structure field="fixTips" usage="optional"/>
+               <structure field="notification"/>
+           </structure>
+       </collection>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck" name="forcedOutPWSCheck">
+       <structure name="timePeriod" value-style="attribute">
+           <value name="unit" field="timePeriodUnit" />
+           <value style="text" field="timePeriod" />
+       </structure>
+       <value name="severity" field="severity" />
+       <structure field="fixTips" usage="optional"/>
+       <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks" name="hl7ExportChecks">
+       <collection field="checks">
+            <value name="check" type="java.lang.String"/>
+       </collection>
+       <structure name="timePeriod" value-style="attribute">
+           <value name="unit" field="timePeriodUnit" />
+           <value style="text" field="timePeriod" />
+       </structure>
+       <value name="numErrors" field="numErrors" />
+       <value name="severity" field="severity" />
+       <structure field="fixTips" usage="optional"/>
+       <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ScanChecks" name="scanChecks">
+        <collection field="scanChecks">
+            <structure name="scanCheck" type="org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck">
+                <value name="formName" field="formName" />
+		        <structure name="timePeriod" value-style="attribute">
+		            <value name="unit" field="timePeriodUnit" />
+		            <value style="text" field="timePeriod" />
+		        </structure>
+		        <value name="severity" field="severity" />
+		        <structure field="fixTips" usage="optional"/>
+		        <structure field="notification"/>
+            </structure>
+        </collection>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks" name="ruleChecks">
+        <structure field="neverFiredCheck" usage="optional"/>
+        <structure field="unFiredCheck" usage="optional"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck" name="neverFiredCheck">
+        <value name="severity" field="severity"/>
+        <structure field="fixTips" usage="optional"/>
+        <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck" name="unFiredCheck">
+        <structure name="timePeriod" value-style="attribute">
+            <value name="unit" field="timePeriodUnit" />
+            <value style="text" field="timePeriod" />
+        </structure>
+        <value name="severity" field="severity"/>
+        <structure field="fixTips" usage="optional"/>
+        <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks" name="immunizationChecks">
+       <collection field="checks">
+            <value name="check" type="java.lang.String"/>
+       </collection>
+       <structure name="timePeriod" value-style="attribute">
+           <value name="unit" field="timePeriodUnit" />
+           <value style="text" field="timePeriod" />
+       </structure>
+       <value name="numErrors" field="numErrors" />
+       <value name="severity" field="severity" />
+       <structure field="fixTips" usage="optional"/>
+       <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks" name="manualCheckinChecks">
+       <structure name="timePeriod" value-style="attribute">
+           <value name="unit" field="timePeriodUnit" />
+           <value style="text" field="timePeriod" />
+       </structure>
+       <value name="manualCheckinNum" field="manualCheckinNum" />
+       <value name="severity" field="severity" />
+       <structure field="notification"/>
+    </mapping>
+</binding>
