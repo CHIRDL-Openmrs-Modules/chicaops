@@ -24,6 +24,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+		    <dependency>
+		        <groupId>org.openmrs.module</groupId>
+                <artifactId>logic-api</artifactId>
+                <version>0.5.1</version>
+                <scope>provided</scope>
+            </dependency>
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>chirdlutilbackports-api</artifactId>
