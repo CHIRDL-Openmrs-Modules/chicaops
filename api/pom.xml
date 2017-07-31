@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>chicaops</artifactId>
-		<version>1.10.0</version>
+		<version>1.11.0</version>
 	</parent>
 	<artifactId>chicaops-api</artifactId>
 	<packaging>jar</packaging>
