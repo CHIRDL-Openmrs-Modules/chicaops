@@ -75,10 +75,11 @@ public interface ChicaopsDAO {
 	 * @param formId The form ID used for limiting the query.
 	 * @param locationId The location ID used for limiting the query.
 	 * @param sinceDate Only include entries since this date.
+	 * @param reprintStateName reprint State Name.
 	 * @return List of PatientState objects for a particular form that have been recored 
 	 * since the provided Date.
 	 */
-	public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate);
+	public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate, String reprintStateName);
 	
 	/**
 	 * Retrieves all errors from chirdlutilbackports_error table based on immunization error
