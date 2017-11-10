@@ -242,7 +242,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 					+ "and state in ("
 					+ "select state_id "
 				    + "from chirdlutilbackports_state "
-				    + "where name in ('PSF_printed', 'PWS_printed', '"+reprintStateName+"', 'JIT_printed', "
+				    + "where name in ('"+reprintStateName+"', 'JIT_printed', "
 				    		+ "'JIT_reprint'))";
     	
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
