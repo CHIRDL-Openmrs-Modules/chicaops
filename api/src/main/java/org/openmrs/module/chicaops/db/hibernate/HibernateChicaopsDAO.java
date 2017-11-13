@@ -235,14 +235,14 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return qry.list();
     }
 
-    public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate) {
+    public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate, String reprintStateName) {
     	String sql = "select * " 
 			+ "from chirdlutilbackports_patient_state "
 			+ "where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 "
 					+ "and state in ("
 					+ "select state_id "
 				    + "from chirdlutilbackports_state "
-				    + "where name in ('PSF_printed', 'PWS_printed', 'PSF_reprint', 'PWS_reprint', 'JIT_printed', "
+				    + "where name in ('"+reprintStateName+"', 'JIT_printed', "
 				    		+ "'JIT_reprint'))";
     	
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
