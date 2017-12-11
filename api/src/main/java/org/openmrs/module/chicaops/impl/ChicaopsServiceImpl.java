@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.mapping.Collection;
@@ -62,6 +63,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
@@ -228,13 +230,21 @@ public class ChicaopsServiceImpl implements ChicaopsService {
     	for (LocationTag tag : location.getTags()) {
     		FormAttributeValue fav = backportService.getFormAttributeValue(form.getFormId(), "defaultExportDirectory", 
     			tag.getId(), location.getLocationId());
-    		if (fav != null && fav.getValue() != null && fav.getValue().trim().length() > 0 && 
+    		if (fav != null && StringUtils.isNotBlank(fav.getValue()) && 
     				!checkedDirs.contains(fav.getValue())) {
     			String scanDirStr = fav.getValue();
     			checkedDirs.add(scanDirStr);
+
     			// Check to see if any forms have been printed first
+    			FormAttributeValue formAttributeValueReprintStateName = backportService.getFormAttributeValue(form.getFormId(), ChirdlUtilConstants.FORM_ATTRIBUTE_REPRINT_STATE, 
+    					tag.getId(), location.getLocationId());
+    			
+    			String reprintStateName = null;
+    			if (formAttributeValueReprintStateName != null && StringUtils.isNotBlank(formAttributeValueReprintStateName.getValue())) {
+    				reprintStateName = formAttributeValueReprintStateName.getValue();
+    			}
     			List<PatientState> pStates = 
-    				getChicaopsDAO().getPatientsStates(form.getFormId(), location.getLocationId(), sinceDate);
+    				getChicaopsDAO().getPatientsStates(form.getFormId(), location.getLocationId(), sinceDate, reprintStateName);
     			if (pStates == null || pStates.size() == 0) {
     				continue;
     			}
