@@ -615,7 +615,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			LocationService ls = Context.getLocationService();
 			List<Location> locations = ls.getAllLocations();
 			for(Location loc: locations){
-				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, null, null, null, false); // CHICA-1151 Add null parameters for Collection<VisitType> and Collection<Visit>
+				java.util.Collection<Encounter> encountersRecords = es.getEncounters(null, loc, start, now, null, encounterTypes, null, false); // DWE CHICA-367 Replaced call to deprecated method
 				int manualCheckinNum = encountersRecords.size();
 				
 				if(manualCheckinNum>=manualCheckinChecks.getManualCheckinNum()){
