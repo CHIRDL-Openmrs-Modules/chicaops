@@ -44,6 +44,7 @@
         </description>
     </globalProperty>
     
+    <require_version>2.0.6</require_version>
     <require_modules>
         <require_module version="2.33.0">org.openmrs.module.dss</require_module>
         <require_module version="2.10.0">org.openmrs.module.atd</require_module>
