@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +27,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * Implementation of the DashboardDAO used for checking state information 
@@ -197,14 +198,25 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return patientStates;
 	}
 
-    public List<Rule> getNeverFiredRules() {
-		String sql = "select * from dss_Rule where rule_id not in (select rule_id from atd_patient_atd_element) "
-			   + "and priority is not null and priority <1000 "
-			   + "and token_name<>rule_type "
-			   + "and version <> 0.1 "
-			   + "order by title";
+	/**
+	 * @see org.openmrs.module.chicaops.db.ChicaopsDAO#getNeverFiredRules()
+	 */
+    public List<RuleEntry> getNeverFiredRules() {
+		String sql = "SELECT *" + 
+				"  FROM dss_rule_entry ruleEntry" + 
+				"       INNER JOIN dss_rule rule" + 
+				"          ON ruleEntry.rule_id = rule.rule_id" + 
+				"       INNER JOIN dss_rule_type ruleType" + 
+				"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" +
+				" AND ruleType.retired = false" + 
+				" AND ruleEntry.retired = false" + 
+				" AND ruleEntry.priority IS NOT NULL" + 
+				" AND ruleEntry.priority < 1000" + 
+				" AND rule.token_name <> ruleType.name" +
+				" AND rule.rule_id not in (select distinct rule_id from atd_patient_atd_element)" + 
+				" ORDER BY ruleType.name, rule.token_name";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		qry.addEntity(Rule.class);
+		qry.addEntity(RuleEntry.class);
 		return qry.list();
     }
 

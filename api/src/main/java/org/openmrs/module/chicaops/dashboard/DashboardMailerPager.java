@@ -7,15 +7,13 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
@@ -336,8 +334,8 @@ public class DashboardMailerPager {
 				Notification notification = nfRuleCheck.getNotification();
 				String message = "The following rules have never fired:\n";
 				boolean found = false;
-				for (String rule : ruleResult.getNeverFiredRules()) {
-					message += "\n" + rule;
+				for (RuleIdentifier rule : ruleResult.getNeverFiredRules()) {
+					message += "\n" + rule.getTokenName() + " (" + rule.getRuleType() + ")";
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";

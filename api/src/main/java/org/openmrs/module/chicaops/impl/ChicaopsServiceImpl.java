@@ -22,7 +22,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.mapping.Collection;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
@@ -45,6 +44,7 @@ import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.MemoryProblem;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
+import org.openmrs.module.chicaops.dashboard.RuleIdentifier;
 import org.openmrs.module.chicaops.dashboard.ScanProblem;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
@@ -69,6 +69,7 @@ import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * Service layer implementation for the Dashboard.
@@ -474,10 +475,11 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			
 			// Check for rules that have never fired
 			if (ruleChecks != null && ruleChecks.getNeverFiredCheck() != null) {
-				List<Rule> rules = getChicaopsDAO().getNeverFiredRules();
-				if (rules != null) {
-					for (Rule rule: rules) {
-						results.addNeverFiredRule(rule.getTitle());
+				List<RuleEntry> ruleEntries = getChicaopsDAO().getNeverFiredRules();
+				if (ruleEntries != null) {
+					for (RuleEntry rule: ruleEntries) {
+						results.addNeverFiredRule(
+							new RuleIdentifier(rule.getRule().getTokenName(), rule.getRuleType().getName()));
 					}
 				}
 			}

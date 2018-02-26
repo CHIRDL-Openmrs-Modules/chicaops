@@ -6,5 +6,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<mapping resource="rule.hbm.xml"/>
+        <mapping resource="rule_type.hbm.xml"/>
+        <mapping resource="rule_entry.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

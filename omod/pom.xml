@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>chicaops</artifactId>
-		<version>1.13.0</version>
+		<version>1.14.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>chicaops-omod</artifactId>
 	<packaging>jar</packaging>
@@ -19,17 +19,9 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>logic-api</artifactId>
-        </dependency>
-		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>chirdlutil-api</artifactId>
 		</dependency>
-		<dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>dss-api</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.jibx</groupId>
 			<artifactId>jibx-run</artifactId>
