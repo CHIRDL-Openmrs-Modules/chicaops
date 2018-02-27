@@ -334,8 +334,8 @@ public class DashboardMailerPager {
 				Notification notification = nfRuleCheck.getNotification();
 				String message = "The following rules have never fired:\n";
 				boolean found = false;
-				for (RuleIdentifier rule : ruleResult.getNeverFiredRules()) {
-					message += "\n" + rule.getTokenName() + " (" + rule.getRuleType() + ")";
+				for (RuleIdentifier ruleIdentifier : ruleResult.getNeverFiredRules()) {
+					message += "\n" + ruleIdentifier.getTokenName() + " (" + ruleIdentifier.getRuleType() + ")";
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";
@@ -355,8 +355,8 @@ public class DashboardMailerPager {
 				String message = "The following rules have not fired in the past " + ufRuleCheck.getTimePeriod() + " "
 				        + ufRuleCheck.getTimePeriodUnit() + "(s):\n";
 				boolean found = false;
-				for (String rule : ruleResult.getUnFiredRules()) {
-					message += "\n" + rule;
+				for (RuleIdentifier ruleIdentifier : ruleResult.getUnFiredRules()) {
+					message += "\n" + ruleIdentifier.getTokenName() + " (" + ruleIdentifier.getRuleType() + ")";
 					found = true;
 				}
 				message += "\n\nRegards,\nCHICA Operations Dashboard";

@@ -14,8 +14,8 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
 public class RuleCheckResult {
 
 	private RuleChecks ruleChecks;
-	private List<RuleIdentifier> neverFiredRules = new ArrayList<RuleIdentifier>();
-	private List<String> unFiredRules = new ArrayList<String>();
+	private List<RuleIdentifier> neverFiredRules = new ArrayList<>();
+	private List<RuleIdentifier> unFiredRules = new ArrayList<>();
 	private boolean hasErrors;
 	private boolean hasWarnings;
 	
@@ -35,8 +35,8 @@ public class RuleCheckResult {
     	return ruleChecks;
     }
     
-    public void addUnFiredRule(String ruleTitle) {
-    	unFiredRules.add(ruleTitle);
+    public void addUnFiredRule(RuleIdentifier ruleIdentifier) {
+    	unFiredRules.add(ruleIdentifier);
     	if (DashboardConfig.SEVERITY_ERROR.equals(ruleChecks.getUnFiredCheck().getSeverity())) {
     		hasErrors = true;
     	} else if (DashboardConfig.SEVERITY_WARNING.equals(ruleChecks.getUnFiredCheck().getSeverity())) {
@@ -56,7 +56,7 @@ public class RuleCheckResult {
 	/**
      * @return the unFiredRules
      */
-    public List<String> getUnFiredRules() {
+    public List<RuleIdentifier> getUnFiredRules() {
     	return unFiredRules;
     }
     

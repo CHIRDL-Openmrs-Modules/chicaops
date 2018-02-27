@@ -68,7 +68,6 @@ import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
-import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
@@ -477,19 +476,20 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			if (ruleChecks != null && ruleChecks.getNeverFiredCheck() != null) {
 				List<RuleEntry> ruleEntries = getChicaopsDAO().getNeverFiredRules();
 				if (ruleEntries != null) {
-					for (RuleEntry rule: ruleEntries) {
+					for (RuleEntry ruleEntry: ruleEntries) {
 						results.addNeverFiredRule(
-							new RuleIdentifier(rule.getRule().getTokenName(), rule.getRuleType().getName()));
+							new RuleIdentifier(ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
 					}
 				}
 			}
 			
 			// Check for rules that have not fired in the specified time period.
 			if (ruleChecks != null && ruleChecks.getUnFiredCheck() != null) {
-				List<Rule> rules = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
-				if (rules != null) {
-					for (Rule rule: rules) {
-						results.addUnFiredRule(rule.getTitle());
+				List<RuleEntry> ruleEntries = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
+				if (ruleEntries != null) {
+					for (RuleEntry ruleEntry: ruleEntries) {
+						results.addUnFiredRule(new RuleIdentifier(
+							ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
 					}
 				}
 			}
