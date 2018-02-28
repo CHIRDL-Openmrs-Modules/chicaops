@@ -262,10 +262,9 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("						  INNER JOIN form form\n");
     	sql.append("							 ON atd.form_id = form.form_id\n");
     	sql.append("					   WHERE ruleType2.name = form.name\n");
-    	sql.append("                       AND atd.creation_time >=\n");
-    	sql.append("                              (SELECT DATE_SUB(NOW(), INTERVAL ? ");
+    	sql.append("                       AND TIMESTAMPADD(");
     	sql.append(check.getTimePeriodUnit());
-    	sql.append(")))\n");
+    	sql.append(", ?, atd.creation_time) >= NOW())\n");
     	sql.append("ORDER BY ruleType.name, rule.token_name\n");
 
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());

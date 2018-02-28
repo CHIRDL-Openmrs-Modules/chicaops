@@ -1,0 +1,230 @@
+<!ELEMENT dataset (
+    location*,
+    patient*,
+    global_property*,
+    dss_rule*,
+    dss_rule_type*,
+    dss_rule_entry*,
+    form*,
+    field*,
+    encounter_type*,
+    encounter*,
+    atd_patient_atd_element*)>
+
+<!ELEMENT atd_patient_atd_element EMPTY>
+<!ATTLIST atd_patient_atd_element
+    atd_id CDATA #REQUIRED
+    patient_id CDATA #REQUIRED
+    form_id CDATA #REQUIRED
+    field_id CDATA #REQUIRED
+    text CDATA #IMPLIED
+    rule_id CDATA #REQUIRED
+    form_instance_id CDATA #REQUIRED
+    creation_time CDATA #REQUIRED
+    encounter_id CDATA #IMPLIED
+    location_id CDATA #REQUIRED
+>
+
+<!ELEMENT dss_rule EMPTY>
+<!ATTLIST dss_rule
+    rule_id CDATA #REQUIRED
+    class_filename CDATA #REQUIRED
+    creation_time CDATA #REQUIRED
+    title CDATA #IMPLIED
+    version CDATA #IMPLIED
+    institution CDATA #IMPLIED
+    author CDATA #IMPLIED
+    specialist CDATA #IMPLIED
+    ruleCreationDate CDATA #IMPLIED
+    purpose CDATA #IMPLIED
+    explanation CDATA #IMPLIED
+    keywords CDATA #IMPLIED
+    citations CDATA #IMPLIED
+    links CDATA #IMPLIED
+    data CDATA #IMPLIED
+    logic CDATA #IMPLIED
+    action CDATA #IMPLIED
+    last_modified CDATA #IMPLIED
+    token_name CDATA #IMPLIED
+    age_min_units CDATA #IMPLIED
+    age_max_units CDATA #IMPLIED
+    age_min CDATA #IMPLIED
+    age_max CDATA #IMPLIED
+>
+
+<!ELEMENT dss_rule_entry EMPTY>
+<!ATTLIST dss_rule_entry
+    rule_entry_id CDATA #REQUIRED
+    rule_type_id CDATA #REQUIRED
+    rule_id CDATA #REQUIRED
+    priority CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT dss_rule_type EMPTY>
+<!ATTLIST dss_rule_type
+    rule_type_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT encounter EMPTY>
+<!ATTLIST encounter
+    encounter_id CDATA #REQUIRED
+    encounter_type CDATA #IMPLIED
+    patient_id CDATA #REQUIRED
+    location_id CDATA #REQUIRED
+    form_id CDATA #IMPLIED
+    encounter_datetime CDATA #REQUIRED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    voided CDATA #REQUIRED
+    voided_by CDATA #IMPLIED
+    date_voided CDATA #IMPLIED
+    void_reason CDATA #IMPLIED
+    scheduled_datetime CDATA #IMPLIED
+    insurance_sms_code CDATA #IMPLIED
+    printer_location CDATA #IMPLIED
+    insurance_carrier_code CDATA #IMPLIED
+    insurance_plan_code CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    data_changed CDATA #IMPLIED
+    visit_id CDATA #IMPLIED
+>
+
+<!ELEMENT encounter_type EMPTY>
+<!ATTLIST encounter_type
+    encounter_type_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT form EMPTY>
+<!ATTLIST form
+    form_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    version CDATA #REQUIRED
+    build CDATA #IMPLIED
+    published CDATA #REQUIRED
+    description CDATA #IMPLIED
+    encounter_type CDATA #IMPLIED
+    template CDATA #IMPLIED
+    xslt CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retired_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT field EMPTY>
+<!ATTLIST field
+    field_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    field_type CDATA #IMPLIED
+    concept_id CDATA #IMPLIED
+    table_name CDATA #IMPLIED
+    attribute_name CDATA #IMPLIED
+    default_value CDATA #IMPLIED
+    select_multiple CDATA #REQUIRED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT global_property EMPTY>
+<!ATTLIST global_property
+    property CDATA #REQUIRED
+    property_value CDATA #IMPLIED
+    description CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT location EMPTY>
+<!ATTLIST location
+    location_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    address1 CDATA #IMPLIED
+    address2 CDATA #IMPLIED
+    city_village CDATA #IMPLIED
+    state_province CDATA #IMPLIED
+    postal_code CDATA #IMPLIED
+    country CDATA #IMPLIED
+    latitude CDATA #IMPLIED
+    longitude CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    county_district CDATA #IMPLIED
+    address3 CDATA #IMPLIED
+    address6 CDATA #IMPLIED
+    address5 CDATA #IMPLIED
+    address4 CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    parent_location CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    data_changed CDATA #IMPLIED
+    address7 CDATA #IMPLIED
+    address8 CDATA #IMPLIED
+    address9 CDATA #IMPLIED
+    address10 CDATA #IMPLIED
+    address11 CDATA #IMPLIED
+    address12 CDATA #IMPLIED
+    address13 CDATA #IMPLIED
+    address14 CDATA #IMPLIED
+    address15 CDATA #IMPLIED
+>
+
+<!ELEMENT patient EMPTY>
+<!ATTLIST patient
+    patient_id CDATA #REQUIRED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    voided CDATA #REQUIRED
+    voided_by CDATA #IMPLIED
+    date_voided CDATA #IMPLIED
+    void_reason CDATA #IMPLIED
+    allergy_status CDATA #REQUIRED
+>

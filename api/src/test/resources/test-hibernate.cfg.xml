@@ -8,5 +8,6 @@
 		<mapping resource="rule.hbm.xml"/>
         <mapping resource="rule_type.hbm.xml"/>
         <mapping resource="rule_entry.hbm.xml"/>
+        <mapping resource="patient_atd.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>
