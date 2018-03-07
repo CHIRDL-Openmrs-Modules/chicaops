@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>chicaops</artifactId>
-		<version>1.13.0</version>
+		<version>1.14.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>chicaops-api</artifactId>
 	<packaging>jar</packaging>
@@ -20,10 +20,18 @@
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>chirdlutil-api</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>logic-api</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>dss-api</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>atd-api</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.jibx</groupId>
 			<artifactId>jibx-run</artifactId>
@@ -59,6 +67,10 @@
 			<artifactId>legacyui-omod</artifactId>
 			<type>jar</type>
 		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>          
+        </dependency>
 	</dependencies>
 
 	<build>

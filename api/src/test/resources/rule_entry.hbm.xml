@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.dss">
+
+    <class name="org.openmrs.module.dss.hibernateBeans.RuleEntry" table="dss_rule_entry">
+
+        <id name="ruleEntryId" type="java.lang.Integer" column="rule_entry_id" unsaved-value="0">
+            <generator class="native" />
+        </id>
+        
+        <discriminator column="rule_entry_id" insert="false" />
+        
+        <property name="priority" type="java.lang.Integer" column="priority" length="11" />
+        <property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
+        <property name="dateCreated" type="java.util.Date" column="date_created" not-null="true" length="19" />
+        <property name="dateChanged" type="java.util.Date" column="date_changed" length="19" />
+        <property name="dateRetired" type="java.util.Date" column="date_retired" length="19" />
+        <property name="retired" type="boolean" not-null="true" length="1" />
+        <property name="retireReason" type="java.lang.String" column="retire_reason" length="255" />
+        
+        <many-to-one name="ruleType" class="org.openmrs.module.dss.hibernateBeans.RuleType" not-null="true">
+            <column name="rule_type_id" />
+        </many-to-one>
+        <many-to-one name="rule" class="org.openmrs.module.dss.hibernateBeans.Rule" not-null="true">
+            <column name="rule_id" />
+        </many-to-one>
+                
+        <many-to-one name="creator" class="org.openmrs.User" column="creator" not-null="true" />
+        <many-to-one name="changedBy" class="org.openmrs.User" column="changed_by" />
+        <many-to-one name="retiredBy" class="org.openmrs.User" column="retired_by" />
+        
+    </class>
+</hibernate-mapping>

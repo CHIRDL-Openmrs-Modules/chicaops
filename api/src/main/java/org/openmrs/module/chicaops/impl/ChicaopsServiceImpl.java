@@ -22,7 +22,6 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.mapping.Collection;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
@@ -45,6 +44,7 @@ import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.MemoryProblem;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
+import org.openmrs.module.chicaops.dashboard.RuleIdentifier;
 import org.openmrs.module.chicaops.dashboard.ScanProblem;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
@@ -68,7 +68,7 @@ import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
-import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * Service layer implementation for the Dashboard.
@@ -474,20 +474,22 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			
 			// Check for rules that have never fired
 			if (ruleChecks != null && ruleChecks.getNeverFiredCheck() != null) {
-				List<Rule> rules = getChicaopsDAO().getNeverFiredRules();
-				if (rules != null) {
-					for (Rule rule: rules) {
-						results.addNeverFiredRule(rule.getTitle());
+				List<RuleEntry> ruleEntries = getChicaopsDAO().getNeverFiredRules();
+				if (ruleEntries != null) {
+					for (RuleEntry ruleEntry: ruleEntries) {
+						results.addNeverFiredRule(
+							new RuleIdentifier(ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
 					}
 				}
 			}
 			
 			// Check for rules that have not fired in the specified time period.
 			if (ruleChecks != null && ruleChecks.getUnFiredCheck() != null) {
-				List<Rule> rules = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
-				if (rules != null) {
-					for (Rule rule: rules) {
-						results.addUnFiredRule(rule.getTitle());
+				List<RuleEntry> ruleEntries = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
+				if (ruleEntries != null) {
+					for (RuleEntry ruleEntry: ruleEntries) {
+						results.addUnFiredRule(new RuleIdentifier(
+							ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
 					}
 				}
 			}

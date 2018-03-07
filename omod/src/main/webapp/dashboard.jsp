@@ -525,7 +525,7 @@
                     <c:if test="${(counter mod 2) == 1}">
                         <tr>
                     </c:if>
-                        <td>${neverFiredRule}</td>
+                        <td>${neverFiredRule.tokenName}&nbsp;(${neverFiredRule.ruleType})</td>
                     <c:if test="${(counter mod 2) == 0}">
                         </tr>
                     </c:if>
@@ -594,7 +594,7 @@
                     <c:if test="${(counter mod 2) == 1}">
                         <tr>
                     </c:if>
-                        <td>${unFiredRule}</td>
+                        <td>${unFiredRule.tokenName}&nbsp;(${unFiredRule.ruleType})</td>
                     <c:if test="${(counter mod 2) == 0}">
                         </tr>
                     </c:if>
