@@ -211,7 +211,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("		   AND ruleType.retired = FALSE\n");
     	sql.append("		   AND ruleEntry.retired = FALSE\n");
     	sql.append("		   AND ruleEntry.priority IS NOT NULL\n");
-    	sql.append("		   AND ruleEntry.priority < 1000\n");
+    	sql.append("		   AND ruleEntry.priority < ?\n");
     	sql.append("		   AND rule.token_name <> ruleType.name\n");
     	sql.append("		   AND ruleEntry.rule_entry_id NOT IN\n");
     	sql.append("				  (SELECT ruleEntry2.rule_entry_id\n");
@@ -230,6 +230,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 		qry.addEntity(RuleEntry.class);
+		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
 		return qry.list();
     }
 
@@ -247,7 +248,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("               AND ruleType.retired = FALSE\n");
     	sql.append("               AND ruleEntry.retired = FALSE\n");
     	sql.append("               AND ruleEntry.priority IS NOT NULL\n");
-    	sql.append("               AND ruleEntry.priority < 1000\n");
+    	sql.append("               AND ruleEntry.priority < ?\n");
     	sql.append("               AND rule.token_name <> ruleType.name\n");
     	sql.append("               AND ruleEntry.rule_entry_id NOT IN\n");
     	sql.append("                      (SELECT ruleEntry2.rule_entry_id\n");
@@ -268,7 +269,8 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("ORDER BY ruleType.name, rule.token_name\n");
 
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-		qry.setInteger(0, check.getTimePeriod());
+		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
+		qry.setInteger(1, check.getTimePeriod());
 		qry.addEntity(RuleEntry.class);
 		return qry.list();
     }
