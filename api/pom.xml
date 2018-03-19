@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>chicaops</artifactId>
-		<version>1.13.0</version>
+		<version>1.13.1</version>
 	</parent>
 	<artifactId>chicaops-api</artifactId>
 	<packaging>jar</packaging>
@@ -12,6 +12,10 @@
 	<description>API project for Chica Operations</description>
 
 	<dependencies>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>logic-api</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>chirdlutilbackports-api</artifactId>
@@ -59,6 +63,10 @@
 			<artifactId>legacyui-omod</artifactId>
 			<type>jar</type>
 		</dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>          
+        </dependency>
 	</dependencies>
 
 	<build>

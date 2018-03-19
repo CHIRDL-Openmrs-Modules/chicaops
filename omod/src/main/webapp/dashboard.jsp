@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<openmrs:require allPrivileges="View Encounters, View Patients, View Concept Classes" otherwise="/login.htm" redirect="/module/chicaops/dashboard.form" />
+<openmrs:require allPrivileges="Manage CHICAOPS" otherwise="/login.htm" redirect="/module/chicaops/dashboard.form" />
 
 <html>
 <head>
