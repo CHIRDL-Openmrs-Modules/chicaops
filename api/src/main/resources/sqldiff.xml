@@ -69,4 +69,16 @@
            delete from global_property where property = 'chicaops.dashboardPagerUrlNumberParam';
         </sql>
     </diff>
+    <diff>
+        <version>1.0.4</version>
+        <author>David Ely</author>
+        <date>March 14, 2018</date>
+        <description>
+            CHICA-1209 Create new privilege for chicaops module
+        </description>
+        <sql>
+            Insert Into privilege(privilege, description, uuid)
+			Values('Manage CHICAOPS', 'CHICAOPS Module privilege', UUID());
+        </sql>
+    </diff>
 </sqldiff>

@@ -7,9 +7,9 @@
 
 <beans>
 
-	<!-- This bean calls ServiceContext.setModuleService() with our ChicaopsService class -->
-	<!-- This makes it possible to call Context.getService(ChicaopsService.class);... -->
-	
+    <!-- This bean calls ServiceContext.setModuleService() with our ChicaopsService class -->
+    <!-- This makes it possible to call Context.getService(ChicaopsService.class);... -->
+    
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
@@ -37,18 +37,5 @@
             </list>
         </property>
     </bean>
-	
-	<bean id="chicaopsUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="/module/@MODULE_ID@/dashboard.form">dashboard</prop>
-            </props>
-        </property>
-    </bean>
-	<bean id="dashboard" class="org.openmrs.module.chicaops.web.controller.ChicaopsFormController">
-        <property name="commandName"><value>dashboardObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/dashboard</value></property>
-        <property name="successView"><value>dashboard.form</value></property>
-    </bean>
-	
+    
 </beans>
