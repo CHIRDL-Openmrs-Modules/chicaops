@@ -11,13 +11,23 @@
     
     <description>Monitor CHICA Installations</description>
     
-    <!-- All message codes should start with @MODULE_ID@.* -->
-    <messages>
-        <lang>en</lang>
-        <file>messages.properties</file>
-    </messages>
-    
     <activator>@MODULE_PACKAGE@.ChicaopsActivator</activator> <!-- Class called when the module is installed into openmrs and when the module is turned off -->
+    
+    <require_version>2.0.6</require_version>
+    <require_modules>
+        <require_module version="3.0.0">org.openmrs.module.dss</require_module>
+        <require_module version="2.10.0">org.openmrs.module.atd</require_module>
+        <require_module version="1.14.0">org.openmrs.module.chirdlutil</require_module>
+        <require_module version="2.10.0">org.openmrs.module.chirdlutilbackports</require_module>
+        <require_module version="1.76.0">org.openmrs.module.chica</require_module>
+        <require_module version="1.3.1">org.openmrs.module.legacyui</require_module>
+    </require_modules>
+    
+    <!-- Extensions -->
+    <extension>
+        <point>org.openmrs.admin.list</point>
+        <class>org.openmrs.module.chicaops.extension.html.AdminList</class>
+    </extension>
     
     <!-- Properties -->
     <globalProperty>
@@ -54,10 +64,10 @@
         <require_module version="1.3.1">org.openmrs.module.legacyui</require_module>
     </require_modules>
     
-    <!-- Extensions -->
-    <extension>
-        <point>org.openmrs.admin.list</point>
-        <class>org.openmrs.module.chicaops.extension.html.AdminList</class>
-    </extension>
+    <!-- All message codes should start with @MODULE_ID@.* -->
+    <messages>
+        <lang>en</lang>
+        <file>messages.properties</file>
+    </messages>
     
 </module>

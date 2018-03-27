@@ -12,6 +12,10 @@
 	<description>API project for Chica Operations</description>
 
 	<dependencies>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>logic-api</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>chirdlutilbackports-api</artifactId>

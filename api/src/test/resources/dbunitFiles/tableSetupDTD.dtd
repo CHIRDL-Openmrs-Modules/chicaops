@@ -1,4 +1,7 @@
 <!ELEMENT dataset (
+    person*,
+    role*,
+    users*,
     location*,
     patient*,
     global_property*,
@@ -227,4 +230,54 @@
     date_voided CDATA #IMPLIED
     void_reason CDATA #IMPLIED
     allergy_status CDATA #REQUIRED
+>
+
+<!ELEMENT person EMPTY>
+<!ATTLIST person
+    person_id CDATA #REQUIRED
+    gender CDATA #IMPLIED
+    birthdate CDATA #IMPLIED
+    birthdate_estimated CDATA #IMPLIED
+    dead CDATA #REQUIRED
+    death_date CDATA #IMPLIED
+    cause_of_death CDATA #IMPLIED
+    creator CDATA #IMPLIED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    voided CDATA #REQUIRED
+    voided_by CDATA #IMPLIED
+    date_voided CDATA #IMPLIED
+    void_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+    deathdate_estimated CDATA #IMPLIED
+    birthtime CDATA #IMPLIED
+>
+
+<!ELEMENT role EMPTY>
+<!ATTLIST role
+    role CDATA #REQUIRED
+    description CDATA #REQUIRED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT users EMPTY>
+<!ATTLIST users
+    user_id CDATA #REQUIRED
+    system_id CDATA #REQUIRED
+    username CDATA #IMPLIED
+    password CDATA #IMPLIED
+    salt CDATA #IMPLIED
+    secret_question CDATA #IMPLIED
+    secret_answer CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    person_id CDATA #REQUIRED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
 >
