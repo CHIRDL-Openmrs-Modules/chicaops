@@ -100,6 +100,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		return dao;
 	}
 
+    @Override
     public ArrayList<CareCenterResult> checkCareCenters() {
 		Map<String, CareCenterResult> careCenterNameToResultMap = 
 			new LinkedHashMap<String, CareCenterResult>();
@@ -266,6 +267,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
     	return null;
     }
 
+    @Override
     public ServerCheckResult performServerChecks() {
 		ServerCheckResult result = new ServerCheckResult();
 		try {
@@ -465,38 +467,43 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			new FileInputStream(configFile), null);
 	}
 
+    @Override
     public RuleCheckResult performRuleChecks() {
 		RuleChecks ruleChecks = new RuleChecks();
 		RuleCheckResult results = new RuleCheckResult(ruleChecks);
 		try {
-			ruleChecks = getDashboardConfig().getRuleChecks();
-			results = new RuleCheckResult(ruleChecks);
-			
-			// Check for rules that have never fired
-			if (ruleChecks != null && ruleChecks.getNeverFiredCheck() != null) {
-				List<RuleEntry> ruleEntries = getChicaopsDAO().getNeverFiredRules();
-				if (ruleEntries != null) {
-					for (RuleEntry ruleEntry: ruleEntries) {
-						results.addNeverFiredRule(
-							new RuleIdentifier(ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
-					}
-				}
-			}
-			
-			// Check for rules that have not fired in the specified time period.
-			if (ruleChecks != null && ruleChecks.getUnFiredCheck() != null) {
-				List<RuleEntry> ruleEntries = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
-				if (ruleEntries != null) {
-					for (RuleEntry ruleEntry: ruleEntries) {
-						results.addUnFiredRule(new RuleIdentifier(
-							ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
-					}
-				}
-			}
+		    DashboardConfig dashboardConfig = getDashboardConfig();
+		    if (dashboardConfig != null) {
+    			ruleChecks = dashboardConfig.getRuleChecks();
+    			if (ruleChecks != null) {
+        			results = new RuleCheckResult(ruleChecks);
+        			
+        			// Check for rules that have never fired
+        			if (ruleChecks.getNeverFiredCheck() != null) {
+        				List<RuleEntry> ruleEntries = getChicaopsDAO().getNeverFiredRules();
+        				if (ruleEntries != null) {
+        					for (RuleEntry ruleEntry: ruleEntries) {
+        						results.addNeverFiredRule(new RuleIdentifier(
+        						    ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
+        					}
+        				}
+        			}
+        			
+        			// Check for rules that have not fired in the specified time period.
+        			if (ruleChecks.getUnFiredCheck() != null) {
+        				List<RuleEntry> ruleEntries = getChicaopsDAO().getUnFiredRules(ruleChecks.getUnFiredCheck());
+        				if (ruleEntries != null) {
+        					for (RuleEntry ruleEntry: ruleEntries) {
+        						results.addUnFiredRule(new RuleIdentifier(
+        							ruleEntry.getRule().getTokenName(), ruleEntry.getRuleType().getName()));
+        					}
+        				}
+        			}
+    			}
+		    }
 			return results;
 		} catch (Exception e) {
 			log.error("Error processing the dashboard configuration file.", e);
-			e.printStackTrace();
 		}
 		
 		return new RuleCheckResult(ruleChecks);
@@ -508,7 +515,8 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	 */
     
     
-	public ImmunizationCheckResult performImmunizationChecks(){
+	@Override
+    public ImmunizationCheckResult performImmunizationChecks(){
 		ImmunizationCheckResult result = new ImmunizationCheckResult();
 		try {
 			DashboardConfig config = getDashboardConfig();
@@ -538,7 +546,6 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			result.setImmunizationChecks(immunChecks);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 		return result;
@@ -573,7 +580,8 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		 * 
 		 * @param filter FilenameFilter used for matching child files.
 		 */
-		public String[] list(FilenameFilter filter) {
+		@Override
+        public String[] list(FilenameFilter filter) {
 			String[] names = list();
 			if ((names == null) || (filter == null)) {
 				return names;
@@ -630,7 +638,6 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 		return resultsList;
