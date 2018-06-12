@@ -61,7 +61,8 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
-	public ArrayList<MonitorResult> checkState(StateToMonitor state) throws Exception {
+	@Override
+    public ArrayList<MonitorResult> checkState(StateToMonitor state) throws Exception {
 		ArrayList<MonitorResult> results = new ArrayList<MonitorResult>();
 		if (state == null) {
 			return results;
@@ -120,7 +121,8 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return results;
 	}
 	
-	public List<PatientState> getForcedOutPWSs(ForcedOutPWSCheck forcedOutPWSCheck) {
+	@Override
+    public List<PatientState> getForcedOutPWSs(ForcedOutPWSCheck forcedOutPWSCheck) {
 		String sql = "select * "
 				+ "from chirdlutilbackports_patient_state a, chirdlutilbackports_patient_state b "
 				+ "where a.session_id = b.session_id "
@@ -132,7 +134,8 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return qry.list();
 	}
 	
-	public List<Object[]> getHL7ExportAlerts(HL7ExportChecks alerts) {
+	@Override
+    public List<Object[]> getHL7ExportAlerts(HL7ExportChecks alerts) {
 		StringBuffer sql = new StringBuffer("select c.name, a.location_id from encounter a, chica_hl7_export b, " +
 				"chica_hl7_export_status c where a.encounter_id = b.encounter_id and b.status = c.hl7_export_status_id " +
 				"and c.name IN (");
@@ -201,6 +204,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	/**
 	 * @see org.openmrs.module.chicaops.db.ChicaopsDAO#getNeverFiredRules()
 	 */
+    @Override
     public List<RuleEntry> getNeverFiredRules() {
     	StringBuilder sql = new StringBuilder();
     	sql.append("SELECT *\n");
@@ -238,6 +242,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
      * @see org.openmrs.module.chicaops.db.ChicaopsDAO#getUnFiredRules(
      * org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck)
      */
+    @Override
     public List<RuleEntry> getUnFiredRules(UnFiredRuleCheck check) {
     	StringBuilder sql = new StringBuilder();
     	sql.append("SELECT *\n");
@@ -275,17 +280,18 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return qry.list();
     }
 
+    @Override
     public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate, String reprintStateName) {
-    	String sql = "select * " 
-			+ "from chirdlutilbackports_patient_state "
-			+ "where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 "
-					+ "and state in ("
-					+ "select state_id "
-				    + "from chirdlutilbackports_state "
-				    + "where name in ('"+reprintStateName+"', 'JIT_printed', "
-				    		+ "'JIT_reprint'))";
+    	StringBuilder sql = new StringBuilder("select * ");
+		sql.append("from chirdlutilbackports_patient_state ");
+		sql.append("where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 ");
+		sql.append("and state in (");
+		sql.append("select state_id ");
+		sql.append("from chirdlutilbackports_state ");
+		sql.append("where name in ('"+reprintStateName+"', 'JIT_printed', ");
+		sql.append("'JIT_reprint'))");
     	
-		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 		qry.setInteger(0, formId);
 		qry.setInteger(1, locationId);
 		qry.setTimestamp(2, new Timestamp(sinceDate.getTime()));
@@ -293,6 +299,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return qry.list();
     }
     
+    @Override
     public List<String> getImmunizationAlerts(ImmunizationChecks alerts) {
     	StringBuffer sql = new StringBuffer("select e.message from chirdlutilbackports_error e "
     			+ " join chirdlutilbackports_error_category c ON "  
