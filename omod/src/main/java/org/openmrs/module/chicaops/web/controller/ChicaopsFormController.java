@@ -1,11 +1,6 @@
 package org.openmrs.module.chicaops.web.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,13 +9,15 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DashboardMailerPager;
 import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
-import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.service.ChicaopsService;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * This class is found by spring because we put
@@ -32,23 +29,42 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
  * @author Steve McKee
  */
 @Controller
-public class ChicaopsFormController extends SimpleFormController {
+@RequestMapping(value = "module/chicaops/dashboard.form")
+public class ChicaopsFormController {
     
     /** Logger for this class and subclasses */
     protected final Log log = LogFactory.getLog(getClass());
     
+    /** Form view */
+    private static final String FORM_VIEW = "/module/chicaops/dashboard";
+    
+    /** Parameters */
+    private static final String PARAMETER_APP_NAME = "appName";
+    private static final String PARAMETER_REFRESH_PERIOD = "refreshPeriod";
+    private static final String PARAMETER_IMMUNIZATION_RESULT = "immunizationResult";
+    private static final String PARAMETER_RULE_RESULT = "ruleResult";
+    private static final String PARAMETER_SERVER_RESULT = "serverResult";
+    private static final String PARAMETER_CARE_CENTERS = "careCenters";
+    
+    /** Global properties */
+    private static final String GLOBAL_PROP_CHICAOPS_DASHBOARD_APPLICATION_NAME = "chicaops.dashboardApplicationName";
+    private static final String GLOBAL_PROP_CHICAOPS_DASHBOARD_REFRESH = "chicaops.dashboardRefresh";
+    
+    /** Default values */
+    private static final String DEFAULT_REFRESH_RATE = "120";
+    
     /**
-     * Returns any extra data in a key-->value pair kind of way
+     * Form initialization method.
      * 
-     * @see org.springframework.web.servlet.mvc.SimpleFormController#referenceData(javax.servlet.http.HttpServletRequest,
-     *      java.lang.Object, org.springframework.validation.Errors)
+     * @param request The HTTP request information
+     * @param map The map to populate for return to the client
+     * @return The form view name
      */
-    @Override
-    protected Map<String, Object> referenceData(HttpServletRequest request) throws Exception {
-        if(Context.getUserContext().getAuthenticatedUser()== null){
+    @RequestMapping(method = RequestMethod.GET)
+    protected String initForm(ModelMap map) {
+        if(Context.getUserContext().getAuthenticatedUser()== null) {
 			return null;
 		}
-        Map<String, Object>  modelMap = new HashMap<String, Object> ();
         
         try {
         	AdministrationService adminService = Context.getAdministrationService();
@@ -56,59 +72,65 @@ public class ChicaopsFormController extends SimpleFormController {
 				.getService(ChicaopsService.class);
         	
         	// Check the states
-        	ArrayList<CareCenterResult> results = dashService.checkCareCenters();        	
-        	modelMap.put("careCenters", results);
+        	List<CareCenterResult> results = dashService.checkCareCenters();        	
+        	map.put(PARAMETER_CARE_CENTERS, results);
         	
         	// Check server issues
         	ServerCheckResult serverResult = dashService.performServerChecks();
-        	modelMap.put("serverResult", serverResult);
+        	map.put(PARAMETER_SERVER_RESULT, serverResult);
         	
         	// Check rules
         	RuleCheckResult ruleResult = dashService.performRuleChecks();
-        	modelMap.put("ruleResult", ruleResult);
+        	map.put(PARAMETER_RULE_RESULT, ruleResult);
         	
         	// Check rules
         	ImmunizationCheckResult immunizationResult = dashService.performImmunizationChecks();
-        	modelMap.put("immunizationResult", immunizationResult);
+        	map.put(PARAMETER_IMMUNIZATION_RESULT, immunizationResult);
         	
         	// Load the refresh rate
-        	String refreshRate = adminService.getGlobalProperty("chicaops.dashboardRefresh");        	
+        	String refreshRate = adminService.getGlobalProperty(GLOBAL_PROP_CHICAOPS_DASHBOARD_REFRESH);        	
         	if (refreshRate == null || refreshRate.trim().length() == 0) {
         		// Default to two minutes.
-        		refreshRate = "120";
+        		refreshRate = DEFAULT_REFRESH_RATE;
         	}
         	
-        	modelMap.put("refreshPeriod", refreshRate);
+        	map.put(PARAMETER_REFRESH_PERIOD, refreshRate);
         	
         	// Load the application name
-        	String appName = adminService.getGlobalProperty("chicaops.dashboardApplicationName");
+        	String appName = adminService.getGlobalProperty(GLOBAL_PROP_CHICAOPS_DASHBOARD_APPLICATION_NAME);
         	if (appName == null) {
-        		appName = "";
+        		appName = ChirdlUtilConstants.GENERAL_INFO_EMPTY_STRING;
         	}
         	
-        	modelMap.put("appName", appName);
-        	
-        	try {
-	        	// Send emails/pages if necessary.
-	        	DashboardMailerPager mailer = new DashboardMailerPager();
-	        	mailer.sendEmailsOrPages(results);
-	        	mailer.sendEmailsOrPages(serverResult);
-	        	mailer.sendEmailsOrPages(ruleResult);
-	        	mailer.sendEmailsOrPages(immunizationResult);
-        	} catch (Exception e) {
-        		log.error("Error creating/sending email/pages", e);
-        	}
+        	map.put(PARAMETER_APP_NAME, appName);
+        	sendEmailAndPages(results, serverResult, ruleResult, immunizationResult);
         } catch (Exception e) {
         	this.log.error(Util.getStackTrace(e));
         	throw e;
         }
        
-        return modelMap;
+        return FORM_VIEW;
     }
     
-	@Override
-	protected Object formBackingObject(HttpServletRequest request)
-			throws Exception {
-		return "testing";
-	}
+    /**
+     * Send necessary email and pages to configured recipients.
+     * 
+     * @param results The clinic-specific results
+     * @param serverResult The server check results
+     * @param ruleResult The rules check results
+     * @param immunizationResult The immunization check results
+     */
+    private void sendEmailAndPages(List<CareCenterResult> results, ServerCheckResult serverResult, 
+            RuleCheckResult ruleResult, ImmunizationCheckResult immunizationResult) {
+        try {
+            // Send emails/pages if necessary.
+            DashboardMailerPager mailer = new DashboardMailerPager();
+            mailer.sendEmailsOrPages(results);
+            mailer.sendEmailsOrPages(serverResult);
+            mailer.sendEmailsOrPages(ruleResult);
+            mailer.sendEmailsOrPages(immunizationResult);
+        } catch (Exception e) {
+            log.error("Error creating/sending email/pages", e);
+        }
+    }
 }
