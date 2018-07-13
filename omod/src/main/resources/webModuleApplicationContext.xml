@@ -23,19 +23,6 @@
 	<!-- Annotation based controllers -->
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	
-	<context:component-scan base-package="org.openmrs.module.chica.web.controller" />
-	
-	<bean id="chicaopsUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-                <prop key="/module/@MODULE_ID@/dashboard.form">dashboard</prop>
-            </props>
-        </property>
-    </bean>
-    <bean id="dashboard" class="org.openmrs.module.chicaops.web.controller.ChicaopsFormController">
-        <property name="commandName"><value>dashboardObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/dashboard</value></property>
-        <property name="successView"><value>dashboard.form</value></property>
-    </bean>
+	<context:component-scan base-package="org.openmrs.module.chicaops.web.controller" />
  
 </beans>
