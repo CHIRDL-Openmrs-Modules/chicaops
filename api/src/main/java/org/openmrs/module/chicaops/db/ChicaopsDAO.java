@@ -12,6 +12,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * Interface to define the data layer methods for the Operations Dashboard.
@@ -52,21 +53,21 @@ public interface ChicaopsDAO {
 	public List<Object[]> getHL7ExportAlerts(HL7ExportChecks alerts);
 	
 	/**
-	 * Retrieves all the rules that have not been fired.
+	 * Retrieves all the rule entries that have never fired.
 	 * 
 	 * @return List of Rule objects.
 	 */
-	public List<Rule> getNeverFiredRules();
+	public List<RuleEntry> getNeverFiredRules();
 	
 	/**
-	 * Retrieves all the rules that have not been fired within a specified period of time.  
-	 * This does not include rules that have never fired at all.  This only includes rules 
+	 * Retrieves all the rule entries that have not been fired within a specified period of time.  
+	 * This does not include rule entries that have never fired at all.  This only includes rule entries
 	 * that have fired at least one time.
 	 * 
 	 * @param check UnFiredRuleCheck containing the information needing to be checked.
-	 * @return List of Rule objects.
+	 * @return List of RuleEntry objects.
 	 */
-	public List<Rule> getUnFiredRules(UnFiredRuleCheck check);
+	public List<RuleEntry> getUnFiredRules(UnFiredRuleCheck check);
 	
 	/**
 	 * Retrieves all the PatientState objects for a particular form that have been recorded 

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,6 +27,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * Implementation of the DashboardDAO used for checking state information 
@@ -197,41 +198,80 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		return patientStates;
 	}
 
-    public List<Rule> getNeverFiredRules() {
-		String sql = "select * from dss_Rule where rule_id not in (select rule_id from atd_patient_atd_element) "
-			   + "and priority is not null and priority <1000 "
-			   + "and token_name<>rule_type "
-			   + "and version <> 0.1 "
-			   + "order by title";
-		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		qry.addEntity(Rule.class);
+	/**
+	 * @see org.openmrs.module.chicaops.db.ChicaopsDAO#getNeverFiredRules()
+	 */
+    public List<RuleEntry> getNeverFiredRules() {
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("SELECT *\n");
+    	sql.append("FROM dss_rule_entry ruleEntry\n");
+    	sql.append("	 INNER JOIN dss_rule rule ON ruleEntry.rule_id = rule.rule_id\n");
+    	sql.append("	 INNER JOIN dss_rule_type ruleType\n");
+    	sql.append("		ON     ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+    	sql.append("		   AND ruleType.retired = FALSE\n");
+    	sql.append("		   AND ruleEntry.retired = FALSE\n");
+    	sql.append("		   AND ruleEntry.priority IS NOT NULL\n");
+    	sql.append("		   AND ruleEntry.priority < ?\n");
+    	sql.append("		   AND rule.token_name <> ruleType.name\n");
+    	sql.append("		   AND ruleEntry.rule_entry_id NOT IN\n");
+    	sql.append("				  (SELECT ruleEntry2.rule_entry_id\n");
+    	sql.append("					 FROM dss_rule_entry ruleEntry2\n");
+    	sql.append("						  INNER JOIN dss_rule_type ruleType2\n");
+    	sql.append("							 ON ruleEntry2.rule_type_id =\n");
+    	sql.append("								ruleType2.rule_type_id\n");
+    	sql.append("						  INNER JOIN dss_rule rule2\n");
+    	sql.append("							 ON ruleEntry2.rule_id = rule2.rule_id\n");
+    	sql.append("						  INNER JOIN atd_patient_atd_element atd\n");
+    	sql.append("							 ON rule2.rule_id = atd.rule_id\n");
+    	sql.append("						  INNER JOIN form form\n");
+    	sql.append("							 ON atd.form_id = form.form_id\n");
+    	sql.append("					WHERE ruleType2.name = form.name)\n");
+    	sql.append("ORDER BY ruleType.name, rule.token_name\n");
+
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+		qry.addEntity(RuleEntry.class);
+		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
 		return qry.list();
     }
 
-    public List<Rule> getUnFiredRules(UnFiredRuleCheck check) {
-		String sql = "SELECT * FROM dss_rule "
-			   + "WHERE rule_id NOT IN"
-			   + "          (SELECT rule_id"
-			   + "             FROM atd_patient_atd_element"
-			   + "             WHERE creation_time >= (SELECT DATE_SUB(NOW(), INTERVAL ? "
-			   + 			   check.getTimePeriodUnit() + ")))"
-			   + "       AND PRIORITY IS NOT NULL"
-			   + "       AND PRIORITY < 1000"
-			   + "       AND token_name <> rule_type"
-			   + "       AND version <> 0.1"
-			   + "       AND rule_id NOT IN"
-			   + "              (SELECT rule_id"
-			   + "                FROM dss_Rule"
-			   + "                WHERE rule_id NOT IN"
-			   + "                         (SELECT rule_id FROM atd_patient_atd_element)"
-			   + "                      AND priority IS NOT NULL"
-			   + "                      AND priority < 1000"
-			   + "                      AND token_name <> rule_type"
-			   + "                      AND version <> 0.1)";
+    /**
+     * @see org.openmrs.module.chicaops.db.ChicaopsDAO#getUnFiredRules(
+     * org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck)
+     */
+    public List<RuleEntry> getUnFiredRules(UnFiredRuleCheck check) {
+    	StringBuilder sql = new StringBuilder();
+    	sql.append("SELECT *\n");
+    	sql.append("    FROM dss_rule_entry ruleEntry\n");
+    	sql.append("         INNER JOIN dss_rule rule ON ruleEntry.rule_id = rule.rule_id\n");
+    	sql.append("         INNER JOIN dss_rule_type ruleType\n");
+    	sql.append("            ON     ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+    	sql.append("               AND ruleType.retired = FALSE\n");
+    	sql.append("               AND ruleEntry.retired = FALSE\n");
+    	sql.append("               AND ruleEntry.priority IS NOT NULL\n");
+    	sql.append("               AND ruleEntry.priority < ?\n");
+    	sql.append("               AND rule.token_name <> ruleType.name\n");
+    	sql.append("               AND ruleEntry.rule_entry_id NOT IN\n");
+    	sql.append("                      (SELECT ruleEntry2.rule_entry_id\n");
+    	sql.append("					   FROM dss_rule_entry ruleEntry2\n");
+    	sql.append("						  INNER JOIN dss_rule_type ruleType2\n");
+    	sql.append("							 ON ruleEntry2.rule_type_id =\n");
+    	sql.append("								ruleType2.rule_type_id\n");
+    	sql.append("						  INNER JOIN dss_rule rule2\n");
+    	sql.append("							 ON ruleEntry2.rule_id = rule2.rule_id\n");
+    	sql.append("						  INNER JOIN atd_patient_atd_element atd\n");
+    	sql.append("							 ON rule2.rule_id = atd.rule_id\n");
+    	sql.append("						  INNER JOIN form form\n");
+    	sql.append("							 ON atd.form_id = form.form_id\n");
+    	sql.append("					   WHERE ruleType2.name = form.name\n");
+    	sql.append("                       AND TIMESTAMPADD(");
+    	sql.append(check.getTimePeriodUnit());
+    	sql.append(", ?, atd.creation_time) >= NOW())\n");
+    	sql.append("ORDER BY ruleType.name, rule.token_name\n");
 
-		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		qry.setInteger(0, check.getTimePeriod());
-		qry.addEntity(Rule.class);
+		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
+		qry.setInteger(1, check.getTimePeriod());
+		qry.addEntity(RuleEntry.class);
 		return qry.list();
     }
 

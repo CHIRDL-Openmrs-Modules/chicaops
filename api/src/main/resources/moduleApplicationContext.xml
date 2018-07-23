@@ -7,9 +7,9 @@
 
 <beans>
 
-    <!-- This bean calls ServiceContext.setModuleService() with our ChicaopsService class -->
-    <!-- This makes it possible to call Context.getService(ChicaopsService.class);... -->
-    
+	<!-- This bean calls ServiceContext.setModuleService() with our ChicaopsService class -->
+	<!-- This makes it possible to call Context.getService(ChicaopsService.class);... -->
+	
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
@@ -37,5 +37,5 @@
             </list>
         </property>
     </bean>
-    
+	
 </beans>

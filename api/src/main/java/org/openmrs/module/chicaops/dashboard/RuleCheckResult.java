@@ -1,6 +1,7 @@
 package org.openmrs.module.chicaops.dashboard;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
@@ -13,8 +14,8 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
 public class RuleCheckResult {
 
 	private RuleChecks ruleChecks;
-	private ArrayList<String> neverFiredRules = new ArrayList<String>();
-	private ArrayList<String> unFiredRules = new ArrayList<String>();
+	private List<RuleIdentifier> neverFiredRules = new ArrayList<>();
+	private List<RuleIdentifier> unFiredRules = new ArrayList<>();
 	private boolean hasErrors;
 	private boolean hasWarnings;
 	
@@ -34,8 +35,8 @@ public class RuleCheckResult {
     	return ruleChecks;
     }
     
-    public void addUnFiredRule(String ruleTitle) {
-    	unFiredRules.add(ruleTitle);
+    public void addUnFiredRule(RuleIdentifier ruleIdentifier) {
+    	unFiredRules.add(ruleIdentifier);
     	if (DashboardConfig.SEVERITY_ERROR.equals(ruleChecks.getUnFiredCheck().getSeverity())) {
     		hasErrors = true;
     	} else if (DashboardConfig.SEVERITY_WARNING.equals(ruleChecks.getUnFiredCheck().getSeverity())) {
@@ -43,8 +44,8 @@ public class RuleCheckResult {
     	}
     }
     
-    public void addNeverFiredRule(String ruleTitle) {
-    	neverFiredRules.add(ruleTitle);
+    public void addNeverFiredRule(RuleIdentifier ruleIdentifier) {
+    	neverFiredRules.add(ruleIdentifier);
     	if (DashboardConfig.SEVERITY_ERROR.equals(ruleChecks.getNeverFiredCheck().getSeverity())) {
     		hasErrors = true;
     	} else if (DashboardConfig.SEVERITY_WARNING.equals(ruleChecks.getNeverFiredCheck().getSeverity())) {
@@ -55,14 +56,14 @@ public class RuleCheckResult {
 	/**
      * @return the unFiredRules
      */
-    public ArrayList<String> getUnFiredRules() {
+    public List<RuleIdentifier> getUnFiredRules() {
     	return unFiredRules;
     }
     
 	/**
-     * @return the unFiredRules
+     * @return the neverFiredRules
      */
-    public ArrayList<String> getNeverFiredRules() {
+    public List<RuleIdentifier> getNeverFiredRules() {
     	return neverFiredRules;
     }
     

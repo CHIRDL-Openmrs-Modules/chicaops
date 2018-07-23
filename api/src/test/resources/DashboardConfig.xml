@@ -1,0 +1,572 @@
+<!-- 
+	The possible unit values for the time measurements below are as follows:
+		microsecond
+		second
+		minute
+		hour
+		day
+		week
+		quarter
+		year
+
+	The possible values for severity are as follows:
+		error
+		warning
+
+	Sample config XML:
+	<dashboardConfig>
+		<statesToMonitor>
+			<stateToMonitor name="PSF_printed">
+				<elapsedTime unit="second">30</elapsedTime>
+				<timePeriod unit="day">20</timePeriod>
+				<numErrors>1</numErrors>
+				<severity>error</severity>
+				<fixTips> //fix tips are optional
+					<tip>Is there power to the printer?</tip>
+					<tip>Check the USB cable.</tip>
+					.........
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>test@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>555-5555</pageNumber>
+				</notification>
+			</stateToMonitor>
+			.........
+		</statesToMonitor>
+		<hl7ExportChecks>
+			<check>ACK_not_received</check>
+			.........
+			<timePeriod unit="day">8</timePeriod>
+			<numErrors>1</numErrors>
+			<severity>error</severity>
+			<fixTips> //fix tips are optional
+				<tip>HL7 tip 1.</tip>
+				...........
+			</fixTips>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress>test@iupui.edu</emailAddress>
+				<page>N</page>
+				<pageNumber>555-5555</pageNumber>
+			</notification>
+		</hl7ExportChecks>
+		<forcedOutPWSCheck>
+			<timePeriod unit="day">6</timePeriod>
+			<severity>error</severity>
+			<fixTips> //fix tips are optional
+				<tip>PWS tip 1.</tip>
+				...........
+			</fixTips>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress>test@iupui.edu</emailAddress>
+				<page>N</page>
+				<pageNumber>555-5555</pageNumber>
+			</notification>
+		</forcedOutPWSCheck>
+		<scanChecks>
+			<scanCheck>
+				<formName>PSF</formName>
+				<timePeriod unit="day">3</timePeriod>	
+				<severity>error</severity>
+				<fixTips> //fix tips are optional
+					<tip>tip 1.</tip>
+					...........
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>sjmckee@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>3175431631</pageNumber>
+				</notification>
+			</scanCheck>
+		</scanChecks>
+		<serverChecks>
+			<memoryCheck>
+				<percentileToNotify>1</percentileToNotify>
+				<severity>warning</severity>
+				<fixTips> // fix tips are optional
+					<tip>Tip 1</tip>
+					.........
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>test@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>555-5555</pageNumber>
+				</notification>
+			</memoryCheck>
+			.........
+			<directoryCheck>
+				<imageDir>C:\chica\images\BBPS\PSF</imageDir>
+				<scanDir>C:\chica\scan\BBPS\PSF_SCAN</scanDir>
+				<timePeriod unit="week">1</timePeriod>
+				<numErrors>1</numErrors>
+				<severity>error</severity>
+				<fixTips> // fix tips are optional
+					<tip>Tip 1</tip>
+					.........
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>test@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>555-5555</pageNumber>
+				</notification>
+			</directoryCheck>
+			.........
+		</serverChecks>
+		<ruleChecks>
+			<neverFiredCheck>
+				<severity>warning</severity>
+				<fixTips> // fix tips are optional
+					<tip>Tip 1.</tip>
+					.......
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>test@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>555-5555</pageNumber>
+				</notification>
+			</neverFiredCheck>
+			<unFiredCheck>
+				<timePeriod unit="month">6</timePeriod>
+				<severity>warning</severity>
+				<fixTips> // fix tips are optional
+					<tip>Tip 1</tip>
+					.........
+				</fixTips>
+				<notification>
+					<email>N</email>
+					<weekend>N</weekend>
+					<emailAddress>test@iupui.edu</emailAddress>
+					<page>N</page>
+					<pageNumber>555-5555</pageNumber>
+				</notification>
+			</unFiredCheck>
+		</ruleChecks>
+	</dashboardConfig>
+-->
+<dashboardConfig>
+	<statesToMonitor>
+		<stateToMonitor name="PSF_printed">
+			<elapsedTime unit="second">60</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<!--<fixTips>
+				<tip>Is there power to the printer?</tip>
+				<tip>Check the USB cable.</tip>
+			</fixTips>-->
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PSF_printed">
+			<elapsedTime unit="second">180</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<!--<fixTips>
+				<tip>Is there power to the printer?</tip>
+				<tip>Check the USB cable.</tip>
+			</fixTips>-->
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PWS_printed">
+			<elapsedTime unit="second">60</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PWS_printed">
+			<elapsedTime unit="second">180</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PWS_create">
+			<elapsedTime unit="second">30</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>5</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PWS_create">
+			<elapsedTime unit="second">120</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>5</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PSF_create">
+			<elapsedTime unit="second">30</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>5</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="PSF_create">
+			<elapsedTime unit="second">120</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>5</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="JIT_printed">
+			<elapsedTime unit="second">60</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="JIT_printed">
+			<elapsedTime unit="second">180</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>2</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<stateToMonitor name="CHECKIN">
+			<elapsedTime unit="minute">15</elapsedTime>
+			<timePeriod unit="hour">1</timePeriod>
+			<numErrors>5</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+		<!-- The following state check is used to tell us if we're being bombarded by checkins for some reason -->
+		<stateToMonitor name="CHECKIN">
+			<elapsedTime unit="microsecond">1</elapsedTime>
+			<timePeriod unit="minute">1</timePeriod>
+			<numErrors>10</numErrors>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</stateToMonitor>
+	</statesToMonitor>
+	<hl7ExportChecks>
+		<check>ACK_not_received</check>
+		<check>concept_map_location_unknown</check>
+		<check>Image_not_found</check>
+		<check>hl7_config_file_not_found</check>
+		<check>no_hl7_config_properties</check>
+		<check>XML_parsing_error</check>
+		<check>PSF_Image_not_found</check>
+		<!--<check>PWS_Image_not_found</check>-->
+		<timePeriod unit="hour">1</timePeriod>
+		<numErrors>3</numErrors>
+		<severity>error</severity>
+		<notification>
+			<email>N</email>
+			<weekend>N</weekend>
+			<emailAddress></emailAddress>
+			<page>N</page>
+			<pageNumber>3175431631</pageNumber>
+		</notification>
+	</hl7ExportChecks>
+	<forcedOutPWSCheck>
+		<timePeriod unit="hour">4</timePeriod>
+		<severity>error</severity>
+		<notification>
+			<email>N</email>
+			<weekend>N</weekend>
+			<emailAddress></emailAddress>
+			<page>N</page>
+			<pageNumber>3175431631</pageNumber>
+		</notification>
+	</forcedOutPWSCheck>
+	<scanChecks>
+		<scanCheck>
+			<formName>PSF</formName>
+			<timePeriod unit="hour">24</timePeriod>	
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</scanCheck>
+		<scanCheck>
+			<formName>PWS</formName>
+			<timePeriod unit="hour">48</timePeriod>	
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</scanCheck>
+	</scanChecks>
+	<serverChecks>
+		<memoryCheck>
+			<percentileToNotify>90</percentileToNotify>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</memoryCheck>
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\BBPS\PSF</imageDir>
+			<scanDir>C:\chica\scan\BBPS\PSF_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\BBPS\PWS</imageDir>
+			<scanDir>C:\chica\scan\BBPS\PWS_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\FMPS\PSF</imageDir>
+			<scanDir>C:\chica\scan\FMPS\PSF_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\FMPS\PWS</imageDir>
+			<scanDir>C:\chica\scan\FMPS\PWS_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\PCPS\PSF</imageDir>
+			<scanDir>C:\chica\scan\PCPS\PSF_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\PCPS\PWS</imageDir>
+			<scanDir>C:\chica\scan\PCPS\PWS_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\PEPS\PSF</imageDir>
+			<scanDir>C:\chica\scan\PEPS\PSF_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+		<!--<directoryCheck>
+			<imageDir>C:\chica\images\PEPS\PWS</imageDir>
+			<scanDir>C:\chica\scan\PEPS\PWS_SCAN</scanDir>
+			<timePeriod unit="hour">4</timePeriod>
+			<numErrors>5</numErrors>
+			<bufferTime unit="minute">5</bufferTime>
+			<severity>error</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</directoryCheck>-->
+	</serverChecks>
+	<ruleChecks>
+		<neverFiredCheck>
+			<severity>warning</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress>sjmckee@iu.edu</emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</neverFiredCheck>
+		<unFiredCheck>
+			<timePeriod unit="minute">1</timePeriod>
+			<severity>warning</severity>
+			<notification>
+				<email>N</email>
+				<weekend>N</weekend>
+				<emailAddress></emailAddress>
+				<page>N</page>
+				<pageNumber>3175431631</pageNumber>
+			</notification>
+		</unFiredCheck>
+	</ruleChecks>
+	<immunizationChecks>
+		<check>CHIRP sent an application error. Review CHIRP response string in log or error table.</check>
+		<check>CHIRP HL7 parsing error . Check CHIRP response in logs.</check>
+		<check>CHIRP query timed out</check>
+		<check>CHIRP response was empty or invalid</check>
+		<check>CHIRP did not accept immunization update. Review CHIRP response in logs or error table.</check>
+		<check>Error during immunization POST to CHIRP.  Verify URL and parameters.</check>
+		<timePeriod unit="hour">2</timePeriod>
+		<numErrors>5</numErrors>
+		<severity>error</severity>
+		<notification>
+			<email>N</email>
+			<weekend>N</weekend>
+			<emailAddress></emailAddress>
+			<page>N</page>
+			<pageNumber>3175431631</pageNumber>
+		</notification>
+	</immunizationChecks>
+	<manualCheckinChecks>
+		<timePeriod unit="minute">30</timePeriod>
+		<!-- Emails/pages will be sent when the number of manual check-ins is greater than manualCheckinNum-->
+		<manualCheckinNum>10</manualCheckinNum>
+		<severity>warning</severity>
+		<notification>
+			<email>N</email>
+			<weekend>N</weekend>
+			<emailAddress></emailAddress>
+			<page>N</page>
+			<pageNumber>3175431631</pageNumber>
+		</notification>
+	</manualCheckinChecks>
+</dashboardConfig>
