@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.openmrs.Location;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
-import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
@@ -41,6 +42,14 @@ public interface ChicaopsDAO {
 	 */
 	public List<PatientState> getForcedOutPWSs(ForcedOutPWSCheck forcedOutPWSCheck);
 	
+	/**
+	 * Retrieve the number of suspected wifi issues
+	 * @param wifiIssueChecks
+	 * @param location
+	 * @return
+	 */
+	public Integer getWifiIssues(WifiIssueChecks wifiIssueChecks, Location location);
+    
 	/**
 	 * Finds status in the HL7 Export table occurring based on the specified parameter in 
 	 * the provided HL7ExportAlerts object. 

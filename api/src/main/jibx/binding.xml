@@ -8,6 +8,7 @@
         <structure field="ruleChecks" usage="optional"/>
         <structure field="immunizationChecks" usage="optional"/>
         <structure field="manualCheckinChecks" usage="optional"/>
+        <structure field="wifiIssueChecks" usage="optional"/>
     </mapping>
     <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor" name="statesToMonitor">
         <collection field="statesToMonitor">
@@ -141,6 +142,15 @@
            <value style="text" field="timePeriod" />
        </structure>
        <value name="manualCheckinNum" field="manualCheckinNum" />
+       <value name="severity" field="severity" />
+       <structure field="notification"/>
+    </mapping>
+    <mapping class="org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks" name="wifiIssueChecks">
+       <structure name="timePeriod" value-style="attribute">
+           <value name="unit" field="timePeriodUnit" />
+           <value style="text" field="timePeriod" />
+       </structure>
+       <value name="wifiIssueNum" field="wifiIssueNum" />
        <value name="severity" field="severity" />
        <structure field="notification"/>
     </mapping>
