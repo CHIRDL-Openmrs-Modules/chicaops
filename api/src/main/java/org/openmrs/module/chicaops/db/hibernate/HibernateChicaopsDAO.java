@@ -26,6 +26,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
@@ -137,19 +138,24 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	
 	@Override
     public Integer getWifiIssues(WifiIssueChecks wifiIssueChecks, Location location) {
+	    
+        Set<String> formNames = org.openmrs.module.atd.util.Util.getPrimaryFormNameByLocation(
+          ChirdlUtilConstants.FORM_ATTRIBUTE_IS_PRIMARY_PATIENT_FORM, location.getLocationId());
+	    
         String sql = "select count(distinct form_instance_id) as num_issues from "+
                 "(select a.form_instance_id from atd_statistics a "+
                 "inner join obs d on a.obsv_id=d.obs_id "+
                 "inner join concept_name b on d.concept_id=b.concept_id "+
                 "inner join concept_name c on d.value_coded = c.concept_id "+
                 "where TIMESTAMPDIFF(" + wifiIssueChecks.getTimePeriodUnit() 
-                + ", printed_timestamp, NOW()) <= ? and form_name='PSF' "+
+                + ", printed_timestamp, NOW()) <= ? and form_name in (:forms) "+
                 "and a.location_id=? "+
                 "group by a.form_instance_id,a.location_id,a.rule_id,b.name,c.name "+
                 "having count(*)>1)a";
         
         SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
         qry.setInteger(0, wifiIssueChecks.getTimePeriod());
+        qry.setParameterList("forms", formNames);
         qry.setInteger(1, location.getLocationId());
         qry.addScalar("num_issues",StandardBasicTypes.LONG);
         List results = qry.list();
