@@ -47,6 +47,7 @@ import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.RuleIdentifier;
 import org.openmrs.module.chicaops.dashboard.ScanProblem;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
+import org.openmrs.module.chicaops.dashboard.WifiIssueNumResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
 import org.openmrs.module.chicaops.service.ChicaopsService;
 import org.openmrs.module.chicaops.util.FileListTimeFilter;
@@ -63,6 +64,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ServerChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StatesToMonitor;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
 import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormAttributeValue;
@@ -97,7 +99,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	 * @return The ChicaopsDAO object.
 	 */
 	public ChicaopsDAO getChicaopsDAO() {
-		return dao;
+		return this.dao;
 	}
 
     @Override
@@ -159,7 +161,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    	for (ScanCheck check : scanChecks.getScanChecks()) {
 		        	Form form = formService.getForm(check.getFormName());
 		        	if (form == null) {
-		        		log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
+		        		this.log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
 		        		continue;
 		        	}
 		        	
@@ -213,8 +215,21 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    	}
 		    }
 		    
+		    List<WifiIssueNumResult> wifiIssueNumResultList = performWifiIssuesChecks();
+            if(wifiIssueNumResultList != null)
+            {
+                for(WifiIssueNumResult wifiIssueNumResult : wifiIssueNumResultList)
+                {
+                    CareCenterResult careCenterResult = careCenterIdToResultMap.get(wifiIssueNumResult.getLocation().getId());
+                    if(careCenterResult != null)
+                    {
+                        careCenterResult.setWifiIssueNumResult(wifiIssueNumResult);
+                    }
+                }
+            }
+		    
 		} catch (Throwable e) {
-			log.error("Error processing the dashboard configuration file.", e);
+			this.log.error("Error processing the dashboard configuration file.", e);
 		}
 	    
 		ArrayList<CareCenterResult> returnList = new ArrayList<CareCenterResult>(careCenterNameToResultMap.values());
@@ -284,7 +299,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			performMemoryChecks(checks.getMemoryChecks(), result);
 			performDirectoryChecks(checks.getDirectoryChecks(), result);
 		} catch (Throwable e) {
-			log.error("Error attempting to load the dashboard configuration file.", e);
+			this.log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 	    
 	    return result;
@@ -337,18 +352,18 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			File imageDir = new File(imageDirStr);
 			File scanDir = new File(scanDirStr);
 			if (!imageDir.exists() || !imageDir.canRead()) {
-				log.error("Error performing directory checks: The image directory (" + imageDir + ") does not exist or " +
+				this.log.error("Error performing directory checks: The image directory (" + imageDir + ") does not exist or " +
 						"cannot be read.");
 				continue;
 			} else if (!scanDir.exists() || !scanDir.canRead()) {
-				log.error("Error performing directory checks: The scan directory (" + scanDir + ") does not exist or " +
+				this.log.error("Error performing directory checks: The scan directory (" + scanDir + ") does not exist or " +
 				"cannot be read.");
 				continue;
 			} else if (!imageDir.isDirectory()) {
-				log.error("Error performing directory checks: The image directory (" + imageDir + " is not directory.");
+				this.log.error("Error performing directory checks: The image directory (" + imageDir + " is not directory.");
 				continue;
 			} else if (!scanDir.isDirectory()) {
-				log.error("Error performing directory checks: The scan directory (" + scanDir + " is not directory.");
+				this.log.error("Error performing directory checks: The scan directory (" + scanDir + " is not directory.");
 				continue;
 			}
 			
@@ -447,14 +462,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		String configFileStr = adminService.getGlobalProperty(
 			"chicaops.dashboardConfigFile");
 		if (configFileStr == null) {
-			log.error("You must set a value for global property: "
+			this.log.error("You must set a value for global property: "
 				+ "chicaops.dashboardConfigFile");
 			return null;
 		}
 		
 		File configFile = new File(configFileStr);
 		if (!configFile.exists()) {
-			log.error("The file location specified for the global property "
+			this.log.error("The file location specified for the global property "
 				+ "chicaops.dashboardConfigFile does not exist.");
 			return null;
 		}
@@ -503,7 +518,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    }
 			return results;
 		} catch (Exception e) {
-			log.error("Error processing the dashboard configuration file.", e);
+			this.log.error("Error processing the dashboard configuration file.", e);
 		}
 		
 		return new RuleCheckResult(ruleChecks);
@@ -546,7 +561,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			result.setImmunizationChecks(immunChecks);
 			
 		} catch (Exception e) {
-			log.error("Error attempting to load the dashboard configuration file.", e);
+			this.log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 		return result;
 	}
@@ -598,12 +613,11 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		}
     }
 
-	@Override
 	/**
 	 * Perform monitoring clinic manual check-in times frequency. If it happens too frequently, the program will let chica team know. 
 	 * @return ManualCheckinNumResult object containing the results of manual check-in monitoring result
 	 */
-	public List<ManualCheckinNumResult> performManualCheckinChecks() {
+	private List<ManualCheckinNumResult> performManualCheckinChecks() {
 		DashboardConfig config=null;
 		List<ManualCheckinNumResult> resultsList = new ArrayList<ManualCheckinNumResult>();
 		try {
@@ -638,8 +652,46 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				
 			}
 		} catch (Exception e) {
-			log.error("Error attempting to load the dashboard configuration file.", e);
+			this.log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 		return resultsList;
 	}
+	
+	   private List<WifiIssueNumResult> performWifiIssuesChecks() {
+	       DashboardConfig config=null;
+	        List<WifiIssueNumResult> resultsList = new ArrayList<WifiIssueNumResult>();
+	        try {
+	            config = getDashboardConfig();
+	            if (config == null) {
+	                return null;
+	            }
+	            WifiIssueChecks wifiIssueChecks = config.getWifiIssueChecks();
+	            if (wifiIssueChecks == null) {
+	                  return null;
+	            }
+       
+	            LocationService ls = Context.getLocationService();
+	            List<Location> locations = ls.getAllLocations();
+	            for(Location loc: locations){
+	                
+	                Integer wifiIssueNum = getWifiIssues(wifiIssueChecks,loc);
+	                
+	                if(wifiIssueNum>=wifiIssueChecks.getWifiIssueNum()){
+	                    WifiIssueNumResult result = new WifiIssueNumResult();
+	                    result.setWifiIssueChecks(wifiIssueChecks);
+	                    result.setLocation(loc);
+	                    result.setNumberOfWifiIssues(wifiIssueNum); 
+	                    resultsList.add(result);
+	                }
+	                
+	            }
+	        } catch (Exception e) {
+	            this.log.error("Error attempting to load the dashboard configuration file.", e);
+	        }
+	        return resultsList;
+	    }
+	   
+	   public Integer getWifiIssues(WifiIssueChecks wifiIssueChecks, Location location){
+	       return getChicaopsDAO().getWifiIssues(wifiIssueChecks, location);
+	   }
 }

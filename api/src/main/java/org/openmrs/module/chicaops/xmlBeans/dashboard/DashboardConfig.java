@@ -225,6 +225,7 @@ public class DashboardConfig {
 	private RuleChecks ruleChecks;
 	private ImmunizationChecks immunizationChecks;
 	private ManualCheckinChecks manualCheckinChecks;
+	private WifiIssueChecks wifiIssueChecks;
 
 	/**
 	 * Default Constructor
@@ -248,7 +249,8 @@ public class DashboardConfig {
 	                       ScanChecks scanChecks,
 	                       RuleChecks ruleChecks,
 	                       ImmunizationChecks immunizationChecks,
-	                       ManualCheckinChecks manualCheckinChecks) {
+	                       ManualCheckinChecks manualCheckinChecks,
+	                       WifiIssueChecks wifiIssueChecks) {
 		this.statesToMonitor = statesToMonitor;
 		this.serverChecks = serverChecks;
 		this.forcedOutPWSCheck = forcedOutPWSCheck;
@@ -257,13 +259,14 @@ public class DashboardConfig {
 		this.ruleChecks = ruleChecks;
 		this.immunizationChecks = immunizationChecks;
 		this.manualCheckinChecks = manualCheckinChecks;
+		this.wifiIssueChecks = wifiIssueChecks;
 	}
 	
     /**
      * @return the statesToMonitor
      */
     public StatesToMonitor getStatesToMonitor() {
-    	return statesToMonitor;
+    	return this.statesToMonitor;
     }
     
     /**
@@ -277,7 +280,7 @@ public class DashboardConfig {
      * @return the serverChecks
      */
     public ServerChecks getServerChecks() {
-    	return serverChecks;
+    	return this.serverChecks;
     }
 	
     /**
@@ -291,7 +294,7 @@ public class DashboardConfig {
      * @return the forcedOutPWSCheck
      */
     public ForcedOutPWSCheck getForcedOutPWSCheck() {
-    	return forcedOutPWSCheck;
+    	return this.forcedOutPWSCheck;
     }
 	
     /**
@@ -305,7 +308,7 @@ public class DashboardConfig {
      * @return the hl7ExportChecks
      */
     public HL7ExportChecks getHl7ExportChecks() {
-    	return hl7ExportChecks;
+    	return this.hl7ExportChecks;
     }
 	
     /**
@@ -319,7 +322,7 @@ public class DashboardConfig {
      * @return the scanChecks
      */
     public ScanChecks getScanChecks() {
-    	return scanChecks;
+    	return this.scanChecks;
     }
 	
     /**
@@ -333,7 +336,7 @@ public class DashboardConfig {
      * @return the ruleChecks
      */
     public RuleChecks getRuleChecks() {
-    	return ruleChecks;
+    	return this.ruleChecks;
     }
 	
     /**
@@ -344,7 +347,7 @@ public class DashboardConfig {
     }
 
 	public ImmunizationChecks getImmunizationChecks() {
-		return immunizationChecks;
+		return this.immunizationChecks;
 	}
 
 	public void setImmunizationChecks(ImmunizationChecks immunizationChecks) {
@@ -352,12 +355,22 @@ public class DashboardConfig {
 	}
 
 	public ManualCheckinChecks getManualCheckinChecks() {
-		return manualCheckinChecks;
+		return this.manualCheckinChecks;
 	}
 
 	public void setManualCheckinChecks(ManualCheckinChecks manualCheckinChecks) {
 		this.manualCheckinChecks = manualCheckinChecks;
 	}
+
+    
+    public WifiIssueChecks getWifiIssueChecks() {
+        return this.wifiIssueChecks;
+    }
+
+    
+    public void setWifiIssueChecks(WifiIssueChecks wifiIssueChecks) {
+        this.wifiIssueChecks = wifiIssueChecks;
+    }
 	
 	
 }
