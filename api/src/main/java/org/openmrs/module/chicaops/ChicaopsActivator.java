@@ -23,14 +23,16 @@ public class ChicaopsActivator extends BaseModuleActivator {
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
-	public void stopped() {
+	@Override
+    public void stopped() {
 		this.log.info("Shutting down Chica Ops Module");
 	}
 
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#started()
 	 */
-	public void started() {
+	@Override
+    public void started() {
 		this.log.info("Starting Chica Ops Module");
 		
 		//check that all the required global properties are set
@@ -52,15 +54,8 @@ public class ChicaopsActivator extends BaseModuleActivator {
 			{
 				currProperty = properties.next();
 				currName = currProperty.getProperty();
-				if (currName.equals("chicaops.dashboardConfigFile"))
+				if (currName.equals("chicaops.dashboardConfigFile")  || currName.equals("chicaops.dashboardRefresh"))
 				{
-					currValue = currProperty.getPropertyValue();
-					if (currValue == null || currValue.length() == 0)
-					{
-						this.log.error("You must set a value for global property: "
-								+ currName);
-					}
-				} else if (currName.equals("chicaops.dashboardRefresh")) {
 					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{

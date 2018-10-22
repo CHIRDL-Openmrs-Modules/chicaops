@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -87,9 +88,9 @@ public class DashboardMailerPager {
 	/**
 	 * Sends emails/pages for the Care Center Results.
 	 * 
-	 * @param results ArrayList of CareCenterResult objects.
+	 * @param results List of CareCenterResult objects.
 	 */
-	public void sendEmailsOrPages(ArrayList<CareCenterResult> results) {
+	public void sendEmailsOrPages(List<CareCenterResult> results) {
 		for (CareCenterResult result : results) {
 			String location = result.getCareCenterName();
 			String locationDescription = result.getCareCenterDescription();
