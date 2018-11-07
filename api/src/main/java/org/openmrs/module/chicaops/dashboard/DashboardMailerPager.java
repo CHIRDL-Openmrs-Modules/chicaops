@@ -25,7 +25,6 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
-import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
@@ -406,50 +405,7 @@ public class DashboardMailerPager {
 			}
 		}
 	}
-	/**
-	 * Sends emails/pages for issues with the immunization checks.
-	 * 
-	 * @param immunizationResult ImmunizationCheckResult object containing the results from the immunization checks.
-	 */
-	public void sendEmailsOrPages(ImmunizationCheckResult immunizationResult) {
-		// Memory problems
-		if (immunizationResult == null) 
-			return;
-		Map<String, Integer> immunProblemsMap = immunizationResult.getImmunizationProblems();
-		
-		if (!immunProblemsMap.isEmpty()) {
-			ImmunizationChecks checks = immunizationResult.getImmunizationChecks();
-			Notification notification = checks.getNotification();
-			if (notification != null) {
-				if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
-						DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-					Set<Entry<String, Integer>> entries = immunProblemsMap.entrySet();
-					Iterator<Entry<String, Integer>> iter = entries.iterator();
-					StringBuffer message = new StringBuffer("There have been some immunization forecasting issues over the past ");
-					message.append(checks.getTimePeriod());
-					message.append(" ");
-					message.append(checks.getTimePeriodUnit());
-					message.append("(s) ");
-					while (iter.hasNext()) {
-						Entry<String, Integer> entry = iter.next();
-						message.append("\n");
-						message.append(entry.getKey());
-					}
-					
-					message.append("\n\nRegards,\nCHICA Operations Dashboard");
-					if (canSendMessage(message.toString(), notification)) {
-						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
-							sendMail(message.toString(), notification.getEmailAddress(), null, null);
-						}
-						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-							sendPage(message.toString(), notification.getPageNumber());
-						}
-					}
-				}
-			}
-		}
-
-	}
+	
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {

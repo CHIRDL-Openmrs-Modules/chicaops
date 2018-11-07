@@ -8,7 +8,6 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DashboardMailerPager;
-import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 import org.openmrs.module.chicaops.service.ChicaopsService;
@@ -41,7 +40,6 @@ public class ChicaopsFormController {
     /** Parameters */
     private static final String PARAMETER_APP_NAME = "appName";
     private static final String PARAMETER_REFRESH_PERIOD = "refreshPeriod";
-    private static final String PARAMETER_IMMUNIZATION_RESULT = "immunizationResult";
     private static final String PARAMETER_RULE_RESULT = "ruleResult";
     private static final String PARAMETER_SERVER_RESULT = "serverResult";
     private static final String PARAMETER_CARE_CENTERS = "careCenters";
@@ -83,10 +81,6 @@ public class ChicaopsFormController {
         	RuleCheckResult ruleResult = dashService.performRuleChecks();
         	map.put(PARAMETER_RULE_RESULT, ruleResult);
         	
-        	// Check rules
-        	ImmunizationCheckResult immunizationResult = dashService.performImmunizationChecks();
-        	map.put(PARAMETER_IMMUNIZATION_RESULT, immunizationResult);
-        	
         	// Load the refresh rate
         	String refreshRate = adminService.getGlobalProperty(GLOBAL_PROP_CHICAOPS_DASHBOARD_REFRESH);        	
         	if (refreshRate == null || refreshRate.trim().length() == 0) {
@@ -103,7 +97,7 @@ public class ChicaopsFormController {
         	}
         	
         	map.put(PARAMETER_APP_NAME, appName);
-        	sendEmailAndPages(results, serverResult, ruleResult, immunizationResult);
+        	sendEmailAndPages(results, serverResult, ruleResult);
         } catch (Exception e) {
         	this.log.error(Util.getStackTrace(e));
         	throw e;
@@ -118,17 +112,15 @@ public class ChicaopsFormController {
      * @param results The clinic-specific results
      * @param serverResult The server check results
      * @param ruleResult The rules check results
-     * @param immunizationResult The immunization check results
      */
     private void sendEmailAndPages(List<CareCenterResult> results, ServerCheckResult serverResult, 
-            RuleCheckResult ruleResult, ImmunizationCheckResult immunizationResult) {
+            RuleCheckResult ruleResult) {
         try {
             // Send emails/pages if necessary.
             DashboardMailerPager mailer = new DashboardMailerPager();
             mailer.sendEmailsOrPages(results);
             mailer.sendEmailsOrPages(serverResult);
             mailer.sendEmailsOrPages(ruleResult);
-            mailer.sendEmailsOrPages(immunizationResult);
         } catch (Exception e) {
             log.error("Error creating/sending email/pages", e);
         }
