@@ -181,21 +181,6 @@ package org.openmrs.module.chicaops.xmlBeans.dashboard;
  *						</notification>
  *					</unFiredCheck>
  *				</ruleChecks>
- *				<immunizationChecks>
- *						<timePeriod unit="hour">8</timePeriod>
- *						<severity>warning</severity>
- *						<numErrors>1</numErrors>
- *						<fixTips> <!-- fix tips are optional -->
- *							<tip>Tip 1.</tip>
- *							..........
- *						</fixTips>
- *						<notification>
- *							<email>Y</email>
- *							<emailAddress>bob@iupui.edu</emailAddress>
- *							<page>N</page>
- *							<pageNumber>5555555</pageNumber>
- *						</notification>
- *				</immunizationChecks>
  *			</dashboardConfig>
  *  	}
  *  </pre>
@@ -223,7 +208,6 @@ public class DashboardConfig {
 	private HL7ExportChecks hl7ExportChecks;
 	private ScanChecks scanChecks;
 	private RuleChecks ruleChecks;
-	private ImmunizationChecks immunizationChecks;
 	private ManualCheckinChecks manualCheckinChecks;
 	private WifiIssueChecks wifiIssueChecks;
 
@@ -248,7 +232,6 @@ public class DashboardConfig {
 	                       HL7ExportChecks hl7ExportChecks,
 	                       ScanChecks scanChecks,
 	                       RuleChecks ruleChecks,
-	                       ImmunizationChecks immunizationChecks,
 	                       ManualCheckinChecks manualCheckinChecks,
 	                       WifiIssueChecks wifiIssueChecks) {
 		this.statesToMonitor = statesToMonitor;
@@ -257,7 +240,6 @@ public class DashboardConfig {
 		this.hl7ExportChecks = hl7ExportChecks;
 		this.scanChecks = scanChecks;
 		this.ruleChecks = ruleChecks;
-		this.immunizationChecks = immunizationChecks;
 		this.manualCheckinChecks = manualCheckinChecks;
 		this.wifiIssueChecks = wifiIssueChecks;
 	}
@@ -346,15 +328,7 @@ public class DashboardConfig {
     	this.ruleChecks = ruleChecks;
     }
 
-	public ImmunizationChecks getImmunizationChecks() {
-		return this.immunizationChecks;
-	}
-
-	public void setImmunizationChecks(ImmunizationChecks immunizationChecks) {
-		this.immunizationChecks = immunizationChecks;
-	}
-
-	public ManualCheckinChecks getManualCheckinChecks() {
+    public ManualCheckinChecks getManualCheckinChecks() {
 		return this.manualCheckinChecks;
 	}
 

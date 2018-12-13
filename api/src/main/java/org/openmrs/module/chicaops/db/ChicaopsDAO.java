@@ -8,7 +8,6 @@ import org.openmrs.Location;
 import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
-import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
@@ -91,11 +90,5 @@ public interface ChicaopsDAO {
 	 */
 	public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate, String reprintStateName);
 	
-	/**
-	 * Retrieves all errors from chirdlutilbackports_error table based on immunization error
-	 * message.
-	 * @param alerts ImmunizationCheck contains information needing to be checked.
-	 * @return
-	 */
-	public List<String> getImmunizationAlerts(ImmunizationChecks alerts);
+	
 }

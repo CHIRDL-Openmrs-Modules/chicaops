@@ -538,24 +538,6 @@
 			</notification>
 		</unFiredCheck>
 	</ruleChecks>
-	<immunizationChecks>
-		<check>CHIRP sent an application error. Review CHIRP response string in log or error table.</check>
-		<check>CHIRP HL7 parsing error . Check CHIRP response in logs.</check>
-		<check>CHIRP query timed out</check>
-		<check>CHIRP response was empty or invalid</check>
-		<check>CHIRP did not accept immunization update. Review CHIRP response in logs or error table.</check>
-		<check>Error during immunization POST to CHIRP.  Verify URL and parameters.</check>
-		<timePeriod unit="hour">2</timePeriod>
-		<numErrors>5</numErrors>
-		<severity>error</severity>
-		<notification>
-			<email>N</email>
-			<weekend>N</weekend>
-			<emailAddress></emailAddress>
-			<page>N</page>
-			<pageNumber>3175431631</pageNumber>
-		</notification>
-	</immunizationChecks>
 	<manualCheckinChecks>
 		<timePeriod unit="minute">30</timePeriod>
 		<!-- Emails/pages will be sent when the number of manual check-ins is greater than manualCheckinNum-->
