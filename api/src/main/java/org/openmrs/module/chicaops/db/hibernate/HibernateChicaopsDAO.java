@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.StandardBasicTypes;
 import org.openmrs.Location;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
@@ -21,12 +22,12 @@ import org.openmrs.module.chicaops.dashboard.MonitorResult;
 import org.openmrs.module.chicaops.db.ChicaopsDAO;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
-import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
-import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
@@ -133,6 +134,46 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.addEntity(PatientState.class);
 		return qry.list();
 	}
+	
+	@Override
+    public Integer getWifiIssues(WifiIssueChecks wifiIssueChecks, Location location) {
+        
+        Set<String> formNames = org.openmrs.module.atd.util.Util.getPrimaryFormNameByLocation(
+            ChirdlUtilConstants.LOC_TAG_ATTR_PRIMARY_PATIENT_FORM, location.getLocationId());
+        
+        if (!formNames.isEmpty()) {
+            StringBuilder sql = new StringBuilder("select count(distinct form_instance_id) as num_issues from "
+                    + "(select a.form_instance_id from atd_statistics a " + "inner join obs d on a.obsv_id=d.obs_id "
+                    + "inner join concept_name b on d.concept_id=b.concept_id "
+                    + "inner join concept_name c on d.value_coded = c.concept_id " + "where TIMESTAMPDIFF("
+                    + wifiIssueChecks.getTimePeriodUnit() + ", printed_timestamp, NOW()) <= ? and form_name in (");
+            
+            for (int i = 0; i < formNames.size(); i++) {
+                if (i == 0) {
+                    sql.append("?");
+                    continue;
+                }
+                
+                sql.append(", ?");
+            }
+            
+            sql.append(") " + "and a.location_id=? " + "group by a.form_instance_id,a.location_id,a.rule_id,b.name,c.name "
+                    + "having count(*)>1)a");
+            
+            SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+            qry.setInteger(0, wifiIssueChecks.getTimePeriod());
+            
+            int count = 1;
+            for (String alert : formNames) {
+                qry.setString(count++, alert);
+            }
+            qry.setInteger(2, location.getLocationId());
+            qry.addScalar("num_issues", StandardBasicTypes.LONG);
+            List results = qry.list();
+            return Integer.valueOf(results.get(0).toString());
+        }
+        return 0;
+    }
 	
 	@Override
     public List<Object[]> getHL7ExportAlerts(HL7ExportChecks alerts) {
@@ -298,33 +339,5 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.addEntity(PatientState.class);
 		return qry.list();
     }
-    
-    @Override
-    public List<String> getImmunizationAlerts(ImmunizationChecks alerts) {
-    	StringBuffer sql = new StringBuffer("select e.message from chirdlutilbackports_error e "
-    			+ " join chirdlutilbackports_error_category c ON "  
-    			+ " e.error_category_id = c.error_category_id"
-    			+ " where c.name like 'Query Immunization List Connection' "
-    			+ " and e.message in (");
-    	
-    	ArrayList<String> al = alerts.getChecks();
-		for (int i = 0; i < al.size(); i++) {
-			if (i == 0) {
-				sql.append("?");
-				continue;
-			}
-			
-			sql.append(", ?");
-		}
-    	
-		sql.append(") and TIMESTAMPDIFF(" + alerts.getTimePeriodUnit() + ", e.date_time, NOW())<= ?");
-		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-		int count = 0;
-		for (String alert : al) {
-			qry.setString(count++, alert);
-		}
-		
-		qry.setInteger(count, alerts.getTimePeriod());
-		return qry.list();
-	}
+   
 }

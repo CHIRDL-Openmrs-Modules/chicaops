@@ -24,6 +24,7 @@ public class CareCenterResult {
 	private Map<String, Integer> hl7ExportProblems = new HashMap<String, Integer>();
 	private HL7ExportChecks hl7ExportChecks;
 	private ManualCheckinNumResult manualCheckinNumResult; // DWE CHICA-367
+	private WifiIssueNumResult wifiIssueNumResult;
 
 	/**
 	 * Constructor method
@@ -39,21 +40,21 @@ public class CareCenterResult {
      * @return the careCenterName
      */
     public String getCareCenterName() {
-    	return careCenterName;
+    	return this.careCenterName;
     }
     
     /**
      * @return the careCenterDescription
      */
     public String getCareCenterDescription() {
-    	return careCenterDescription;
+    	return this.careCenterDescription;
     }
 	
     /**
      * @return the stateResults
      */
     public ArrayList<MonitorResult> getStateResults() {
-    	return stateResults;
+    	return this.stateResults;
     }
     
     /**
@@ -62,14 +63,14 @@ public class CareCenterResult {
      * @param result The MonitorResult to add
      */
     public void addStateResult(MonitorResult result) {
-    	stateResults.add(result);
+        this.stateResults.add(result);
     	if (result.issueOccurred()) {
     		if (DashboardConfig.SEVERITY_ERROR.equals(
     			result.getStateToMonitor().getSeverity())) {
-    			hasErrors = true;
+    		    this.hasErrors = true;
     		} else if (DashboardConfig.SEVERITY_WARNING.equals(
     			result.getStateToMonitor().getSeverity())) {
-    			hasWarnings = true;
+    		    this.hasWarnings = true;
     		}
     	}
     }
@@ -78,21 +79,21 @@ public class CareCenterResult {
      * @return the hasErrors
      */
     public boolean getHasErrors() {
-    	return hasErrors;
+    	return this.hasErrors;
     }
 	
     /**
      * @return the hasWarnings
      */
     public boolean getHasWarnings() {
-    	return hasWarnings;
+    	return this.hasWarnings;
     }
 	
     /**
      * @return the forcedOutPWSs
      */
     public ArrayList<ForcedOutPWSProblem> getForcedOutPWSs() {
-    	return forcedOutPWSs;
+    	return this.forcedOutPWSs;
     }
     
     /**
@@ -101,12 +102,12 @@ public class CareCenterResult {
      * @param forcedOutPWSCheckResult
      */
     public void addForcedOutPWS(ForcedOutPWSProblem forcedOutPWSCheckResult) {
-    	forcedOutPWSs.add(forcedOutPWSCheckResult);
+        this.forcedOutPWSs.add(forcedOutPWSCheckResult);
 		String severity = forcedOutPWSCheckResult.getForcedOutPWSCheck().getSeverity();
 		if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
-			hasErrors = true;
+		    this.hasErrors = true;
 		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
-			hasWarnings = true;
+		    this.hasWarnings = true;
 		}
     }
 
@@ -114,7 +115,7 @@ public class CareCenterResult {
      * @return the hl7ExportProblems
      */
     public Map<String, Integer> getHl7ExportProblems() {
-    	return hl7ExportProblems;
+    	return this.hl7ExportProblems;
     }
     
     /**
@@ -124,20 +125,20 @@ public class CareCenterResult {
      * @param hl7ExportSeverity The severity of the problem.
      */
     public void addHl7ExportProblem(String status) {
-    	Integer count = hl7ExportProblems.get(status);
+    	Integer count = this.hl7ExportProblems.get(status);
     	if (count == null) {
     		count = 1;
-    		hl7ExportProblems.put(status, count);
+    		this.hl7ExportProblems.put(status, count);
     	} else {
-    		hl7ExportProblems.put(status, ++count);
+    	    this.hl7ExportProblems.put(status, ++count);
     	}
     	
-    	if (hl7ExportChecks != null) {
-    		String severity = hl7ExportChecks.getSeverity();
+    	if (this.hl7ExportChecks != null) {
+    		String severity = this.hl7ExportChecks.getSeverity();
     		if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
-    			hasErrors = true;
+    		    this.hasErrors = true;
     		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
-    			hasWarnings = true;
+    		    this.hasWarnings = true;
     		}
     	}
     }
@@ -146,7 +147,7 @@ public class CareCenterResult {
      * @return the hl7ExportChecks
      */
     public HL7ExportChecks getHl7ExportChecks() {
-    	return hl7ExportChecks;
+    	return this.hl7ExportChecks;
     }
 
     /**
@@ -160,7 +161,7 @@ public class CareCenterResult {
      * @return the scanProblems
      */
     public ArrayList<ScanProblem> getScanProblems() {
-    	return scanProblems;
+    	return this.scanProblems;
     }
     
     /**
@@ -169,12 +170,12 @@ public class CareCenterResult {
      * @param scanProblem
      */
     public void addScanProblem(ScanProblem scanProblem) {
-    	scanProblems.add(scanProblem);
+        this.scanProblems.add(scanProblem);
 		String severity = scanProblem.getScanCheck().getSeverity();
 		if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
-			hasErrors = true;
+		    this.hasErrors = true;
 		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
-			hasWarnings = true;
+		    this.hasWarnings = true;
 		}
     }
     
@@ -188,9 +189,9 @@ public class CareCenterResult {
     	
     	String severity = manualCheckinNumResult.getManualCheckinChecks().getSeverity();
     	if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
-			hasErrors = true;
+    	    this.hasErrors = true;
 		} else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
-			hasWarnings = true;
+		    this.hasWarnings = true;
 		}
     }
     
@@ -199,6 +200,28 @@ public class CareCenterResult {
      * @return the manualCheckinNumResult
      */
     public ManualCheckinNumResult getManualCheckinNumResult(){
-    	return manualCheckinNumResult;
+    	return this.manualCheckinNumResult;
+    }
+    
+    /**
+     * Sets hasWarnings or hasErrors and sets the WifiIssueNumResult object
+     * @param wifiIssueNumResult the wifiIssueNumResult to set
+     */
+    public void setWifiIssueNumResult (WifiIssueNumResult wifiIssueNumResult){
+        this.wifiIssueNumResult = wifiIssueNumResult;
+        
+        String severity = wifiIssueNumResult.getWifiIssueChecks().getSeverity();
+        if (DashboardConfig.SEVERITY_ERROR.equals(severity)) {
+            this.hasErrors = true;
+        } else if (DashboardConfig.SEVERITY_WARNING.equals(severity)) {
+            this.hasWarnings = true;
+        }
+    }
+    
+    /**
+     * @return the wifiIssueNumResult
+     */
+    public WifiIssueNumResult getWifiIssueNumResult(){
+        return this.wifiIssueNumResult;
     }
 }

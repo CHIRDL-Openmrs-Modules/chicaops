@@ -1,12 +1,9 @@
 package org.openmrs.module.chicaops.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.openmrs.annotation.Authorized;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
-import org.openmrs.module.chicaops.dashboard.ImmunizationCheckResult;
-import org.openmrs.module.chicaops.dashboard.ManualCheckinNumResult;
 import org.openmrs.module.chicaops.dashboard.RuleCheckResult;
 import org.openmrs.module.chicaops.dashboard.ServerCheckResult;
 
@@ -42,18 +39,5 @@ public interface ChicaopsService {
 	 */
 	@Authorized()
 	public RuleCheckResult performRuleChecks();
-	
-	/**
-	 * Perform immunization registry (CHIRP) access checks.
-	 * @return ImmunizationRegistryCheckResult object containing the results of the CHIRP registry check.
-	 */
-	@Authorized()
-	public ImmunizationCheckResult performImmunizationChecks();
-	
-	/**
-	 * Perform monitoring clinic manual check-in times frequency. If it happens too frequently, the program will let chica team know. 
-	 * @return ManualCheckinNumResult object containing the results of manual check-in monitoring result
-	 */
-	@Authorized()
-	public List<ManualCheckinNumResult> performManualCheckinChecks();
+
 }

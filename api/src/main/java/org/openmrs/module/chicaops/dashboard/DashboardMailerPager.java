@@ -25,7 +25,6 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DirectoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ForcedOutPWSCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.HL7ExportChecks;
-import org.openmrs.module.chicaops.xmlBeans.dashboard.ImmunizationChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ManualCheckinChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.MemoryCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.NeverFiredRuleCheck;
@@ -34,6 +33,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.RuleChecks;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
+import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
 import org.openmrs.module.chirdlutil.util.MailSender;
 
 /**
@@ -71,17 +71,17 @@ public class DashboardMailerPager {
 		AdministrationService adminService = Context.getAdministrationService();		
 		String smtpMailHost = adminService.getGlobalProperty("chirdlutil.smtpMailHost");
 		if (smtpMailHost != null) {
-			mailProps.put("mail.smtp.host", smtpMailHost);
+		    this.mailProps.put("mail.smtp.host", smtpMailHost);
 		}
 		
-		mailSender = new MailSender(mailProps);
-		idParam = adminService.getGlobalProperty("chica.pagerUrlNumberParam");
-		textParam = adminService.getGlobalProperty("chica.pagerUrlMessageParam");
-		baseUrl = adminService.getGlobalProperty("chica.pagerBaseURL");
+		this.mailSender = new MailSender(this.mailProps);
+		this.idParam = adminService.getGlobalProperty("chica.pagerUrlNumberParam");
+		this.textParam = adminService.getGlobalProperty("chica.pagerUrlMessageParam");
+		this.baseUrl = adminService.getGlobalProperty("chica.pagerBaseURL");
 		String threshold = adminService.getGlobalProperty("chicaops.dashboardMessageWaitThreshold");
 		if (threshold != null) {
-			thresholdTime = Integer.parseInt(threshold);
-			thresholdTime = thresholdTime * 60000;
+		    this.thresholdTime = Integer.parseInt(threshold);
+		    this.thresholdTime = this.thresholdTime * 60000;
 		}
 	}
 	
@@ -236,6 +236,39 @@ public class DashboardMailerPager {
 					}
 				}	
 			}
+			// Send email for wifi issues
+            // CareCenterResult object will only have a WifiIssueNumResult object 
+            // if the number of wifi issues is greater than the threshold
+            WifiIssueNumResult wifiIssueNumResult = result.getWifiIssueNumResult();
+            if(wifiIssueNumResult != null)
+            {
+                WifiIssueChecks checks = wifiIssueNumResult.getWifiIssueChecks();
+                if(checks != null)
+                {
+                    Notification notification = checks.getNotification();
+                    if (notification != null) {
+                        if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
+                            StringBuilder builder = new StringBuilder();
+                            builder.append(wifiIssueNumResult.getMessage())
+                            .append(" at ")
+                            .append(wifiIssueNumResult.getLocation().getName())
+                            .append(". \n")
+                            .append("\n\nRegards,\nCHICA Operations Dashboard");
+                            if(canSendMessage(builder.toString(), notification)) 
+                            {
+                                if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()))
+                                {
+                                    sendMail(builder.toString(), notification.getEmailAddress(), wifiIssueNumResult.getLocation().getName(), wifiIssueNumResult.getLocation().getDescription());
+                                }
+                                if(DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage()))
+                                {
+                                    sendPage(builder.toString(), notification.getPageNumber());
+                                }
+                            }
+                        }
+                    }
+                }   
+            }
 		}
 		
 		reconcileMessageMap();
@@ -372,55 +405,12 @@ public class DashboardMailerPager {
 			}
 		}
 	}
-	/**
-	 * Sends emails/pages for issues with the immunization checks.
-	 * 
-	 * @param immunizationResult ImmunizationCheckResult object containing the results from the immunization checks.
-	 */
-	public void sendEmailsOrPages(ImmunizationCheckResult immunizationResult) {
-		// Memory problems
-		if (immunizationResult == null) 
-			return;
-		Map<String, Integer> immunProblemsMap = immunizationResult.getImmunizationProblems();
-		
-		if (!immunProblemsMap.isEmpty()) {
-			ImmunizationChecks checks = immunizationResult.getImmunizationChecks();
-			Notification notification = checks.getNotification();
-			if (notification != null) {
-				if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail()) || 
-						DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-					Set<Entry<String, Integer>> entries = immunProblemsMap.entrySet();
-					Iterator<Entry<String, Integer>> iter = entries.iterator();
-					StringBuffer message = new StringBuffer("There have been some immunization forecasting issues over the past ");
-					message.append(checks.getTimePeriod());
-					message.append(" ");
-					message.append(checks.getTimePeriodUnit());
-					message.append("(s) ");
-					while (iter.hasNext()) {
-						Entry<String, Integer> entry = iter.next();
-						message.append("\n");
-						message.append(entry.getKey());
-					}
-					
-					message.append("\n\nRegards,\nCHICA Operations Dashboard");
-					if (canSendMessage(message.toString(), notification)) {
-						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getEmail())) {
-							sendMail(message.toString(), notification.getEmailAddress(), null, null);
-						}
-						if (DashboardConfig.YES_INDICATOR.equalsIgnoreCase(notification.getPage())) {
-							sendPage(message.toString(), notification.getPageNumber());
-						}
-					}
-				}
-			}
-		}
-
-	}
+	
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
-		if (mailProps.get("mail.smtp.host") == null) {
-			log.error("Dashboard: SMTP host not specified.  Please specify the global property chirdlutil.smtpMailHost");
+		if (this.mailProps.get("mail.smtp.host") == null) {
+		    this.log.error("Dashboard: SMTP host not specified.  Please specify the global property chirdlutil.smtpMailHost");
 			return;
 		}
 		
@@ -435,11 +425,11 @@ public class DashboardMailerPager {
 		}
 		
 		if (emailList.length == 0) {
-			log.error("Dashboard: Email list is empty.  Please specify email recipients in the Dashboard configuration file");
+		    this.log.error("Dashboard: Email list is empty.  Please specify email recipients in the Dashboard configuration file");
 			return;
 		}
 		
-		String subject = MAIL_SUBJECT;
+		String subject = this.MAIL_SUBJECT;
 		if (location != null) {
 			subject += " for " + location;
 			if (locationDescription != null) {
@@ -447,7 +437,7 @@ public class DashboardMailerPager {
 			}
 		}
 		
-		mailSender.sendMail(MAIL_SENDER, emailList, subject, message);
+		this.mailSender.sendMail(this.MAIL_SENDER, emailList, subject, message);
 	}
 	
 	/**
@@ -462,18 +452,18 @@ public class DashboardMailerPager {
 			return null;
 		}
 		
-		if (baseUrl == null) {
-			log.error("Dashboard: Pager base URL is null.  Please specify global property chica.pagerBaseURL.");
+		if (this.baseUrl == null) {
+		    this.log.error("Dashboard: Pager base URL is null.  Please specify global property chica.pagerBaseURL.");
 			return null;
 		}
 		
-		if (idParam == null) {
-			log.error("Dashboard: Pager ID param is null.  Please specify global property chica.pagerUrlNumberParam");
+		if (this.idParam == null) {
+		    this.log.error("Dashboard: Pager ID param is null.  Please specify global property chica.pagerUrlNumberParam");
 			return null;
 		}
 		
-		if (textParam == null) {
-			log.error("Dashboard: Pager text param is null.  Please specify global property chica.pagerUrlMessageParam");
+		if (this.textParam == null) {
+		    this.log.error("Dashboard: Pager text param is null.  Please specify global property chica.pagerUrlMessageParam");
 			return null;
 		}
 		
@@ -482,18 +472,18 @@ public class DashboardMailerPager {
 			message = message.substring(0, 159);
 		}
 		
-		String urlStr = baseUrl;
+		String urlStr = this.baseUrl;
 		BufferedReader rd = null;
 		String response = null;
 		
 		try {
 			
-			urlStr += "?" + idParam + "=" + URLEncoder.encode(pagerNumber, "UTF-8") + "&" + textParam + "="
+			urlStr += "?" + this.idParam + "=" + URLEncoder.encode(pagerNumber, "UTF-8") + "&" + textParam + "="
 			        + URLEncoder.encode(message, "UTF-8");
 			
-			if (baseUrl == null || baseUrl.length() == 0 || pagerNumber == null || pagerNumber.length() == 0
-			        || message == null || message.length() == 0 || idParam == null || idParam.length() == 0
-			        || textParam == null || textParam.length() == 0) {
+			if (this.baseUrl == null || this.baseUrl.length() == 0 || pagerNumber == null || pagerNumber.length() == 0
+			        || message == null || message.length() == 0 || this.idParam == null || this.idParam.length() == 0
+			        || this.textParam == null || this.textParam.length() == 0) {
 				this.log.warn("Page was not sent due to null url string or null parameters. " + urlStr);
 				
 				return null;
@@ -554,7 +544,7 @@ public class DashboardMailerPager {
 			return true;
 		}
 
-		if ((currTime - time) > thresholdTime) {
+		if ((currTime - time) > this.thresholdTime) {
 			messageToTimeMap.put(messageHash, currTime);
 			return true;
 		}
@@ -563,7 +553,7 @@ public class DashboardMailerPager {
 	}
 	
 	/**
-	 * Traces through the message map to determine what messages have last bee sent over the
+	 * Traces through the message map to determine what messages have last been sent over the
 	 * threshold mark. If they have, they will be removed from the map so they will be allowed to
 	 * be sent again.
 	 */
@@ -577,7 +567,7 @@ public class DashboardMailerPager {
 				Entry<Integer, Long> entry = iter.next();
 				Integer messageHash = entry.getKey();
 				Long time = entry.getValue();
-				if ((currTime - time) > thresholdTime) {
+				if ((currTime - time) > this.thresholdTime) {
 					removeKeys.add(messageHash);
 				}
 			}
