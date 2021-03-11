@@ -12,11 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.AdministrationService;
@@ -34,7 +33,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.ScanCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.StateToMonitor;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.UnFiredRuleCheck;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
-import org.openmrs.module.chirdlutil.util.MailSender;
+import org.openmrs.notification.MessageException;
 
 /**
  * Handles all the email/pager messaging for the CHICA Operations Dashboard.
@@ -43,18 +42,16 @@ import org.openmrs.module.chirdlutil.util.MailSender;
  */
 public class DashboardMailerPager {
 	
-	private static Map<Integer, Long> messageToTimeMap = new ConcurrentHashMap<Integer, Long>(new HashMap<Integer, Long>());
+	private static Map<Integer, Long> messageToTimeMap = new ConcurrentHashMap<>(new HashMap<>());
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
 	
-	private final String MAIL_SUBJECT = "CHICA Operations Dashboard Notice";
+	private static final String MAIL_SUBJECT = "CHICA Operations Dashboard Notice";
 	
-	private final String MAIL_SENDER = "chica.operations.dashboard@iupui.edu";
+	private static final String DEFAULT_MAIL_SENDER = "chica.operations.dashboard@chicaoperationsdashboard.com";
 	
-	private Properties mailProps = new Properties();
-	
-	private MailSender mailSender = null;
+	private static final String GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM = "chicaops.dashboardEmailFrom";
 	
 	private String baseUrl;
 	
@@ -69,12 +66,7 @@ public class DashboardMailerPager {
 	 */
 	public DashboardMailerPager() {
 		AdministrationService adminService = Context.getAdministrationService();		
-		String smtpMailHost = adminService.getGlobalProperty("chirdlutil.smtpMailHost");
-		if (smtpMailHost != null) {
-		    this.mailProps.put("mail.smtp.host", smtpMailHost);
-		}
 		
-		this.mailSender = new MailSender(this.mailProps);
 		this.idParam = adminService.getGlobalProperty("chica.pagerUrlNumberParam");
 		this.textParam = adminService.getGlobalProperty("chica.pagerUrlMessageParam");
 		this.baseUrl = adminService.getGlobalProperty("chica.pagerBaseURL");
@@ -409,27 +401,12 @@ public class DashboardMailerPager {
 	
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
-		if (this.mailProps.get("mail.smtp.host") == null) {
-		    this.log.error("Dashboard: SMTP host not specified.  Please specify the global property chirdlutil.smtpMailHost");
-			return;
-		}
-		
-		String[] emailList = new String[0];
-		if (dashboardEmail != null) {
-			StringTokenizer tokenizer = new StringTokenizer(dashboardEmail, ",", false);
-			emailList = new String[tokenizer.countTokens()];
-			int i = 0;
-			while (tokenizer.hasMoreTokens()) {
-				emailList[i++] = tokenizer.nextToken().trim();
-			}
-		}
-		
-		if (emailList.length == 0) {
+		if (StringUtils.isBlank(dashboardEmail)) {
 		    this.log.error("Dashboard: Email list is empty.  Please specify email recipients in the Dashboard configuration file");
 			return;
 		}
 		
-		String subject = this.MAIL_SUBJECT;
+		String subject = MAIL_SUBJECT;
 		if (location != null) {
 			subject += " for " + location;
 			if (locationDescription != null) {
@@ -437,7 +414,18 @@ public class DashboardMailerPager {
 			}
 		}
 		
-		this.mailSender.sendMail(this.MAIL_SENDER, emailList, subject, message);
+		String emailFrom = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM);
+		if (StringUtils.isBlank(emailFrom)) {
+			this.log.error("Global property " + GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM + " does not contain a valid "
+					+ "value.  The from email address will be defaulted to " + DEFAULT_MAIL_SENDER);
+			emailFrom = DEFAULT_MAIL_SENDER;
+		}
+		
+		try {
+            Context.getMessageService().sendMessage(dashboardEmail, emailFrom, subject, message);
+        } catch (MessageException e) {
+            this.log.error("Error creating email message" + message, e);
+        }
 	}
 	
 	/**
