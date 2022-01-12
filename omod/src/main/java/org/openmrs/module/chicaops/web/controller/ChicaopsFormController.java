@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ChicaopsFormController {
     
     /** Logger for this class and subclasses */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+	private static final Logger log = LoggerFactory.getLogger(ChicaopsFormController.class);
     
     /** Form view */
     private static final String FORM_VIEW = "/module/chicaops/dashboard";

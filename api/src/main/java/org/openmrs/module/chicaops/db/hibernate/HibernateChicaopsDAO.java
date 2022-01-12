@@ -40,7 +40,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	
 	private static final String CHECKIN_STATE = "CHECKIN";
 	
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	private static final Logger log = LoggerFactory.getLogger(HibernateChicaopsDAO.class);
 
 	/**
 	 * Hibernate session factory

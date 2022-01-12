@@ -18,7 +18,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class ChicaopsActivator extends BaseModuleActivator {
 	
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(ChicaopsActivator.class);
 	
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()

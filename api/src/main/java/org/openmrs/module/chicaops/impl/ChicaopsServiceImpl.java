@@ -77,7 +77,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleEntry;
  */
 public class ChicaopsServiceImpl implements ChicaopsService {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(ChicaopsServiceImpl.class);
 	private ChicaopsDAO dao;
 	
 	/**

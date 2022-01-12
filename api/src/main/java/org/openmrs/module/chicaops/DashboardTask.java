@@ -32,7 +32,7 @@ import org.openmrs.scheduler.tasks.AbstractTask;
  */
 public class DashboardTask extends AbstractTask {
 	
-	 protected final Logger log = LoggerFactory.getLogger(getClass());
+	private static final Logger log = LoggerFactory.getLogger(DashboardTask.class);
 	
 	/**
 	 * @see org.openmrs.scheduler.tasks.AbstractTask#execute()

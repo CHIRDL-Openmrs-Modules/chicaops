@@ -45,7 +45,7 @@ public class DashboardMailerPager {
 	private static Map<Integer, Long> messageToTimeMap = new ConcurrentHashMap<>(new HashMap<>());
 	
 	/** Logger for this class and subclasses */
-	protected final Logger log = LoggerFactory.getLogger(getClass());
+	private static final Logger log = LoggerFactory.getLogger(DashboardMailerPager.class);
 	
 	private static final String MAIL_SUBJECT = "CHICA Operations Dashboard Notice";
 	
