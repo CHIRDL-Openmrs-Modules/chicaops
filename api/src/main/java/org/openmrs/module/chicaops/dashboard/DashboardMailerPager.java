@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
@@ -45,7 +45,7 @@ public class DashboardMailerPager {
 	private static Map<Integer, Long> messageToTimeMap = new ConcurrentHashMap<>(new HashMap<>());
 	
 	/** Logger for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 	
 	private static final String MAIL_SUBJECT = "CHICA Operations Dashboard Notice";
 	

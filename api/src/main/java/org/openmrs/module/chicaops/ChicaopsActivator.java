@@ -2,8 +2,8 @@ package org.openmrs.module.chicaops;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -18,7 +18,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class ChicaopsActivator extends BaseModuleActivator {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()

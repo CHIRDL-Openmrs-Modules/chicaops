@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.StandardBasicTypes;
@@ -40,7 +40,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 	
 	private static final String CHECKIN_STATE = "CHECKIN";
 	
-	protected final Log log = LogFactory.getLog(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Hibernate session factory
@@ -128,9 +128,9 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 				+ "from chirdlutilbackports_patient_state a, chirdlutilbackports_patient_state b "
 				+ "where a.session_id = b.session_id "
 				+ "and (a.state = 6 and a.end_time is null AND TIMESTAMPDIFF(" + forcedOutPWSCheck.getTimePeriodUnit() 
-				+ ", a.start_time, NOW()) <= ?) and b.state = 19";
+				+ ", a.start_time, NOW()) <= :forcedOutPWSCheckTimePeriod) and b.state = 19";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		qry.setInteger(0, forcedOutPWSCheck.getTimePeriod());
+		qry.setInteger("forcedOutPWSCheckTimePeriod", forcedOutPWSCheck.getTimePeriod());
 		qry.addEntity(PatientState.class);
 		return qry.list();
 	}
@@ -146,28 +146,29 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
                     + "(select a.form_instance_id from atd_statistics a " + "inner join obs d on a.obsv_id=d.obs_id "
                     + "inner join concept_name b on d.concept_id=b.concept_id "
                     + "inner join concept_name c on d.value_coded = c.concept_id " + "where TIMESTAMPDIFF("
-                    + wifiIssueChecks.getTimePeriodUnit() + ", printed_timestamp, NOW()) <= ? and form_name in (");
+                    + wifiIssueChecks.getTimePeriodUnit() + ", printed_timestamp, NOW()) <= :timePeriod and form_name in (");
             
             for (int i = 0; i < formNames.size(); i++) {
                 if (i == 0) {
-                    sql.append("?");
+                    sql.append(":formName"+i);
                     continue;
                 }
                 
-                sql.append(", ?");
+                sql.append(", :formName"+i);
             }
             
-            sql.append(") " + "and a.location_id=? " + "group by a.form_instance_id,a.location_id,a.rule_id,b.name,c.name "
+            sql.append(") " + "and a.location_id=:locationId " + "group by a.form_instance_id,a.location_id,a.rule_id,b.name,c.name "
                     + "having count(*)>1)a");
             
             SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-            qry.setInteger(0, wifiIssueChecks.getTimePeriod());
+            qry.setInteger("timePeriod", wifiIssueChecks.getTimePeriod());
             
-            int count = 1;
+            int count = 0;
             for (String alert : formNames) {
-                qry.setString(count++, alert);
+                qry.setString("formName"+count, alert);
+                count++;
             }
-            qry.setInteger(2, location.getLocationId());
+            qry.setInteger("locationId", location.getLocationId());
             qry.addScalar("num_issues", StandardBasicTypes.LONG);
             List results = qry.list();
             return Integer.valueOf(results.get(0).toString());
@@ -183,40 +184,38 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		ArrayList<String> al = alerts.getChecks();
 		for (int i = 0; i < al.size(); i++) {
 			if (i == 0) {
-				sql.append("?");
+				sql.append(":name"+i);
 				continue;
 			}
 			
-			sql.append(", ?");
+			sql.append(", :name"+i);
 		}
 		
-		sql.append(") and TIMESTAMPDIFF(" + alerts.getTimePeriodUnit() + ", b.date_inserted, NOW())<= ?");
+		sql.append(") and TIMESTAMPDIFF(" + alerts.getTimePeriodUnit() + ", b.date_inserted, NOW())<= :timePeriod");
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 		int count = 0;
 		for (String alert : al) {
-			qry.setString(count++, alert);
+			qry.setString("name"+count, alert);
+			count++;
 		}
 		
-		qry.setInteger(count, alerts.getTimePeriod());
+		qry.setInteger("timePeriod", alerts.getTimePeriod());
 		
 		return qry.list();
 	}
 	
 	private List<PatientState> getGenericPatientStates(StateToMonitor state) {
 		String sql = "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state "
-		        + "where name = ?) and (TIMESTAMPDIFF(" + state.getTimePeriodUnit() + ", start_time, NOW()) <= ?) and "
-		        + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit() + ", start_time, end_time) >= ?) union "
+		        + "where name = :stateName) and (TIMESTAMPDIFF(" + state.getTimePeriodUnit() + ", start_time, NOW()) <= :stateTimePeriod) and "
+		        + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit() + ", start_time, end_time) >= :stateElapsedTime) union "
 		        + "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state "
-		        + "where name = ?) and end_time is null and (TIMESTAMPDIFF(" + state.getTimePeriodUnit()
-		        + ", start_time, NOW()) <= ?) and " + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
-		        + ", start_time, NOW()) >= ?)";
+		        + "where name = :stateName) and end_time is null and (TIMESTAMPDIFF(" + state.getTimePeriodUnit()
+		        + ", start_time, NOW()) <= :stateTimePeriod) and " + "(TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
+		        + ", start_time, NOW()) >= :stateElapsedTime)";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-		qry.setString(0, state.getName());
-		qry.setInteger(1, state.getTimePeriod());
-		qry.setInteger(2, state.getElapsedTime());
-		qry.setString(3, state.getName());
-		qry.setInteger(4, state.getTimePeriod());
-		qry.setInteger(5, state.getElapsedTime());
+		qry.setString("stateName", state.getName());
+		qry.setInteger("stateTimePeriod", state.getTimePeriod());
+		qry.setInteger("stateElapsedTime", state.getElapsedTime());
 		qry.addEntity(PatientState.class);
 		return qry.list();
 	}
@@ -225,15 +224,14 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		List<PatientState> patientStates = new ArrayList<PatientState>();
 		LocationService locService = Context.getLocationService();
 		for (Location location : locService.getAllLocations()) {
-			String sql = "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state where name = ?) "
+			String sql = "select * from chirdlutilbackports_patient_state where state = (select state_id from chirdlutilbackports_state where name = :stateName) "
 			        + "and start_time = (select MAX(start_time) from chirdlutilbackports_patient_state where state = (select state_id from "
-			        + "chirdlutilbackports_state where name = ?) and location_id = ?) and (TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
-			        + ", start_time, NOW()) >= ?)";
+			        + "chirdlutilbackports_state where name = :stateName) and location_id = :locationId) and (TIMESTAMPDIFF(" + state.getElapsedTimeUnit()
+			        + ", start_time, NOW()) >= :stateElapsedTime)";
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString(0, state.getName());
-			qry.setString(1, state.getName());
-			qry.setInteger(2, location.getLocationId());
-			qry.setInteger(3, state.getElapsedTime());
+			qry.setString("stateName", state.getName());
+			qry.setInteger("locationId", location.getLocationId());
+			qry.setInteger("stateElapsedTime", state.getElapsedTime());
 			qry.addEntity(PatientState.class);
 			List<PatientState> states = qry.list();
 			patientStates.addAll(states);
@@ -256,7 +254,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("		   AND ruleType.retired = FALSE\n");
     	sql.append("		   AND ruleEntry.retired = FALSE\n");
     	sql.append("		   AND ruleEntry.priority IS NOT NULL\n");
-    	sql.append("		   AND ruleEntry.priority < ?\n");
+    	sql.append("		   AND ruleEntry.priority < :rulePriorityRetire\n");
     	sql.append("		   AND rule.token_name <> ruleType.name\n");
     	sql.append("		   AND ruleEntry.rule_entry_id NOT IN\n");
     	sql.append("				  (SELECT ruleEntry2.rule_entry_id\n");
@@ -275,7 +273,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 		qry.addEntity(RuleEntry.class);
-		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
+		qry.setInteger("rulePriorityRetire", RuleEntry.RULE_PRIORITY_RETIRE);
 		return qry.list();
     }
 
@@ -294,7 +292,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("               AND ruleType.retired = FALSE\n");
     	sql.append("               AND ruleEntry.retired = FALSE\n");
     	sql.append("               AND ruleEntry.priority IS NOT NULL\n");
-    	sql.append("               AND ruleEntry.priority < ?\n");
+    	sql.append("               AND ruleEntry.priority < :rulePriorityRetire\n");
     	sql.append("               AND rule.token_name <> ruleType.name\n");
     	sql.append("               AND ruleEntry.rule_entry_id NOT IN\n");
     	sql.append("                      (SELECT ruleEntry2.rule_entry_id\n");
@@ -311,12 +309,12 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     	sql.append("					   WHERE ruleType2.name = form.name\n");
     	sql.append("                       AND TIMESTAMPADD(");
     	sql.append(check.getTimePeriodUnit());
-    	sql.append(", ?, atd.creation_time) >= NOW())\n");
+    	sql.append(", :checkTimePeriod, atd.creation_time) >= NOW())\n");
     	sql.append("ORDER BY ruleType.name, rule.token_name\n");
 
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-		qry.setInteger(0, RuleEntry.RULE_PRIORITY_RETIRE);
-		qry.setInteger(1, check.getTimePeriod());
+		qry.setInteger("rulePriorityRetire", RuleEntry.RULE_PRIORITY_RETIRE);
+		qry.setInteger("checkTimePeriod", check.getTimePeriod());
 		qry.addEntity(RuleEntry.class);
 		return qry.list();
     }
@@ -325,7 +323,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
     public List<PatientState> getPatientsStates(Integer formId, Integer locationId, Date sinceDate, String reprintStateName) {
     	StringBuilder sql = new StringBuilder("select * ");
 		sql.append("from chirdlutilbackports_patient_state ");
-		sql.append("where form_id = ? and location_id = ? and end_time is not NULL and timestampdiff(second, ?, end_time) >= 0 ");
+		sql.append("where form_id = :formId and location_id = :locationId and end_time is not NULL and timestampdiff(second, :sinceDateTime, end_time) >= 0 ");
 		sql.append("and state in (");
 		sql.append("select state_id ");
 		sql.append("from chirdlutilbackports_state ");
@@ -333,9 +331,9 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		sql.append("'JIT_reprint'))");
     	
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-		qry.setInteger(0, formId);
-		qry.setInteger(1, locationId);
-		qry.setTimestamp(2, new Timestamp(sinceDate.getTime()));
+		qry.setInteger("formId", formId);
+		qry.setInteger("locationId", locationId);
+		qry.setTimestamp("sinceDateTime", new Timestamp(sinceDate.getTime()));
 		qry.addEntity(PatientState.class);
 		return qry.list();
     }

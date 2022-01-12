@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
@@ -77,7 +77,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleEntry;
  */
 public class ChicaopsServiceImpl implements ChicaopsService {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	private ChicaopsDAO dao;
 	
 	/**
