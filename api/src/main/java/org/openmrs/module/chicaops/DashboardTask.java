@@ -58,7 +58,7 @@ public class DashboardTask extends AbstractTask {
         	mailer.sendEmailsOrPages(serverResult);
         	mailer.sendEmailsOrPages(ruleResult);
         } catch (Exception e) {
-        	this.log.error("Error creating/sending email/pages", e);
+        	log.error("Error creating/sending email/pages", e);
         }
 	}
 }

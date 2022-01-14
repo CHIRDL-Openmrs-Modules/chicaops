@@ -115,7 +115,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 			locationToPatientStateMap.clear();
 			locIdToNameMap.clear();
 		} catch (Exception e) {
-			this.log.error(Util.getStackTrace(e));
+			log.error(Util.getStackTrace(e));
 			throw e;
 		}
 		

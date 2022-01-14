@@ -99,7 +99,7 @@ public class ChicaopsFormController {
         	map.put(PARAMETER_APP_NAME, appName);
         	sendEmailAndPages(results, serverResult, ruleResult);
         } catch (Exception e) {
-        	this.log.error(Util.getStackTrace(e));
+        	log.error(Util.getStackTrace(e));
         	throw e;
         }
        
