@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
@@ -77,7 +77,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleEntry;
  */
 public class ChicaopsServiceImpl implements ChicaopsService {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(ChicaopsServiceImpl.class);
 	private ChicaopsDAO dao;
 	
 	/**
@@ -159,7 +159,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    	for (ScanCheck check : scanChecks.getScanChecks()) {
 		        	Form form = formService.getForm(check.getFormName());
 		        	if (form == null) {
-		        		this.log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
+		        		log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
 		        		continue;
 		        	}
 		        	
@@ -227,7 +227,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
             }
 		    
 		} catch (Throwable e) {
-			this.log.error("Error processing the dashboard configuration file.", e);
+			log.error("Error processing the dashboard configuration file.", e);
 		}
 	    
 		ArrayList<CareCenterResult> returnList = new ArrayList<CareCenterResult>(careCenterNameToResultMap.values());
@@ -297,7 +297,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			performMemoryChecks(checks.getMemoryChecks(), result);
 			performDirectoryChecks(checks.getDirectoryChecks(), result);
 		} catch (Throwable e) {
-			this.log.error("Error attempting to load the dashboard configuration file.", e);
+			log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 	    
 	    return result;
@@ -350,18 +350,18 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			File imageDir = new File(imageDirStr);
 			File scanDir = new File(scanDirStr);
 			if (!imageDir.exists() || !imageDir.canRead()) {
-				this.log.error("Error performing directory checks: The image directory (" + imageDir + ") does not exist or " +
+				log.error("Error performing directory checks: The image directory (" + imageDir + ") does not exist or " +
 						"cannot be read.");
 				continue;
 			} else if (!scanDir.exists() || !scanDir.canRead()) {
-				this.log.error("Error performing directory checks: The scan directory (" + scanDir + ") does not exist or " +
+				log.error("Error performing directory checks: The scan directory (" + scanDir + ") does not exist or " +
 				"cannot be read.");
 				continue;
 			} else if (!imageDir.isDirectory()) {
-				this.log.error("Error performing directory checks: The image directory (" + imageDir + " is not directory.");
+				log.error("Error performing directory checks: The image directory (" + imageDir + " is not directory.");
 				continue;
 			} else if (!scanDir.isDirectory()) {
-				this.log.error("Error performing directory checks: The scan directory (" + scanDir + " is not directory.");
+				log.error("Error performing directory checks: The scan directory (" + scanDir + " is not directory.");
 				continue;
 			}
 			
@@ -460,14 +460,14 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		String configFileStr = adminService.getGlobalProperty(
 			"chicaops.dashboardConfigFile");
 		if (configFileStr == null) {
-			this.log.error("You must set a value for global property: "
+			log.error("You must set a value for global property: "
 				+ "chicaops.dashboardConfigFile");
 			return null;
 		}
 		
 		File configFile = new File(configFileStr);
 		if (!configFile.exists()) {
-			this.log.error("The file location specified for the global property "
+			log.error("The file location specified for the global property "
 				+ "chicaops.dashboardConfigFile does not exist.");
 			return null;
 		}
@@ -516,7 +516,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    }
 			return results;
 		} catch (Exception e) {
-			this.log.error("Error processing the dashboard configuration file.", e);
+			log.error("Error processing the dashboard configuration file.", e);
 		}
 		
 		return new RuleCheckResult(ruleChecks);
@@ -609,7 +609,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 				
 			}
 		} catch (Exception e) {
-			this.log.error("Error attempting to load the dashboard configuration file.", e);
+			log.error("Error attempting to load the dashboard configuration file.", e);
 		}
 		return resultsList;
 	}
@@ -643,7 +643,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 	                
 	            }
 	        } catch (Exception e) {
-	            this.log.error("Error attempting to load the dashboard configuration file.", e);
+	            log.error("Error attempting to load the dashboard configuration file.", e);
 	        }
 	        return resultsList;
 	    }
