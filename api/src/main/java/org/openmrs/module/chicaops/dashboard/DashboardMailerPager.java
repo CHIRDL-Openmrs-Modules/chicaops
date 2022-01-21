@@ -402,7 +402,7 @@ public class DashboardMailerPager {
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
 		if (StringUtils.isBlank(dashboardEmail)) {
-		    log.error("Dashboard: Email list is empty.  Please specify email recipients in the Dashboard configuration file");
+		    log.error("Dashboard: Email list is empty. Please specify email recipients in the Dashboard configuration file");
 			return;
 		}
 		
@@ -416,15 +416,14 @@ public class DashboardMailerPager {
 		
 		String emailFrom = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM);
 		if (StringUtils.isBlank(emailFrom)) {
-			log.error("Global property " + GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM + " does not contain a valid "
-					+ "value.  The from email address will be defaulted to " + DEFAULT_MAIL_SENDER);
+			log.error("Global property {} does not contain a valid value. The from email address will be defaulted to {}", GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM, DEFAULT_MAIL_SENDER);
 			emailFrom = DEFAULT_MAIL_SENDER;
 		}
 		
 		try {
             Context.getMessageService().sendMessage(dashboardEmail, emailFrom, subject, message);
         } catch (MessageException e) {
-            log.error("Error creating email message" + message, e);
+            log.error("Error creating email message {}", message, e);
         }
 	}
 	
@@ -441,17 +440,17 @@ public class DashboardMailerPager {
 		}
 		
 		if (this.baseUrl == null) {
-		    log.error("Dashboard: Pager base URL is null.  Please specify global property chica.pagerBaseURL.");
+		    log.error("Dashboard: Pager base URL is null. Please specify global property chica.pagerBaseURL.");
 			return null;
 		}
 		
 		if (this.idParam == null) {
-		    log.error("Dashboard: Pager ID param is null.  Please specify global property chica.pagerUrlNumberParam");
+		    log.error("Dashboard: Pager ID param is null. Please specify global property chica.pagerUrlNumberParam");
 			return null;
 		}
 		
 		if (this.textParam == null) {
-		    log.error("Dashboard: Pager text param is null.  Please specify global property chica.pagerUrlMessageParam");
+		    log.error("Dashboard: Pager text param is null. Please specify global property chica.pagerUrlMessageParam");
 			return null;
 		}
 		
@@ -472,7 +471,7 @@ public class DashboardMailerPager {
 			if (this.baseUrl == null || this.baseUrl.length() == 0 || pagerNumber == null || pagerNumber.length() == 0
 			        || message == null || message.length() == 0 || this.idParam == null || this.idParam.length() == 0
 			        || this.textParam == null || this.textParam.length() == 0) {
-				log.warn("Page was not sent due to null url string or null parameters. " + urlStr);
+				log.warn("Page was not sent due to null url string or null parameters. {}", urlStr);
 				
 				return null;
 			}
@@ -490,7 +489,7 @@ public class DashboardMailerPager {
 			
 		}
 		catch (Exception e) {
-			log.error("Could not send page: " + e.getMessage());
+			log.error("Could not send page: {}", e.getMessage());
 			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 		}
 		finally {
