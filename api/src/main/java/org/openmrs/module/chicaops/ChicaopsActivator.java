@@ -59,8 +59,7 @@ public class ChicaopsActivator extends BaseModuleActivator {
 					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{
-						log.error("You must set a value for global property: "
-								+ currName);
+						log.error("You must set a value for global property: {}", currName);
 					}
 				}
 			}

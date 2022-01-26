@@ -159,7 +159,7 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		    	for (ScanCheck check : scanChecks.getScanChecks()) {
 		        	Form form = formService.getForm(check.getFormName());
 		        	if (form == null) {
-		        		log.error("Error performing scan check.  The form \"" + check.getFormName() + "\" does not exist.");
+		        		log.error("Error performing scan check. The form \"{}\" does not exist.", check.getFormName());
 		        		continue;
 		        	}
 		        	
@@ -350,18 +350,16 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 			File imageDir = new File(imageDirStr);
 			File scanDir = new File(scanDirStr);
 			if (!imageDir.exists() || !imageDir.canRead()) {
-				log.error("Error performing directory checks: The image directory (" + imageDir + ") does not exist or " +
-						"cannot be read.");
+				log.error("Error performing directory checks: The image directory ({}) does not exist or cannot be read.", imageDir);
 				continue;
 			} else if (!scanDir.exists() || !scanDir.canRead()) {
-				log.error("Error performing directory checks: The scan directory (" + scanDir + ") does not exist or " +
-				"cannot be read.");
+				log.error("Error performing directory checks: The scan directory ({}) does not exist or cannot be read.", scanDir);
 				continue;
 			} else if (!imageDir.isDirectory()) {
-				log.error("Error performing directory checks: The image directory (" + imageDir + " is not directory.");
+				log.error("Error performing directory checks: The image directory ({}) is not a directory.", imageDir);
 				continue;
 			} else if (!scanDir.isDirectory()) {
-				log.error("Error performing directory checks: The scan directory (" + scanDir + " is not directory.");
+				log.error("Error performing directory checks: The scan directory ({}) is not a directory.", scanDir);
 				continue;
 			}
 			
@@ -460,15 +458,13 @@ public class ChicaopsServiceImpl implements ChicaopsService {
 		String configFileStr = adminService.getGlobalProperty(
 			"chicaops.dashboardConfigFile");
 		if (configFileStr == null) {
-			log.error("You must set a value for global property: "
-				+ "chicaops.dashboardConfigFile");
+			log.error("You must set a value for global property: chicaops.dashboardConfigFile");
 			return null;
 		}
 		
 		File configFile = new File(configFileStr);
 		if (!configFile.exists()) {
-			log.error("The file location specified for the global property "
-				+ "chicaops.dashboardConfigFile does not exist.");
+			log.error("The file location specified for the global property chicaops.dashboardConfigFile does not exist.");
 			return null;
 		}
 		
