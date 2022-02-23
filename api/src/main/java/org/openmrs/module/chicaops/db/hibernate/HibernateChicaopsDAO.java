@@ -28,6 +28,7 @@ import org.openmrs.module.chicaops.xmlBeans.dashboard.WifiIssueChecks;
 import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.PatientState;
+import org.openmrs.module.chirdlutilbackports.util.ChirdlUtilBackportsConstants;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
@@ -39,7 +40,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 public class HibernateChicaopsDAO implements ChicaopsDAO {
 	
 	private static final String CHECKIN_STATE = "CHECKIN";
-	
+    
 	private static final Logger log = LoggerFactory.getLogger(HibernateChicaopsDAO.class);
 
 	/**
@@ -131,7 +132,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 				+ ", a.start_time, NOW()) <= :forcedOutPWSCheckTimePeriod) and b.state = 19";
 		SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
 		qry.setInteger("forcedOutPWSCheckTimePeriod", forcedOutPWSCheck.getTimePeriod());
-		qry.addEntity(PatientState.class);
+		qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 		return qry.list();
 	}
 	
@@ -216,7 +217,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.setString("stateName", state.getName());
 		qry.setInteger("stateTimePeriod", state.getTimePeriod());
 		qry.setInteger("stateElapsedTime", state.getElapsedTime());
-		qry.addEntity(PatientState.class);
+		qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 		return qry.list();
 	}
 	
@@ -232,7 +233,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 			qry.setString("stateName", state.getName());
 			qry.setInteger("locationId", location.getLocationId());
 			qry.setInteger("stateElapsedTime", state.getElapsedTime());
-			qry.addEntity(PatientState.class);
+			qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 			List<PatientState> states = qry.list();
 			patientStates.addAll(states);
 		}
@@ -334,7 +335,7 @@ public class HibernateChicaopsDAO implements ChicaopsDAO {
 		qry.setInteger("formId", formId);
 		qry.setInteger("locationId", locationId);
 		qry.setTimestamp("sinceDateTime", new Timestamp(sinceDate.getTime()));
-		qry.addEntity(PatientState.class);
+		qry.addEntity(ChirdlUtilBackportsConstants.PATIENT_STATE_ENTITY);
 		return qry.list();
     }
    
