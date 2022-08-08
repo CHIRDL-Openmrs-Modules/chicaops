@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.xmlBeans.dashboard.DashboardConfig;
@@ -45,7 +45,7 @@ public class DashboardMailerPager {
 	private static Map<Integer, Long> messageToTimeMap = new ConcurrentHashMap<>(new HashMap<>());
 	
 	/** Logger for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
+	private static final Logger log = LoggerFactory.getLogger(DashboardMailerPager.class);
 	
 	private static final String MAIL_SUBJECT = "CHICA Operations Dashboard Notice";
 	
@@ -402,7 +402,7 @@ public class DashboardMailerPager {
 	private void sendMail(String message, String dashboardEmail, String location, 
 	                      String locationDescription) {
 		if (StringUtils.isBlank(dashboardEmail)) {
-		    this.log.error("Dashboard: Email list is empty.  Please specify email recipients in the Dashboard configuration file");
+		    log.error("Dashboard: Email list is empty. Please specify email recipients in the Dashboard configuration file");
 			return;
 		}
 		
@@ -416,15 +416,14 @@ public class DashboardMailerPager {
 		
 		String emailFrom = Context.getAdministrationService().getGlobalProperty(GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM);
 		if (StringUtils.isBlank(emailFrom)) {
-			this.log.error("Global property " + GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM + " does not contain a valid "
-					+ "value.  The from email address will be defaulted to " + DEFAULT_MAIL_SENDER);
+			log.error("Global property {} does not contain a valid value. The from email address will be defaulted to {}", GLOBAL_PROPERTY_DASHBOARD_EMAIL_FROM, DEFAULT_MAIL_SENDER);
 			emailFrom = DEFAULT_MAIL_SENDER;
 		}
 		
 		try {
             Context.getMessageService().sendMessage(dashboardEmail, emailFrom, subject, message);
         } catch (MessageException e) {
-            this.log.error("Error creating email message" + message, e);
+            log.error("Error creating email message {}", message, e);
         }
 	}
 	
@@ -441,17 +440,17 @@ public class DashboardMailerPager {
 		}
 		
 		if (this.baseUrl == null) {
-		    this.log.error("Dashboard: Pager base URL is null.  Please specify global property chica.pagerBaseURL.");
+		    log.error("Dashboard: Pager base URL is null. Please specify global property chica.pagerBaseURL.");
 			return null;
 		}
 		
 		if (this.idParam == null) {
-		    this.log.error("Dashboard: Pager ID param is null.  Please specify global property chica.pagerUrlNumberParam");
+		    log.error("Dashboard: Pager ID param is null. Please specify global property chica.pagerUrlNumberParam");
 			return null;
 		}
 		
 		if (this.textParam == null) {
-		    this.log.error("Dashboard: Pager text param is null.  Please specify global property chica.pagerUrlMessageParam");
+		    log.error("Dashboard: Pager text param is null. Please specify global property chica.pagerUrlMessageParam");
 			return null;
 		}
 		
@@ -472,7 +471,7 @@ public class DashboardMailerPager {
 			if (this.baseUrl == null || this.baseUrl.length() == 0 || pagerNumber == null || pagerNumber.length() == 0
 			        || message == null || message.length() == 0 || this.idParam == null || this.idParam.length() == 0
 			        || this.textParam == null || this.textParam.length() == 0) {
-				this.log.warn("Page was not sent due to null url string or null parameters. " + urlStr);
+				log.warn("Page was not sent due to null url string or null parameters. {}", urlStr);
 				
 				return null;
 			}
@@ -490,8 +489,8 @@ public class DashboardMailerPager {
 			
 		}
 		catch (Exception e) {
-			this.log.error("Could not send page: " + e.getMessage());
-			this.log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
+			log.error("Could not send page: {}", e.getMessage());
+			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 		}
 		finally {
 			if (rd != null)
@@ -499,7 +498,7 @@ public class DashboardMailerPager {
 					rd.close();
 				}
 				catch (Exception e) {
-					this.log.error("Error closing reader", e);
+					log.error("Error closing reader", e);
 				}
 		}
 		return response;

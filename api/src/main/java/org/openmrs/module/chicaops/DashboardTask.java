@@ -15,8 +15,8 @@ package org.openmrs.module.chicaops;
 
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chicaops.dashboard.CareCenterResult;
 import org.openmrs.module.chicaops.dashboard.DashboardMailerPager;
@@ -32,7 +32,7 @@ import org.openmrs.scheduler.tasks.AbstractTask;
  */
 public class DashboardTask extends AbstractTask {
 	
-	 protected final Log log = LogFactory.getLog(getClass());
+	private static final Logger log = LoggerFactory.getLogger(DashboardTask.class);
 	
 	/**
 	 * @see org.openmrs.scheduler.tasks.AbstractTask#execute()
@@ -58,7 +58,7 @@ public class DashboardTask extends AbstractTask {
         	mailer.sendEmailsOrPages(serverResult);
         	mailer.sendEmailsOrPages(ruleResult);
         } catch (Exception e) {
-        	this.log.error("Error creating/sending email/pages", e);
+        	log.error("Error creating/sending email/pages", e);
         }
 	}
 }
