@@ -2,8 +2,8 @@ package org.openmrs.module.chicaops;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -18,14 +18,14 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class ChicaopsActivator extends BaseModuleActivator {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(ChicaopsActivator.class);
 	
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
 	@Override
     public void stopped() {
-		this.log.info("Shutting down Chica Ops Module");
+		log.info("Shutting down Chica Ops Module");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ChicaopsActivator extends BaseModuleActivator {
 	 */
 	@Override
     public void started() {
-		this.log.info("Starting Chica Ops Module");
+		log.info("Starting Chica Ops Module");
 		
 		//check that all the required global properties are set
 		checkGlobalProperties();
@@ -59,16 +59,15 @@ public class ChicaopsActivator extends BaseModuleActivator {
 					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{
-						this.log.error("You must set a value for global property: "
-								+ currName);
+						log.error("You must set a value for global property: {}", currName);
 					}
 				}
 			}
 		} catch (Exception e)
 		{
-			this.log.error("Error checking global properties for chica ops module");
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error checking global properties for chica ops module");
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 		}
 	}
 }
